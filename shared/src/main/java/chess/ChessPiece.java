@@ -1,6 +1,13 @@
+/**
+ * ChessPiece Module
+ * Represents a chess piece including color and type
+ * Author: Isabel Hinton off Template
+ */
+
 package chess;
 
 import java.util.Collection;
+import java.util.Objects;
 
 /**
  * Represents a single chess piece
@@ -10,7 +17,12 @@ import java.util.Collection;
  */
 public class ChessPiece {
 
+    private final ChessGame.TeamColor pieceColor;
+    private final ChessPiece.PieceType pieceType;
+
     public ChessPiece(ChessGame.TeamColor pieceColor, ChessPiece.PieceType type) {
+        this.pieceColor = pieceColor;
+        this.pieceType = type;
     }
 
     /**
@@ -28,16 +40,12 @@ public class ChessPiece {
     /**
      * @return Which team this chess piece belongs to
      */
-    public ChessGame.TeamColor getTeamColor() {
-        throw new RuntimeException("Not implemented");
-    }
+    public ChessGame.TeamColor getTeamColor() { return pieceColor;}
 
     /**
      * @return which type of chess piece this piece is
      */
-    public PieceType getPieceType() {
-        throw new RuntimeException("Not implemented");
-    }
+    public PieceType getPieceType() { return pieceType;}
 
     /**
      * Calculates all the positions a chess piece can move to
@@ -48,5 +56,21 @@ public class ChessPiece {
      */
     public Collection<ChessMove> pieceMoves(ChessBoard board, ChessPosition myPosition) {
         throw new RuntimeException("Not implemented");
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(pieceColor, pieceType);
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        // Check reference equality
+        if(this == obj) return true;
+        // Check null and see if Classes match
+        if((obj == null) || (getClass() != obj.getClass())) return false;
+        // Cast and Compare data
+        ChessPiece that = (ChessPiece) obj;
+        return ((pieceColor == that.pieceColor) && (pieceType == that.pieceType));
     }
 }

@@ -1,3 +1,9 @@
+/**
+ * ChessPosition Module
+ * Represents the coordinates (row, col) of a piece.
+ * Author: Isabel Hinton off Template
+ */
+
 package chess;
 
 import java.util.Objects;
