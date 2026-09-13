@@ -27,6 +27,33 @@ public class ChessMove {
         promoteType = promotionPiece;
     }
 
+    @Override
+    public String toString() {
+        return "ChessMove{" +
+                start + ", " +
+                end + ", " +
+                promoteType +
+                '}';
+    }
+
+    @Override
+    public int hashCode() {
+        return 31 * Objects.hashCode(start) + 51 * Objects.hashCode(end) + 71 * Objects.hashCode(promoteType);
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        // Check reference equality
+        if(this == obj) return true;
+        // Check null and see if Classes match
+        if((obj == null) || (getClass() != obj.getClass())) return false;
+        // Cast and Compare data
+        ChessMove that = (ChessMove) obj;
+        return ((start == that.start) && (end == that.end) && (promoteType == that.promoteType));
+    }
+
+    // Getter Functions
+
     /**
      * @return ChessPosition of starting location
      */
@@ -44,20 +71,4 @@ public class ChessMove {
      * @return Type of piece to promote a pawn to, or null if no promotion
      */
     public ChessPiece.PieceType getPromotionPiece() { return promoteType;}
-
-    @Override
-    public int hashCode() {
-        return Objects.hash(start, end, promoteType);
-    }
-
-    @Override
-    public boolean equals(Object obj) {
-        // Check reference equality
-        if(this == obj) return true;
-        // Check null and see if Classes match
-        if((obj == null) || (getClass() != obj.getClass())) return false;
-        // Cast and Compare data
-        ChessMove that = (ChessMove) obj;
-        return ((start == that.start) && (end == that.end) && (promoteType == that.promoteType));
-    }
 }

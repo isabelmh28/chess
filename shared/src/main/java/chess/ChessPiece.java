@@ -6,6 +6,8 @@
 
 package chess;
 
+import chess.moves.*;
+
 import java.util.Collection;
 import java.util.Objects;
 import java.util.ArrayList;
@@ -17,7 +19,6 @@ import java.util.ArrayList;
  * signature of the existing methods.
  */
 public class ChessPiece {
-
     private final ChessGame.TeamColor pieceColor;
     private final ChessPiece.PieceType pieceType;
 
@@ -39,8 +40,16 @@ public class ChessPiece {
     }
 
     @Override
+    public String toString() {
+        return "ChessPiece{" +
+                pieceColor + ", " +
+                pieceType +
+                '}';
+    }
+
+    @Override
     public int hashCode() {
-        return Objects.hash(pieceColor, pieceType);
+        return 31 * Objects.hashCode(pieceColor) + 51 * Objects.hashCode(pieceType);
     }
 
     @Override
@@ -77,7 +86,7 @@ public class ChessPiece {
      *    ex: (1, 0) would be right, (-1, 1) would be forward left diagonal
      * Used for Rooks, Bishops, and Queens
      */
-    public Collection<ChessMove> moveRay(ChessBoard board, ChessPosition myPosition, int hor, int vert) {
+    public static Collection<ChessMove> moveRay(ChessBoard board, ChessPosition myPosition, ChessGame.TeamColor myColor, int hor, int vert) {
         Collection<ChessMove> rayMoves = new ArrayList<>();
         // No (0,0) direction, since that would be stationary
         if((hor == 0) && (vert == 0)) { return rayMoves;}
@@ -88,16 +97,16 @@ public class ChessPiece {
             // Move to the next position
             currRow += vert;
             currCol += hor;
-            ChessPosition nextPosition = new ChessPosition(currRow, currCol);
-            ChessPiece nextPiece = board.getPiece(nextPosition);
             // Check if the next space would be out of bounds
             if((currRow < 1) || (currRow > 8) || (currCol < 1) || (currCol > 8)) {
                 break;
             }
+            ChessPosition nextPosition = new ChessPosition(currRow, currCol);
+            ChessPiece nextPiece = board.getPiece(nextPosition);
             // Check if there is a piece in the next space
             if(nextPiece != null) {
                 // Check if the piece is on my team or not
-                if(nextPiece.getTeamColor() != getTeamColor()) {
+                if(nextPiece.getTeamColor() != myColor) {
                     rayMoves.add( new ChessMove(myPosition, nextPosition, null));
                 }
                 break;
@@ -116,6 +125,13 @@ public class ChessPiece {
      * @return Collection of valid moves
      */
     public Collection<ChessMove> pieceMoves(ChessBoard board, ChessPosition myPosition) {
-        throw new RuntimeException("Not implemented");
+        return switch (pieceType) {
+            case KING   -> KingMoves.pieceMoves(board,   myPosition, pieceColor);
+            case QUEEN  -> QueenMoves.pieceMoves(board,  myPosition, pieceColor);
+            case KNIGHT -> KnightMoves.pieceMoves(board, myPosition, pieceColor);
+            case BISHOP -> BishopMoves.pieceMoves(board, myPosition, pieceColor);
+            case ROOK   -> RookMoves.pieceMoves(board,   myPosition, pieceColor);
+            case PAWN   -> PawnMoves.pieceMoves(board,   myPosition, pieceColor);
+        };
     }
 }
