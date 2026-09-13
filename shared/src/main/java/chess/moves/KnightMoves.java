@@ -4,7 +4,9 @@
  * Author: Isabel Hinton
  */
 
-package chess;
+package chess.moves;
+
+import chess.*;
 
 import java.util.Collection;
 import java.util.ArrayList;
@@ -29,8 +31,8 @@ public class KnightMoves {
             int currRow = myPosition.getRow();
             int currCol = myPosition.getColumn();
             // Move to the next position
-            currRow += currDirection[0];
-            currCol += currDirection[1];
+            currRow += currDirection[1];
+            currCol += currDirection[0];
             // Check if the destination would be out of bounds
             if((currRow < 1) || (currRow > 8) || (currCol < 1) || (currCol > 8)) {
                 continue;

@@ -4,7 +4,9 @@
  * Author: Isabel Hinton
  */
 
-package chess;
+package chess.moves;
+
+import chess.*;
 
 import java.util.Collection;
 import java.util.ArrayList;
