@@ -60,7 +60,7 @@ public class ChessPiece {
         if((obj == null) || (getClass() != obj.getClass())) return false;
         // Cast and Compare data
         ChessPiece that = (ChessPiece) obj;
-        return ((pieceColor == that.pieceColor) && (pieceType == that.pieceType));
+        return (Objects.equals(pieceColor, that.pieceColor) && Objects.equals(pieceType, that.pieceType));
     }
 
     // Getter Functions

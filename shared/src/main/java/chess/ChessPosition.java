@@ -6,6 +6,8 @@
 
 package chess;
 
+import java.util.Objects;
+
 /**
  * Represents a single square position on a chess board
  * <p>
@@ -44,7 +46,7 @@ public class ChessPosition {
         if((obj == null) || (getClass() != obj.getClass())) return false;
         // Cast and Compare data
         ChessPosition that = (ChessPosition) obj;
-        return ((row == that.row) && (col == that.col));
+        return (Objects.equals(row, that.row) && Objects.equals(col, that.col));
     }
 
     // Getter Functions

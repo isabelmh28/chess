@@ -49,7 +49,7 @@ public class ChessMove {
         if((obj == null) || (getClass() != obj.getClass())) return false;
         // Cast and Compare data
         ChessMove that = (ChessMove) obj;
-        return ((start == that.start) && (end == that.end) && (promoteType == that.promoteType));
+        return (Objects.equals(start, that.start) && Objects.equals(end, that.end) && Objects.equals(promoteType, that.promoteType));
     }
 
     // Getter Functions
