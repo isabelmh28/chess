@@ -16,22 +16,21 @@ import java.util.Arrays;
  * signature of the existing methods.
  */
 public class ChessBoard {
-
+    // Private Members/Macros
     public static final int ROWS = 8;
     public static final int COLS = 8;
     private ChessPiece[][] chessBoard;
-
-    // Chess Board is 8x8
+    // Constructor
+    //     - Chess Board is 8x8
     public ChessBoard() {
         this.chessBoard = new ChessPiece[ROWS][COLS];
     }
-
-    // We are using the "deep" methods found in java.util.Arrays
+    // Overridden Methods
+    //     - We are using the "deep" methods found in java.util.Arrays
     @Override
     public int hashCode() {
         return Arrays.deepHashCode(chessBoard);
     }
-
     @Override
     public boolean equals(Object obj) {
         // Check reference equality
@@ -44,7 +43,6 @@ public class ChessBoard {
     }
 
     // Getter Functions
-
     /**
      * Gets a chess piece on the chessboard
      *
@@ -60,7 +58,6 @@ public class ChessBoard {
     }
 
     // Board Functions
-
     /**
      * Adds a chess piece to the chessboard
      *

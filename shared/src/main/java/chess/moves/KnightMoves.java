@@ -14,6 +14,7 @@ import java.util.ArrayList;
 public class KnightMoves {
     public static Collection<ChessMove> pieceMoves(ChessBoard board, ChessPosition myPosition, ChessGame.TeamColor myColor) {
         Collection<ChessMove> knightMoves = new ArrayList<>();
+        // The Knight can move in the following combinations:
         int[][] directions = {
                 // Horizontal 1, Vertical 2
                 {-1, -2},  // Left 1 Down 2
@@ -26,7 +27,7 @@ public class KnightMoves {
                 {2, 1},    // Right 2 Up 1
                 {2, -1},   // Right 2 Down 1
         };
-
+        // Add moves to our Collection
         for(int[] currDirection : directions) {
             int currRow = myPosition.getRow();
             int currCol = myPosition.getColumn();

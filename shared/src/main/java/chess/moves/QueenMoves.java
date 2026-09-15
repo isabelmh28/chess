@@ -14,6 +14,7 @@ import java.util.ArrayList;
 public class QueenMoves {
     public static Collection<ChessMove> pieceMoves(ChessBoard board, ChessPosition myPosition, ChessGame.TeamColor myColor) {
         Collection<ChessMove> queenMoves = new ArrayList<>();
+        // The Queen can move in the following directions:
         int[][] directions = {
                 // Straights
                 {0, -1},  // Down
@@ -28,6 +29,8 @@ public class QueenMoves {
         };
         // Add moves to Collection per direction
         for(int[] currDirection : directions) {
+            // See moveRay method in ChessPiece module for more information
+            //    - Adds all available moves in a given direction
             queenMoves.addAll(ChessPiece.moveRay(board, myPosition, myColor, currDirection[0], currDirection[1]));
         }
         return queenMoves;

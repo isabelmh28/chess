@@ -14,6 +14,7 @@ import java.util.ArrayList;
 public class KingMoves {
     public static Collection<ChessMove> pieceMoves(ChessBoard board, ChessPosition myPosition, ChessGame.TeamColor myColor) {
         Collection<ChessMove> kingMoves = new ArrayList<>();
+        // The King can move in the following directions:
         int[][] directions = {
                 // Straights
                 {0, -1},  // Down

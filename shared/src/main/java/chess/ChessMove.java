@@ -15,11 +15,11 @@ import java.util.Objects;
  * signature of the existing methods.
  */
 public class ChessMove {
-
+    // Private Members
     private final ChessPosition start;
     private final ChessPosition end;
     private final ChessPiece.PieceType promoteType;
-
+    // Constructor
     public ChessMove(ChessPosition startPosition, ChessPosition endPosition,
                      ChessPiece.PieceType promotionPiece) {
         start = startPosition;
@@ -27,6 +27,7 @@ public class ChessMove {
         promoteType = promotionPiece;
     }
 
+    // Overridden Methods
     @Override
     public String toString() {
         return "ChessMove{" +
@@ -35,12 +36,10 @@ public class ChessMove {
                 promoteType +
                 '}';
     }
-
     @Override
     public int hashCode() {
         return 31 * Objects.hashCode(start) + 51 * Objects.hashCode(end) + 71 * Objects.hashCode(promoteType);
     }
-
     @Override
     public boolean equals(Object obj) {
         // Check reference equality
@@ -53,7 +52,6 @@ public class ChessMove {
     }
 
     // Getter Functions
-
     /**
      * @return ChessPosition of starting location
      */

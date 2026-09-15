@@ -19,9 +19,10 @@ import java.util.ArrayList;
  * signature of the existing methods.
  */
 public class ChessPiece {
+    // Private Members
     private final ChessGame.TeamColor pieceColor;
     private final ChessPiece.PieceType pieceType;
-
+    // Constructor
     public ChessPiece(ChessGame.TeamColor pieceColor, ChessPiece.PieceType type) {
         this.pieceColor = pieceColor;
         this.pieceType = type;
@@ -39,6 +40,7 @@ public class ChessPiece {
         PAWN
     }
 
+    // Overridden Methods
     @Override
     public String toString() {
         return "ChessPiece{" +
@@ -46,12 +48,10 @@ public class ChessPiece {
                 pieceType +
                 '}';
     }
-
     @Override
     public int hashCode() {
         return 31 * Objects.hashCode(pieceColor) + 51 * Objects.hashCode(pieceType);
     }
-
     @Override
     public boolean equals(Object obj) {
         // Check reference equality
@@ -64,7 +64,6 @@ public class ChessPiece {
     }
 
     // Getter Functions
-
     /**
      * @return Which team this chess piece belongs to
      */
@@ -76,7 +75,6 @@ public class ChessPiece {
     public PieceType getPieceType() { return pieceType;}
 
     // Chess Piece Moves
-
     /**
      * Ray Movement: given a direction with col/row delta, move until:
      *    a) you hit your own team's piece (you stop right next to it)
@@ -107,6 +105,7 @@ public class ChessPiece {
             if(nextPiece != null) {
                 // Check if the piece is on my team or not
                 if(nextPiece.getTeamColor() != myColor) {
+                    // If enemy piece, replace it with my piece
                     rayMoves.add( new ChessMove(myPosition, nextPosition, null));
                 }
                 break;
@@ -121,7 +120,7 @@ public class ChessPiece {
      * Calculates all the positions a chess piece can move to
      * Does not take into account moves that are illegal due to leaving the king in
      * danger
-     *
+     * See moves directory for individual pieceMoves methods
      * @return Collection of valid moves
      */
     public Collection<ChessMove> pieceMoves(ChessBoard board, ChessPosition myPosition) {

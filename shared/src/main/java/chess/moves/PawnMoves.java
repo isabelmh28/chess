@@ -44,7 +44,7 @@ public class PawnMoves {
                 pawnMoves.add(new ChessMove(myPosition, forwardPosition, ChessPiece.PieceType.KNIGHT));
                 pawnMoves.add(new ChessMove(myPosition, forwardPosition, ChessPiece.PieceType.QUEEN));
             } else {
-                // If you are in the starting position, you can move forward 1 or 2
+                // If you are in the starting position, you can move forward 2
                 if (currRow == startRow) {
                     int doubleForwardRow = moveForward + direction;
                     ChessPosition doublePosition = new ChessPosition(doubleForwardRow, currCol);
@@ -55,6 +55,7 @@ public class PawnMoves {
                 pawnMoves.add(new ChessMove(myPosition, forwardPosition, null));
             }
         }
+        // Capture Moves
         for (int[] currDiagonal : diagonals) {
            int captureRow = currRow + currDiagonal[1];
            int captureCol = currCol + currDiagonal[0];
