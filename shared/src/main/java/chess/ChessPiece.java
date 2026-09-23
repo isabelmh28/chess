@@ -84,36 +84,29 @@ public class ChessPiece {
      *    ex: (1, 0) would be right, (-1, 1) would be forward left diagonal
      * Used for Rooks, Bishops, and Queens
      */
-    public static Collection<ChessMove> moveRay(ChessBoard board, ChessPosition myPosition, ChessGame.TeamColor myColor, int hor, int vert) {
-        Collection<ChessMove> rayMoves = new ArrayList<>();
-        // No (0,0) direction, since that would be stationary
-        if((hor == 0) && (vert == 0)) { return rayMoves;}
-
-        int currRow = myPosition.getRow();
-        int currCol = myPosition.getColumn();
+    public Collection<ChessMove> rayMoves(ChessBoard board, ChessPosition pos, int rowDelta, int colDelta, boolean cont) {
+        Collection<ChessMove> ray = new ArrayList<>();
+        int currRow = pos.getRow();
+        int currCol = pos.getColumn();
         while(true) {
-            // Move to the next position
-            currRow += vert;
-            currCol += hor;
-            // Check if the next space would be out of bounds
-            if((currRow < 1) || (currRow > 8) || (currCol < 1) || (currCol > 8)) {
-                break;
-            }
-            ChessPosition nextPosition = new ChessPosition(currRow, currCol);
-            ChessPiece nextPiece = board.getPiece(nextPosition);
-            // Check if there is a piece in the next space
-            if(nextPiece != null) {
-                // Check if the piece is on my team or not
-                if(nextPiece.getTeamColor() != myColor) {
-                    // If enemy piece, replace it with my piece
-                    rayMoves.add( new ChessMove(myPosition, nextPosition, null));
+            currRow += rowDelta;
+            currCol += colDelta;
+            ChessPosition newPos = new ChessPosition(currRow, currCol);
+            if(newPos.inBounds()) {
+                if(board.getPiece(newPos) == null) {
+                    ray.add(new ChessMove(pos, newPos, null));
                 }
-                break;
+                else {
+                    if(board.getPiece(newPos).getTeamColor() != pieceColor) {
+                        ray.add(new ChessMove(pos, newPos, null));
+                    }
+                    break;
+                }
             }
-            // If none of these 3 scenarios are hit, add a move and continue
-            rayMoves.add(new ChessMove(myPosition, nextPosition, null));
+            else{ break;}
+            if(!cont) { break;}
         }
-        return rayMoves;
+        return ray;
     }
 
     /**
@@ -125,12 +118,12 @@ public class ChessPiece {
      */
     public Collection<ChessMove> pieceMoves(ChessBoard board, ChessPosition myPosition) {
         return switch (pieceType) {
-            case KING   -> KingMoves.pieceMoves(board,   myPosition, pieceColor);
-            case QUEEN  -> QueenMoves.pieceMoves(board,  myPosition, pieceColor);
-            case KNIGHT -> KnightMoves.pieceMoves(board, myPosition, pieceColor);
-            case BISHOP -> BishopMoves.pieceMoves(board, myPosition, pieceColor);
-            case ROOK   -> RookMoves.pieceMoves(board,   myPosition, pieceColor);
-            case PAWN   -> PawnMoves.pieceMoves(board,   myPosition, pieceColor);
+            case KING   -> KingMoves.pieceMoves(board,   myPosition, this);
+            case QUEEN  -> QueenMoves.pieceMoves(board,  myPosition, this);
+            case KNIGHT -> KnightMoves.pieceMoves(board, myPosition, this);
+            case BISHOP -> BishopMoves.pieceMoves(board, myPosition, this);
+            case ROOK   -> RookMoves.pieceMoves(board,   myPosition, this);
+            case PAWN   -> PawnMoves.pieceMoves(board,   myPosition, this);
         };
     }
 }

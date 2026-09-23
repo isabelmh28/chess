@@ -59,4 +59,8 @@ public class ChessPosition {
      * 1 codes for the left column, 8 is the right column
      */
     public int getColumn() { return col;}
+
+    public boolean inBounds() {
+        return (row >= 1 && row <= 8) && (col >= 1 && col <= 8);
+    }
 }

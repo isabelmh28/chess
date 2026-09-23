@@ -12,40 +12,28 @@ import java.util.Collection;
 import java.util.ArrayList;
 
 public class KingMoves {
-    public static Collection<ChessMove> pieceMoves(ChessBoard board, ChessPosition myPosition, ChessGame.TeamColor myColor) {
+    public static Collection<ChessMove> pieceMoves(ChessBoard board, ChessPosition myPosition, ChessPiece piece) {
         Collection<ChessMove> kingMoves = new ArrayList<>();
         // The King can move in the following directions:
         int[][] directions = {
                 // Straights
-                {0, -1},  // Down
-                {0, 1},   // Up
-                {-1, 0},  // Left
-                {1, 0},   // Right
+                {-1, 0},  // Down
+                {1, 0},   // Up
+                {0, -1},  // Left
+                {0, 1},   // Right
                 // Diagonals
                 {-1, -1}, // Down Left
-                {-1, 1},  // Up Left
+                {1, -1},  // Up Left
                 {1, 1},   // Up Right
-                {1, -1}   // Down Right
+                {-1, 1}   // Down Right
         };
+        // Add moves to Collection per direction
         for(int[] currDirection : directions) {
-            int currRow = myPosition.getRow();
-            int currCol = myPosition.getColumn();
-            // Move to the next position
-            currRow += currDirection[1];
-            currCol += currDirection[0];
-            // Check if the destination would be out of bounds
-            if((currRow < 1) || (currRow > 8) || (currCol < 1) || (currCol > 8)) {
-                continue;
-            }
-            ChessPosition nextPosition = new ChessPosition(currRow, currCol);
-            ChessPiece nextPiece = board.getPiece(nextPosition);
-            // See if the destination is on one of our own pieces
-            if(nextPiece != null){
-                if(nextPiece.getTeamColor() == myColor) {
-                    continue;
-                }
-            }
-            kingMoves.add(new ChessMove(myPosition, nextPosition, null));
+            // See moveRay method in ChessPiece module for more information
+            //    - Adds all available moves in a given direction
+            //    - the boolean "cont" being false means the King can only move once in any given direction; it cannot
+            //      move in a ray like the Queen.
+            kingMoves.addAll(piece.rayMoves(board, myPosition, currDirection[0], currDirection[1], false));
         }
         return kingMoves;
     }

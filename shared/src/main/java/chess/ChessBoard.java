@@ -71,16 +71,7 @@ public class ChessBoard {
          * Position must be on the board: 1 < row < 8; 1 < col < 8
          */
         if(position == null) {throw new RuntimeException("Null position");}
-        if((position.getRow() < 1) || (position.getRow() > ROWS)) {
-            int bad_row = position.getRow() - 1;
-            throw new RuntimeException(String.format("Row out of bounds: %d", bad_row));
-        }
-        if((position.getColumn() < 1) || (position.getColumn() > COLS)) {
-            int bad_col = position.getColumn() - 1;
-            throw new RuntimeException(String.format("Row out of bounds: %d", bad_col));
-        }
-
-        chessBoard[position.getRow()-1][position.getColumn()-1] = piece;
+        if(position.inBounds()) { chessBoard[position.getRow()-1][position.getColumn()-1] = piece;}
     }
 
     /**

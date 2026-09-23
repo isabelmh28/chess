@@ -38,7 +38,7 @@ public class ChessMove {
     }
     @Override
     public int hashCode() {
-        return 31 * Objects.hashCode(start) + 51 * Objects.hashCode(end) + 71 * Objects.hashCode(promoteType);
+        return 31 * Objects.hashCode(start) + 41 * Objects.hashCode(end) + 71 * Objects.hashCode(promoteType);
     }
     @Override
     public boolean equals(Object obj) {
@@ -48,7 +48,7 @@ public class ChessMove {
         if((obj == null) || (getClass() != obj.getClass())) return false;
         // Cast and Compare data
         ChessMove that = (ChessMove) obj;
-        return (Objects.equals(start, that.start) && Objects.equals(end, that.end) && Objects.equals(promoteType, that.promoteType));
+        return Objects.equals(start, that.start) && Objects.equals(end, that.end) && Objects.equals(promoteType, that.promoteType);
     }
 
     // Getter Functions
