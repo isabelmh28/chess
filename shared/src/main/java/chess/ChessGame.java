@@ -1,6 +1,7 @@
 package chess;
 
 import java.util.Collection;
+import java.util.Objects;
 
 /**
  * A class that can manage a chess game, making moves on a board
@@ -9,9 +10,16 @@ import java.util.Collection;
  * signature of the existing methods.
  */
 public class ChessGame {
+    public static final int ROWS = 8;
+    public static final int COLS = 8;
+
+    private TeamColor currentTeam;
+    private ChessBoard board;
 
     public ChessGame() {
-
+        currentTeam = TeamColor.WHITE;
+        board = new ChessBoard();
+        board.resetBoard();
     }
 
     /**
@@ -106,5 +114,16 @@ public class ChessGame {
      */
     public ChessBoard getBoard() {
         throw new RuntimeException("Not implemented");
+    }
+
+    @Override
+    public int hashCode() { return 31 * board.hashCode() + 41 * Objects.hashCode(currentTeam);}
+
+    @Override
+    public boolean equals(Object obj) {
+        if(this == obj) return true;
+        else if((obj == null) || (getClass() != obj.getClass())) return false;
+        ChessGame that = (ChessGame) obj;
+        return Objects.equals(board, that.board) && Objects.equals(currentTeam, that.currentTeam);
     }
 }
