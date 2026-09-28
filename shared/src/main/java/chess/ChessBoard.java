@@ -25,6 +25,16 @@ public class ChessBoard {
     public ChessBoard() {
         this.chessBoard = new ChessPiece[ROWS][COLS];
     }
+    // Copy Constructor
+    public ChessBoard(ChessBoard copy) {
+        chessBoard = new ChessPiece[ROWS][COLS];
+        for(int row = 1; row <= ROWS; row++) {
+            for(int col = 1; col <= COLS; col++) {
+                ChessPosition pos = new ChessPosition(row, col);
+                addPiece(pos, copy.getPiece(pos));
+            }
+        }
+    }
     // Overridden Methods
     //     - We are using the "deep" methods found in java.util.Arrays
     @Override
@@ -72,6 +82,23 @@ public class ChessBoard {
          */
         if(position == null) {throw new RuntimeException("Null position");}
         if(position.inBounds()) { chessBoard[position.getRow()-1][position.getColumn()-1] = piece;}
+    }
+    /**
+     * Returns the position of the Team Color's King
+     * Returns null if King cannot be found.
+     */
+    public ChessPosition kingPosition(ChessGame.TeamColor color) {
+        for(int row = 1; row <= ROWS; row++) {
+            for(int col = 1; col <= COLS; col++) {
+                ChessPiece piece = getPiece(new ChessPosition(row, col));
+                if(piece != null) {
+                    if(piece.getPieceType() == ChessPiece.PieceType.KING) {
+                        if (piece.getTeamColor() == color) return new ChessPosition(row, col);
+                    }
+                }
+            }
+        }
+        return null;
     }
 
     /**
