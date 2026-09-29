@@ -94,7 +94,30 @@ public class ChessGame {
      * @throws InvalidMoveException if move is invalid
      */
     public void makeMove(ChessMove move) throws InvalidMoveException {
-        throw new RuntimeException("Not implemented");
+        // Invalids: Move cannot act on a null piece/empty position, and you can only move your team's pieces.
+        if(board.getPiece(move.getStartPosition()) == null) {
+            throw new InvalidMoveException("makeMove move invalid; trying to move null piece.");
+        }
+        else if(board.getPiece(move.getStartPosition()).getTeamColor() != currentTeam) {
+            throw new InvalidMoveException("makeMove move invalid; not the correct team's turn.");
+        }
+        // Only make a move if it is valid.
+        Collection<ChessMove> valid = validMoves(move.getStartPosition());
+        if(!valid.contains(move)) {
+            throw new InvalidMoveException("makeMove move invalid; not contained in valid moves.");
+        }
+        else {
+            if(move.getPromotionPiece() == null){
+                board.addPiece(move.getEndPosition(), board.getPiece(move.getStartPosition()));
+            }
+            else {
+                ChessPiece promotedPawn = new ChessPiece(currentTeam, move.getPromotionPiece());
+                board.addPiece(move.getEndPosition(), promotedPawn);
+            }
+            board.addPiece(move.getStartPosition(), null);
+        }
+        // Change team after making a move.
+        currentTeam = (currentTeam == TeamColor.WHITE) ? TeamColor.BLACK : TeamColor.WHITE;
     }
 
     /**
@@ -139,7 +162,18 @@ public class ChessGame {
      * @return True if the specified team is in checkmate
      */
     public boolean isInCheckmate(TeamColor teamColor) {
-        throw new RuntimeException("Not implemented");
+        if(isInCheck(teamColor)) {
+            for(int row = 1; row <= ROWS; row++) {
+                for(int col = 1; col <= COLS; col++) {
+                    ChessPosition pos = new ChessPosition(row, col);
+                    if((board.getPiece(pos) != null) && (board.getPiece(pos).getTeamColor() == teamColor)){
+                        if(!validMoves(pos).isEmpty()) return false;
+                    }
+                }
+            }
+            return true;
+        }
+        return false;
     }
 
     /**
