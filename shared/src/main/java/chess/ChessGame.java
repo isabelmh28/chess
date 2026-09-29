@@ -103,7 +103,7 @@ public class ChessGame {
         }
         // Only make a move if it is valid.
         Collection<ChessMove> valid = validMoves(move.getStartPosition());
-        if(!valid.contains(move)) {
+        if(valid == null || !valid.contains(move)) {
             throw new InvalidMoveException("makeMove move invalid; not contained in valid moves.");
         }
         else {
@@ -122,6 +122,9 @@ public class ChessGame {
 
     /**
      * Checks if a team's king is in Check given a board
+     * @param board: the board state being evaluated
+     * @param color: the team color being evaluated
+     * @return true if the given team is in check
      * NOTE: This method was created to find check on a temporary
      *       board that would potentially make a move, see if it was in check,
      *       and return if that move was actually valid.
@@ -206,10 +209,10 @@ public class ChessGame {
 
     /**
      * Gets the current chessboard
-     *
+     * Board returned is a copy for safety
      * @return the chessboard
      */
-    public ChessBoard getBoard() { return board;}
+    public ChessBoard getBoard() { return new ChessBoard(board);}
 
     @Override
     public int hashCode() { return 31 * board.hashCode() + 41 * Objects.hashCode(currentTeam);}
