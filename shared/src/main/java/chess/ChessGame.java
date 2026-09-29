@@ -68,14 +68,39 @@ public class ChessGame {
     }
 
     /**
+     * Checks if a team's king is in Check given a board
+     *
+     * NOTE: This method was created to find check on a temporary
+     *       board that would potentially make a move, see if it was in check,
+     *       and return if that move was actually valid.
+     *       The version that does not pass in the board uses this method,
+     *       simply using this.board as the passed in board.
+     */
+    public boolean isInCheck(ChessBoard board, TeamColor color) {
+        boolean check = false;
+        ChessPosition kingPosition = board.kingPosition(color);
+        for(int row = 1; row <= ROWS; row++) {
+            for(int col = 1; col <= COLS; col++) {
+                ChessPiece piece = board.getPiece(new ChessPosition(row, col));
+                if(piece != null && piece.getTeamColor() != color) {
+                    Collection<ChessMove> enemyMoves = piece.pieceMoves(board, new ChessPosition(row, col));
+                    for(ChessMove move : enemyMoves) {
+                        if (move.getEndPosition().equals(kingPosition)) return true;
+                    }
+                }
+            }
+        }
+        return check;
+    }
+
+    /**
      * Determines if the given team is in check
      *
      * @param teamColor which team to check for check
      * @return True if the specified team is in check
      */
-    public boolean isInCheck(TeamColor teamColor) {
-        throw new RuntimeException("Not implemented");
-    }
+    public boolean isInCheck(TeamColor teamColor) { return isInCheck(this.board, teamColor);}
+
 
     /**
      * Determines if the given team is in checkmate
