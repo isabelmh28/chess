@@ -1,5 +1,6 @@
 package chess;
 
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Objects;
 
@@ -52,9 +53,38 @@ public class ChessGame {
      * @param startPosition the piece to get valid moves for
      * @return Set of valid moves for requested piece, or null if no piece at
      * startPosition
+     * Move is valid if move is a "piece move" at that position AND if it doesn't let
+     * the King get in check.
      */
     public Collection<ChessMove> validMoves(ChessPosition startPosition) {
-        throw new RuntimeException("Not implemented");
+        // If position doesn't have a piece on it, return null
+        if(board.getPiece(startPosition) == null) { return null;}
+        // valid moves that are returned
+        Collection<ChessMove> valid = new ArrayList<>();
+        TeamColor color = board.getPiece(startPosition).getTeamColor();
+        // possible moves
+        Collection<ChessMove> possible = board.getPiece(startPosition).pieceMoves(board, startPosition);
+        for(ChessMove move : possible){
+            // create a temporary copy
+            ChessBoard tempBoard = new ChessBoard(board);
+            // If we are not promoting, just get the original piece and copy over
+            if(move.getPromotionPiece() == null) {
+                ChessPiece piece = tempBoard.getPiece(startPosition);
+                // add the potential move to the temp board
+                tempBoard.addPiece(move.getEndPosition(), piece);
+            }
+            else { // If we are promoting, get the Promotion type
+                ChessPiece piece = new ChessPiece(color, move.getPromotionPiece());
+                // add the potential move to the temp board
+                tempBoard.addPiece(move.getEndPosition(), piece);
+            }
+            tempBoard.addPiece(startPosition, null);
+            // If move does not leave the King in check, add move to collection
+            if(!isInCheck(tempBoard, color)) {
+                valid.add(move);
+            }
+        }
+        return valid;
     }
 
     /**
