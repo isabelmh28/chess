@@ -122,7 +122,6 @@ public class ChessGame {
 
     /**
      * Checks if a team's king is in Check given a board
-     *
      * NOTE: This method was created to find check on a temporary
      *       board that would potentially make a move, see if it was in check,
      *       and return if that move was actually valid.
@@ -184,7 +183,18 @@ public class ChessGame {
      * @return True if the specified team is in stalemate, otherwise false
      */
     public boolean isInStalemate(TeamColor teamColor) {
-        throw new RuntimeException("Not implemented");
+        if(!isInCheck(teamColor)) {
+            for(int row = 1; row <= ROWS; row++) {
+                for(int col = 1; col <= COLS; col++) {
+                    ChessPosition pos = new ChessPosition(row, col);
+                    if((board.getPiece(pos) != null) && (board.getPiece(pos).getTeamColor() == teamColor)){
+                        if(!validMoves(pos).isEmpty()) return false;
+                    }
+                }
+            }
+            return true;
+        }
+        return false;
     }
 
     /**
