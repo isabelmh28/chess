@@ -1,4 +1,4 @@
-package chess.model;
+package model;
 
 public record UserData(
         String username,
