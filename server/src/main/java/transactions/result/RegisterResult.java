@@ -1,6 +1,6 @@
 package transactions.result;
 
-record RegisterResult(
+public record RegisterResult(
         String username,
         String authToken
 ) { }

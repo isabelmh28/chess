@@ -1,3 +1,3 @@
 package transactions.result;
 
-record CreateGameResult(int gameID) { }
+public record CreateGameResult(int gameID) { }
