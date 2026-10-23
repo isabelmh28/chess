@@ -8,7 +8,10 @@ import model.UserData;
 import model.AuthData;
 import transactions.request.*;
 import transactions.result.*;
-import dataaccess.*;
+import dataaccess.DataAccessException;
+import dataaccess.AlreadyTakenException;
+import dataaccess.UnauthorizedUserException;
+import dataaccess.TokenNotFoundException;
 
 /**
  * Performs Services for the User (registration, login, authentication, etc.)
@@ -21,6 +24,7 @@ public class UserService {
         this.user = user;
         this.auth = auth;
     }
+
     public RegisterResult register(RegisterRequest request)
             throws DataAccessException, AlreadyTakenException {
         // Make sure username isn't already taken
@@ -37,6 +41,7 @@ public class UserService {
 
         return new RegisterResult(newAuthData.username(), newAuthData.authToken());
     }
+
     public LoginResult login(LoginRequest request)
             throws DataAccessException, UnauthorizedUserException {
         // Validate user login
@@ -54,6 +59,7 @@ public class UserService {
 
         return new LoginResult(newAuthData.username(), newAuthData.authToken());
     }
+
     public void logout(LogoutRequest request)
             throws DataAccessException, TokenNotFoundException{
         // Find authData from authToken
