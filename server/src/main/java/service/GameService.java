@@ -35,6 +35,7 @@ public class GameService {
         int gameID = Math.abs(UUID.randomUUID().hashCode());
         ChessGame chessGame = new ChessGame();
         GameData newGame = new GameData(gameID, null, null, request.gameName(), chessGame);
+        game.createGame(newGame);
 
         return new CreateGameResult(newGame.gameID());
     }
