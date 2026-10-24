@@ -11,31 +11,32 @@ import dataaccess.*;
 
 public class GameHandler {
     private final GameService gameService;
+    private final Gson serializer = new Gson();
 
     public GameHandler(GameService gameService) {this.gameService = gameService;}
 
     public void create(Context ctx) {
         try {
             String authToken = ctx.header("authorization");
-            CreateGameRequest request = new Gson().fromJson(ctx.body(), CreateGameRequest.class);
+            CreateGameRequest request = serializer.fromJson(ctx.body(), CreateGameRequest.class);
 
             CreateGameResult result = gameService.createGame(authToken, request);
 
             // Success
             ctx.status(200);
-            ctx.json(result);
+            ctx.result(serializer.toJson(result));
         }
         catch (DataAccessException e) {
             ctx.status(500);
-            ctx.json(new ErrorResponse("Error: " + e.getMessage()));
+            ctx.result(serializer.toJson(new ErrorResponse("Error: " + e.getMessage())));
         }
         catch (TokenNotFoundException e) {
             ctx.status(401);
-            ctx.json(new ErrorResponse("Error: unauthorized"));
+            ctx.result(serializer.toJson(new ErrorResponse("Error: unauthorized")));
         }
         catch (InvalidRequestException e) {
             ctx.status(400);
-            ctx.json(new ErrorResponse("Error: bad request"));
+            ctx.result(serializer.toJson(new ErrorResponse("Error: bad request")));
         }
     }
 
@@ -47,22 +48,22 @@ public class GameHandler {
 
             // Success
             ctx.status(200);
-            ctx.json(result);
+            ctx.result(serializer.toJson(result));
         }
         catch (TokenNotFoundException e) {
             ctx.status(401);
-            ctx.json(new ErrorResponse("Error: unauthorized"));
+            ctx.result(serializer.toJson(new ErrorResponse("Error: unauthorized")));
         }
         catch (DataAccessException e) {
             ctx.status(500);
-            ctx.json(new ErrorResponse("Error: " + e.getMessage()));
+            ctx.result(serializer.toJson(new ErrorResponse("Error: " + e.getMessage())));
         }
     }
 
     public void join(Context ctx) {
         try {
             String authToken = ctx.header("authorization");
-            JoinGameRequest request = new Gson().fromJson(ctx.body(), JoinGameRequest.class);
+            JoinGameRequest request = serializer.fromJson(ctx.body(), JoinGameRequest.class);
             gameService.joinGame(authToken, request);
 
             // Success
@@ -71,19 +72,19 @@ public class GameHandler {
         }
         catch (DataAccessException e) {
             ctx.status(500);
-            ctx.json(new ErrorResponse("Error: " + e.getMessage()));
+            ctx.result(serializer.toJson(new ErrorResponse("Error: " + e.getMessage())));
         }
         catch (TokenNotFoundException e) {
             ctx.status(401);
-            ctx.json(new ErrorResponse("Error: unauthorized"));
+            ctx.result(serializer.toJson(new ErrorResponse("Error: unauthorized")));
         }
         catch (AlreadyTakenException e) {
             ctx.status(403);
-            ctx.json(new ErrorResponse("Error: already taken"));
+            ctx.result(serializer.toJson(new ErrorResponse("Error: already taken")));
         }
         catch (InvalidRequestException e) {
             ctx.status(400);
-            ctx.json(new ErrorResponse("Error: bad request"));
+            ctx.result(serializer.toJson(new ErrorResponse("Error: bad request")));
         }
     }
 
