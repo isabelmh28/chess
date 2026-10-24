@@ -2,16 +2,11 @@ package service;
 
 import java.util.UUID;
 
-import dataaccess.AuthDAO;
-import dataaccess.UserDAO;
+import dataaccess.*;
 import model.UserData;
 import model.AuthData;
 import transactions.request.*;
 import transactions.result.*;
-import dataaccess.DataAccessException;
-import dataaccess.AlreadyTakenException;
-import dataaccess.UnauthorizedUserException;
-import dataaccess.TokenNotFoundException;
 
 /**
  * Performs Services for the User (registration, login, authentication, etc.)
@@ -26,7 +21,14 @@ public class UserService {
     }
 
     public RegisterResult register(RegisterRequest request)
-            throws DataAccessException, AlreadyTakenException {
+            throws DataAccessException, InvalidRequestException, AlreadyTakenException {
+        // Check for a bad request
+        if(        (request == null)
+                || (request.username() == null) || (request.username().isBlank())
+                || (request.password() == null) || (request.password().isBlank())
+                || (request.email()    == null) || (request.email().isBlank())) {
+            throw new InvalidRequestException("Error: bad request");
+        }
         // Make sure username isn't already taken
         if(user.getUserData(request.username()) != null) {
             throw new AlreadyTakenException("Error: already taken");
@@ -43,7 +45,13 @@ public class UserService {
     }
 
     public LoginResult login(LoginRequest request)
-            throws DataAccessException, UnauthorizedUserException {
+            throws DataAccessException, InvalidRequestException, UnauthorizedUserException {
+        // Check for a bad request
+        if(        (request == null)
+                || (request.username() == null) || (request.username().isBlank())
+                || (request.password() == null) || (request.password().isBlank())) {
+            throw new InvalidRequestException("Error: bad request");
+        }
         // Validate user login
         UserData checkUser = user.getUserData(request.username());
         if(checkUser == null) {

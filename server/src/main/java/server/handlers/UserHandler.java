@@ -33,7 +33,7 @@ public class UserHandler {
             ctx.status(500);
             ctx.json(new ErrorResponse("Error: " + e.getMessage()));
         }
-        catch (Exception e) {
+        catch (InvalidRequestException e) {
             ctx.status(400);
             ctx.json(new ErrorResponse("Error: bad request"));
         }
@@ -56,7 +56,7 @@ public class UserHandler {
             ctx.status(500);
             ctx.json(new ErrorResponse("Error: " + e.getMessage()));
         }
-        catch (Exception e) {
+        catch (InvalidRequestException e) {
             ctx.status(400);
             ctx.json(new ErrorResponse("Error: bad request"));
         }
@@ -64,14 +64,13 @@ public class UserHandler {
 
     public void logout(Context ctx) {
         try {
-
             String authToken = ctx.header("authorization");
             LogoutRequest request = new LogoutRequest(authToken);
             userService.logout(request);
 
             // Success
             ctx.status(200);
-            ctx.json("{}");
+            ctx.result("{}");
         }
         catch (TokenNotFoundException e) {
         ctx.status(401);

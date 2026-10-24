@@ -24,10 +24,14 @@ public class GameService {
         this.game = game;
     }
 
-    public CreateGameResult createGame(CreateGameRequest request)
-            throws DataAccessException, TokenNotFoundException {
+    public CreateGameResult createGame(String authToken, CreateGameRequest request)
+            throws DataAccessException, InvalidRequestException, TokenNotFoundException {
+        // Check for bad request
+        if((request == null) || (request.gameName() == null) || (request.gameName().isBlank())) {
+            throw new InvalidRequestException("Error: bad request");
+        }
         // Find authData from authToken
-        if(auth.getAuthData(request.authToken()) == null) {
+        if(auth.getAuthData(authToken) == null) {
             throw new TokenNotFoundException("Error: unauthorized");
         }
         // Create new Game
@@ -53,11 +57,11 @@ public class GameService {
         return new ListGamesResult(gameList);
     }
 
-    public void joinGame(JoinGameRequest request)
+    public void joinGame(String authToken, JoinGameRequest request)
             throws DataAccessException, TokenNotFoundException, InvalidRequestException,
                    AlreadyTakenException {
         // Find authData from authToken
-        AuthData checkAuth = auth.getAuthData(request.authToken());
+        AuthData checkAuth = auth.getAuthData(authToken);
         if(checkAuth == null) {
             throw new TokenNotFoundException("Error: unauthorized");
         }
