@@ -90,7 +90,7 @@ public class GameService {
             }
             blackUser = username;
         }
-        else throw new InvalidRequestException("Error: bad request");
+        else {throw new InvalidRequestException("Error: bad request");}
         // New Game
         GameData updateGame = new GameData(
                 checkGame.gameID(),

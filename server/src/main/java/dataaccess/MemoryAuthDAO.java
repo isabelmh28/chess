@@ -42,7 +42,7 @@ public class MemoryAuthDAO implements AuthDAO{
         // Check reference equality
         if(this == obj) return true;
         // Check null and see if Classes match
-        if((obj == null) || (getClass() != obj.getClass())) return false;
+        if((obj == null) || (getClass() != obj.getClass())) {return false;}
         // Cast and Compare data
         MemoryAuthDAO that = (MemoryAuthDAO) obj;
         return auths.equals(that.auths);

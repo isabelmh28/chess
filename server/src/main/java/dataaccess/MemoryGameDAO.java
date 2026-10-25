@@ -48,9 +48,9 @@ public class MemoryGameDAO implements GameDAO{
     @Override
     public boolean equals(Object obj) {
         // Check reference equality
-        if(this == obj) return true;
+        if(this == obj) {return true;}
         // Check null and see if Classes match
-        if((obj == null) || (getClass() != obj.getClass())) return false;
+        if((obj == null) || (getClass() != obj.getClass())) {return false;}
         // Cast and Compare data
         MemoryGameDAO that = (MemoryGameDAO) obj;
         return games.equals(that.games);

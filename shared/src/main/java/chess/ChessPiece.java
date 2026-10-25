@@ -55,9 +55,9 @@ public class ChessPiece {
     @Override
     public boolean equals(Object obj) {
         // Check reference equality
-        if(this == obj) return true;
+        if(this == obj) {return true;}
         // Check null and see if Classes match
-        if((obj == null) || (getClass() != obj.getClass())) return false;
+        if((obj == null) || (getClass() != obj.getClass())) {return false;}
         // Cast and Compare data
         ChessPiece that = (ChessPiece) obj;
         return (Objects.equals(pieceColor, that.pieceColor) && Objects.equals(pieceType, that.pieceType));
@@ -103,7 +103,7 @@ public class ChessPiece {
                     break;
                 }
             }
-            else{ break;}
+            else { break;}
             if(!cont) { break;}
         }
         return ray;

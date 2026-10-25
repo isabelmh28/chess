@@ -79,7 +79,7 @@ public class ChessBoard {
                 ChessPiece piece = getPiece(new ChessPosition(row, col));
                 if(piece != null) {
                     if(piece.getPieceType() == ChessPiece.PieceType.KING) {
-                        if (piece.getTeamColor() == color) return new ChessPosition(row, col);
+                        if (piece.getTeamColor() == color) {return new ChessPosition(row, col);}
                     }
                 }
             }
@@ -133,9 +133,9 @@ public class ChessBoard {
     @Override
     public boolean equals(Object obj) {
         // Check reference equality
-        if(this == obj) return true;
+        if(this == obj) {return true;}
         // Check null and see if Classes match
-        if((obj == null) || (getClass() != obj.getClass())) return false;
+        if((obj == null) || (getClass() != obj.getClass())) {return false;}
         // Cast and Compare data
         ChessBoard that = (ChessBoard) obj;
         return Arrays.deepEquals(chessBoard, that.chessBoard);

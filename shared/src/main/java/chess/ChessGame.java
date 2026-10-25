@@ -140,7 +140,7 @@ public class ChessGame {
                 if(piece != null && piece.getTeamColor() != color) {
                     Collection<ChessMove> enemyMoves = piece.pieceMoves(board, new ChessPosition(row, col));
                     for(ChessMove move : enemyMoves) {
-                        if (move.getEndPosition().equals(kingPosition)) return true;
+                        if (move.getEndPosition().equals(kingPosition)) {return true;}
                     }
                 }
             }
@@ -169,7 +169,7 @@ public class ChessGame {
                 for(int col = 1; col <= COLS; col++) {
                     ChessPosition pos = new ChessPosition(row, col);
                     if((board.getPiece(pos) != null) && (board.getPiece(pos).getTeamColor() == teamColor)){
-                        if(!validMoves(pos).isEmpty()) return false;
+                        if(!validMoves(pos).isEmpty()) {return false;}
                     }
                 }
             }
@@ -191,7 +191,7 @@ public class ChessGame {
                 for(int col = 1; col <= COLS; col++) {
                     ChessPosition pos = new ChessPosition(row, col);
                     if((board.getPiece(pos) != null) && (board.getPiece(pos).getTeamColor() == teamColor)){
-                        if(!validMoves(pos).isEmpty()) return false;
+                        if(!validMoves(pos).isEmpty()) {return false;}
                     }
                 }
             }
@@ -219,8 +219,8 @@ public class ChessGame {
 
     @Override
     public boolean equals(Object obj) {
-        if(this == obj) return true;
-        else if((obj == null) || (getClass() != obj.getClass())) return false;
+        if(this == obj) {return true;}
+        else if((obj == null) || (getClass() != obj.getClass())) {return false;}
         ChessGame that = (ChessGame) obj;
         return Objects.equals(board, that.board) && Objects.equals(currentTeam, that.currentTeam);
     }
