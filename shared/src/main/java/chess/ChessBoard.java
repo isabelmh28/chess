@@ -78,8 +78,8 @@ public class ChessBoard {
             for(int col = 1; col <= COLS; col++) {
                 ChessPiece piece = getPiece(new ChessPosition(row, col));
                 if(piece != null) {
-                    if(piece.getPieceType() == ChessPiece.PieceType.KING) {
-                        if (piece.getTeamColor() == color) {return new ChessPosition(row, col);}
+                    if((piece.getPieceType() == ChessPiece.PieceType.KING) && (piece.getTeamColor() == color)) {
+                        return new ChessPosition(row, col);
                     }
                 }
             }

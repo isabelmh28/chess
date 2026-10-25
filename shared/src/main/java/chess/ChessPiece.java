@@ -22,6 +22,30 @@ public class ChessPiece {
     // Private Members
     private final ChessGame.TeamColor pieceColor;
     private final ChessPiece.PieceType pieceType;
+    // Direction Macros for Chess Piece moving
+    public static final int[][] STRAIGHTS_DIRECTIONS = {
+            {-1, 0}, // Down
+            {1, 0},  // Up
+            {0, -1}, // Left
+            {0, 1}   // Right
+    };
+    public static final int[][] DIAGONALS_DIRECTIONS = {
+            {-1, 1},  // Down Right
+            {1, 1},   // Up Right
+            {-1, -1}, // Down Left
+            {1, -1}   // Up Left
+    };
+    public static final int[][] ALL_DIRECTIONS = {
+            {-1, 0}, // Down
+            {1, 0},  // Up
+            {0, -1}, // Left
+            {0, 1},  // Right
+            {-1, 1},  // Down Right
+            {1, 1},   // Up Right
+            {-1, -1}, // Down Left
+            {1, -1}   // Up Left
+    };
+
     // Constructor
     public ChessPiece(ChessGame.TeamColor pieceColor, ChessPiece.PieceType type) {
         this.pieceColor = pieceColor;
