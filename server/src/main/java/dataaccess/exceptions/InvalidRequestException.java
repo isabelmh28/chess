@@ -1,4 +1,4 @@
-package dataaccess;
+package dataaccess.exceptions;
 
 public class InvalidRequestException extends Exception {
     public InvalidRequestException(String message) {

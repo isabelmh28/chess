@@ -4,7 +4,12 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.UUID;
 
-import dataaccess.*;
+import dataaccess.doa.interfaces.AuthDAO;
+import dataaccess.doa.interfaces.GameDAO;
+import dataaccess.exceptions.AlreadyTakenException;
+import dataaccess.exceptions.DataAccessException;
+import dataaccess.exceptions.InvalidRequestException;
+import dataaccess.exceptions.TokenNotFoundException;
 import model.AuthData;
 import model.GameData;
 import transactions.request.*;
@@ -59,7 +64,7 @@ public class GameService {
 
     public void joinGame(String authToken, JoinGameRequest request)
             throws DataAccessException, TokenNotFoundException, InvalidRequestException,
-                   AlreadyTakenException {
+            AlreadyTakenException {
         // Find authData from authToken
         AuthData checkAuth = auth.getAuthData(authToken);
         if(checkAuth == null) {

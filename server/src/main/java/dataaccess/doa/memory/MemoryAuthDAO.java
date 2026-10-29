@@ -1,5 +1,7 @@
-package dataaccess;
+package dataaccess.doa.memory;
 
+import dataaccess.doa.interfaces.AuthDAO;
+import dataaccess.exceptions.DataAccessException;
 import model.AuthData;
 import java.util.HashMap;
 
@@ -7,7 +9,7 @@ import java.util.HashMap;
  * Stores auths (mapped by authToken)
  * NOTE: DataAccessExceptions thrown for SQL side but must still be implemented
  */
-public class MemoryAuthDAO implements AuthDAO{
+public class MemoryAuthDAO implements AuthDAO {
     private final HashMap<String, AuthData> auths = new HashMap<>();
 
     // Interface Functions

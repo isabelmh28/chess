@@ -1,5 +1,7 @@
-package dataaccess;
+package dataaccess.doa.memory;
 
+import dataaccess.exceptions.DataAccessException;
+import dataaccess.doa.interfaces.UserDAO;
 import model.UserData;
 import java.util.HashMap;
 
@@ -7,7 +9,7 @@ import java.util.HashMap;
  * Stores users (mapped by username) in Memory
  * NOTE: DataAccessExceptions thrown for SQL side but must still be implemented
  */
-public class MemoryUserDAO implements UserDAO{
+public class MemoryUserDAO implements UserDAO {
     private final HashMap<String, UserData> users = new HashMap<>();
 
     // Interface Functions
@@ -17,8 +19,8 @@ public class MemoryUserDAO implements UserDAO{
     }
 
     @Override
-    public UserData getUserData(String userName) throws DataAccessException {
-        return users.get(userName);
+    public UserData getUserData(String username) throws DataAccessException {
+        return users.get(username);
     }
 
     @Override

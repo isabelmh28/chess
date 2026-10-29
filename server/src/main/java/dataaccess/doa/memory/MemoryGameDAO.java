@@ -1,5 +1,7 @@
-package dataaccess;
+package dataaccess.doa.memory;
 
+import dataaccess.doa.interfaces.GameDAO;
+import dataaccess.exceptions.DataAccessException;
 import model.GameData;
 
 import java.util.ArrayList;
@@ -10,7 +12,7 @@ import java.util.HashMap;
  * Stores games (mapped by gameID)
  * NOTE: DataAccessExceptions thrown for SQL side but must still be implemented
  */
-public class MemoryGameDAO implements GameDAO{
+public class MemoryGameDAO implements GameDAO {
     private final HashMap<Integer, GameData> games = new HashMap<>();
 
     // Interface Functions

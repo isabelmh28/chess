@@ -1,6 +1,12 @@
 package service;
 
-import dataaccess.*;
+import dataaccess.doa.interfaces.AuthDAO;
+import dataaccess.doa.interfaces.GameDAO;
+import dataaccess.doa.memory.MemoryAuthDAO;
+import dataaccess.doa.memory.MemoryGameDAO;
+import dataaccess.doa.memory.MemoryUserDAO;
+import dataaccess.exceptions.TokenNotFoundException;
+import dataaccess.doa.interfaces.UserDAO;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import transactions.request.*;

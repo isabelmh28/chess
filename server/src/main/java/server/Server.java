@@ -1,11 +1,14 @@
 package server;
 
-import dataaccess.*;
-import io.javalin.*;
-import server.handlers.*;
 import service.*;
+import dataaccess.*;
+import dataaccess.doa.interfaces.*;
+import dataaccess.doa.memory.*;
+import dataaccess.doa.sql.*;
+import dataaccess.exceptions.*;
+import server.handlers.*;
 
-import javax.xml.crypto.Data;
+import io.javalin.*;
 import java.sql.SQLException;
 
 public class Server {
@@ -16,7 +19,7 @@ public class Server {
     public Server() {
         // Initialization
         // Data Access Objects
-        UserDAO user = new MemoryUserDAO();
+        UserDAO user = new SQLUserDAO();
         AuthDAO auth = new MemoryAuthDAO();
         GameDAO game = new MemoryGameDAO();
         // Services

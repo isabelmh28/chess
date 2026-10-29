@@ -1,8 +1,12 @@
 package service;
 
+import dataaccess.doa.interfaces.AuthDAO;
+import dataaccess.doa.interfaces.UserDAO;
+import dataaccess.doa.memory.MemoryAuthDAO;
+import dataaccess.doa.memory.MemoryUserDAO;
+import dataaccess.exceptions.*;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import dataaccess.*;
 import transactions.request.*;
 import transactions.result.*;
 

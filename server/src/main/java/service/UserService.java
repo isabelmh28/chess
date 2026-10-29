@@ -2,7 +2,9 @@ package service;
 
 import java.util.UUID;
 
-import dataaccess.*;
+import dataaccess.doa.interfaces.AuthDAO;
+import dataaccess.doa.interfaces.UserDAO;
+import dataaccess.exceptions.*;
 import model.UserData;
 import model.AuthData;
 import transactions.request.*;
@@ -69,7 +71,7 @@ public class UserService {
     }
 
     public void logout(LogoutRequest request)
-            throws DataAccessException, TokenNotFoundException{
+            throws DataAccessException, TokenNotFoundException {
         // Find authData from authToken
         if(auth.getAuthData(request.authToken()) == null) {
             throw new TokenNotFoundException("Error: unauthorized");
