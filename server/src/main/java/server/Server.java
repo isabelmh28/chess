@@ -5,6 +5,9 @@ import io.javalin.*;
 import server.handlers.*;
 import service.*;
 
+import javax.xml.crypto.Data;
+import java.sql.SQLException;
+
 public class Server {
 
     private final Javalin javalin;
@@ -51,8 +54,52 @@ public class Server {
         javalin.put("/game", gameHandler::join);
     }
 
+    private void dbSetup() throws DataAccessException {
+        DatabaseManager.createDatabase();
+        try (var connection = DatabaseManager.getConnection()) {
+            // Initialize the Database with User, Auth, and Game tables
+            String[] createChessDB = {
+                    """
+                    CREATE TABLE IF NOT EXISTS user (
+                        username VARCHAR(255) PRIMARY KEY,
+                        password VARCHAR(255) NOT NULL
+                    )
+                    """,
+                    """
+                    CREATE TABLE IF NOT EXISTS auth (
+                        authToken VARCHAR(255) PRIMARY KEY,
+                        username VARCHAR(255) NOT NULL
+                    )
+                    """,
+                    """
+                    CREATE TABLE IF NOT EXISTS game (
+                        gameID INT PRIMARY KEY,
+                        whiteUsername VARCHAR(255),
+                        blackUsername VARCHAR(255),
+                        gameName VARCHAR(255) NOT NULL,
+                        gameJson TEXT NOT NULL
+                    )
+                    """
+            };
+
+            for(String table : createChessDB) {
+                try (var createTable = connection.prepareStatement(table)) {
+                    createTable.executeUpdate();
+                }
+            }
+
+        } catch (SQLException e) {
+            throw new DataAccessException("Failed to set up the database", e);
+        }
+    }
+
     public int run(int desiredPort) {
         javalin.start(desiredPort);
+        try {
+            dbSetup();
+        } catch (DataAccessException e) {
+            throw new RuntimeException("Failed to initalize database during run", e);
+        }
         return javalin.port();
     }
 

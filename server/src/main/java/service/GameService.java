@@ -36,7 +36,7 @@ public class GameService {
         }
         // Create new Game
         // Generate a random, positive gameID
-        int gameID = Math.abs(UUID.randomUUID().hashCode());
+        int gameID = UUID.randomUUID().hashCode() & 0x7FFFFFFF;
         ChessGame chessGame = new ChessGame();
         GameData newGame = new GameData(gameID, null, null, request.gameName(), chessGame);
         game.createGame(newGame);
