@@ -1,5 +1,6 @@
 package server;
 
+import com.google.gson.Gson;
 import service.*;
 import dataaccess.*;
 import dataaccess.doa.interfaces.*;
@@ -15,13 +16,14 @@ public class Server {
 
     private final Javalin javalin;
     private final ClearService clearService;
+    Gson serializer = new Gson();
 
     public Server() {
         // Initialization
         // Data Access Objects
         UserDAO user = new SQLUserDAO();
-        AuthDAO auth = new MemoryAuthDAO();
-        GameDAO game = new MemoryGameDAO();
+        AuthDAO auth = new SQLAuthDAO();
+        GameDAO game = new SQLGameDAO();
         // Services
         UserService userService = new UserService(user, auth);
         GameService gameService = new GameService(auth, game);
@@ -31,6 +33,13 @@ public class Server {
         GameHandler gameHandler = new GameHandler(gameService);
         // Javalin
         javalin = Javalin.create(config -> config.staticFiles.add("web"));
+        // Exception Handling
+        javalin.exception(DataAccessException.class, (e, ctx)-> {
+            ctx.status(500);
+            String jsonErr = serializer.toJson(java.util.Map.of("message", "Error: " + e.getMessage()));
+            ctx.result(jsonErr);
+            }
+        );
 
         // Register your endpoints and exception handlers here.
         // Clear Endpoint

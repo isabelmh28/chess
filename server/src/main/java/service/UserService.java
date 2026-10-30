@@ -1,6 +1,7 @@
 package service;
 
 import java.util.UUID;
+import org.mindrot.jbcrypt.BCrypt;
 
 import dataaccess.doa.interfaces.AuthDAO;
 import dataaccess.doa.interfaces.UserDAO;
@@ -59,7 +60,7 @@ public class UserService {
         if(checkUser == null) {
             throw new UnauthorizedUserException("Error: unauthorized");
         }
-        else if(!checkUser.password().equals(request.password())) {
+        else if(!BCrypt.checkpw(request.password(), checkUser.password())) {
             throw new UnauthorizedUserException("Error: unauthorized");
         }
         // Generate an authToken
