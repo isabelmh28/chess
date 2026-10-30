@@ -1,19 +1,13 @@
 package service;
 
-import dataaccess.doa.interfaces.AuthDAO;
-import dataaccess.doa.interfaces.GameDAO;
-import dataaccess.doa.memory.MemoryAuthDAO;
-import dataaccess.doa.memory.MemoryGameDAO;
-import dataaccess.doa.memory.MemoryUserDAO;
-import dataaccess.exceptions.AlreadyTakenException;
-import dataaccess.exceptions.InvalidRequestException;
-import dataaccess.exceptions.TokenNotFoundException;
-import dataaccess.doa.interfaces.UserDAO;
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Test;
+import dataaccess.doa.interfaces.*;
+import dataaccess.doa.memory.*;
+import dataaccess.exceptions.*;
 import transactions.request.*;
 import transactions.result.*;
 
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 import static org.junit.jupiter.api.Assertions.*;
 
 class GameServiceTest {
@@ -95,8 +89,8 @@ class GameServiceTest {
         CreateGameRequest game1 = new CreateGameRequest("game1");
         CreateGameRequest game2 = new CreateGameRequest("game2");
 
-        CreateGameResult create1 = gameService.createGame(auth1.authToken(), game1);
-        CreateGameResult create2 = gameService.createGame(auth1.authToken(), game2);
+        gameService.createGame(auth1.authToken(), game1);
+        gameService.createGame(auth1.authToken(), game2);
 
         ListGamesRequest list = new ListGamesRequest(auth1.authToken());
         ListGamesResult games = gameService.listGames(list);

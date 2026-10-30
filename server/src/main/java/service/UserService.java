@@ -40,7 +40,7 @@ public class UserService {
         user.createUser(newUser);
         // Generate an authToken
         String newAuthToken = UUID.randomUUID().toString();
-        AuthData newAuthData = new AuthData(request.username(), newAuthToken);
+        AuthData newAuthData = new AuthData(newAuthToken, request.username());
         auth.createAuthData(newAuthData);
 
         return new RegisterResult(newAuthData.username(), newAuthData.authToken());
@@ -64,7 +64,7 @@ public class UserService {
         }
         // Generate an authToken
         String newAuthToken = UUID.randomUUID().toString();
-        AuthData newAuthData = new AuthData(request.username(), newAuthToken);
+        AuthData newAuthData = new AuthData(newAuthToken, request.username());
         auth.createAuthData(newAuthData);
 
         return new LoginResult(newAuthData.username(), newAuthData.authToken());

@@ -1,15 +1,12 @@
 package server.handlers;
 
-import com.google.gson.Gson;
-import dataaccess.exceptions.AlreadyTakenException;
-import dataaccess.exceptions.DataAccessException;
-import dataaccess.exceptions.InvalidRequestException;
-import dataaccess.exceptions.TokenNotFoundException;
-import io.javalin.http.Context;
-
 import service.GameService;
+import dataaccess.exceptions.*;
 import transactions.request.*;
 import transactions.result.*;
+
+import com.google.gson.Gson;
+import io.javalin.http.Context;
 
 public class GameHandler {
     private final GameService gameService;

@@ -1,12 +1,12 @@
 package server.handlers;
 
-import com.google.gson.Gson;
 import dataaccess.exceptions.*;
-import io.javalin.http.Context;
-
 import service.UserService;
 import transactions.request.*;
 import transactions.result.*;
+
+import com.google.gson.Gson;
+import io.javalin.http.Context;
 
 public class UserHandler {
     private final UserService userService;
