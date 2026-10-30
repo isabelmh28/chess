@@ -8,6 +8,7 @@ import dataaccess.exceptions.DataAccessException;
 import model.GameData;
 
 import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.Collection;
 
 /**
@@ -63,16 +64,57 @@ public class SQLGameDAO implements GameDAO {
 
     @Override
     public void updateGame(GameData game) throws DataAccessException {
-
+        var gameJson = serializer.toJson(game.game());
+        try (var connection = DatabaseManager.getConnection();
+             var statement = connection.prepareStatement(
+                "UPDATE game SET whiteUsername = ?, blackUsername = ?, gameName = ?, gameJson = ?" +
+                     "WHERE gameID = ?")) {
+            statement.setString(1, game.whiteUsername());
+            statement.setString(2, game.blackUsername());
+            statement.setString(3, game.gameName());
+            statement.setString(4, gameJson);
+            statement.setInt(5, game.gameID());
+            statement.executeUpdate();
+        } catch (SQLException e) {
+            throw new DataAccessException(
+                    String.format("Unable to update GameData in Game: updateGame. %s", e.getMessage()));
+        }
     }
 
     @Override
     public Collection<GameData> getGameList() throws DataAccessException {
-
+        Collection<GameData> gameList = new ArrayList<>();
+        try (var connection = DatabaseManager.getConnection();
+             var statement = connection.prepareStatement(
+                     "SELECT gameID, whiteUsername, blackUsername, gameName, gameJson FROM game")) {
+            try (var ret = statement.executeQuery()) {
+                while(ret.next()) {
+                    ChessGame game = serializer.fromJson(ret.getString("gameJson"), ChessGame.class);
+                    gameList.add( new GameData(
+                            ret.getInt("gameID"),
+                            ret.getString("whiteUsername"),
+                            ret.getString("blackUsername"),
+                            ret.getString("gameName"),
+                            game)
+                    );
+                }
+            }
+        } catch (SQLException e) {
+            throw new DataAccessException(
+                    String.format("Unable to retrieve gameList in Game: getGameList. %s", e.getMessage()));
+        }
+        return gameList;
     }
 
     @Override
     public void clear() throws DataAccessException {
-
+        try (var connection = DatabaseManager.getConnection();
+             var statement = connection.prepareStatement(
+                     "DELETE FROM game")) {
+            statement.executeUpdate();
+        } catch (SQLException e) {
+            throw new DataAccessException(
+                    String.format("Unable to clear GameData in Game: clear. %s", e.getMessage()));
+        }
     }
 }
