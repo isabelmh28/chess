@@ -9,8 +9,7 @@ import org.mindrot.jbcrypt.BCrypt;
 import java.sql.SQLException;
 
 /**
- * Stores users (mapped by username) in Memory
- * NOTE: DataAccessExceptions thrown for SQL side but must still be implemented
+ * Stores users (Primary Key is username) in SQL
  */
 public class SQLUserDAO implements UserDAO {
     // Interface Functions
@@ -18,8 +17,8 @@ public class SQLUserDAO implements UserDAO {
     public void createUser(UserData data) throws DataAccessException {
         // Hashed Password
         String encryptedPassword = BCrypt.hashpw(data.password(), BCrypt.gensalt());
-        var connection = DatabaseManager.getConnection();
-        try (var statement = connection.prepareStatement(
+        try (var connection = DatabaseManager.getConnection();
+             var statement = connection.prepareStatement(
                 "INSERT INTO user (username, password, email)" +
                         "VALUES (?, ?, ?)")) {
             statement.setString(1, data.username());
@@ -27,13 +26,14 @@ public class SQLUserDAO implements UserDAO {
             statement.setString(3, data.email());
             statement.executeUpdate();
         } catch (SQLException e) {
-            throw new DataAccessException(String.format("Unable to update database in User: createUser. %s", e.getMessage()));
+            throw new DataAccessException(
+                    String.format("Unable to update database in User: createUser. %s", e.getMessage()));
         }
     }
     @Override
     public UserData getUserData(String username) throws DataAccessException {
-        var connection = DatabaseManager.getConnection();
-        try (var statement = connection.prepareStatement(
+        try (var connection = DatabaseManager.getConnection();
+             var statement = connection.prepareStatement(
                 "SELECT username, password, email FROM user WHERE username = ?")) {
             statement.setString(1, username);
             try (var ret = statement.executeQuery()) {
@@ -46,18 +46,20 @@ public class SQLUserDAO implements UserDAO {
                 }
             }
         } catch (SQLException e) {
-            throw new DataAccessException(String.format("Unable to retrieve UserData in User: getUserData. %s", e.getMessage()));
+            throw new DataAccessException(
+                    String.format("Unable to retrieve UserData in User: getUserData. %s", e.getMessage()));
         }
         return null;
     }
     @Override
     public void clear() throws DataAccessException {
-        var connection = DatabaseManager.getConnection();
-        try (var statement = connection.prepareStatement(
+        try (var connection = DatabaseManager.getConnection();
+             var statement = connection.prepareStatement(
                 "DELETE FROM user")) {
             statement.executeUpdate();
         } catch (SQLException e) {
-            throw new DataAccessException(String.format("Unable to clear UserData in User: clear. %s", e.getMessage()));
+            throw new DataAccessException(
+                    String.format("Unable to clear UserData in User: clear. %s", e.getMessage()));
         }
     }
 }
