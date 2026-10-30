@@ -4,25 +4,25 @@ import dataaccess.DatabaseManager;
 import dataaccess.doa.sql.SQLAuthDAO;
 import dataaccess.exceptions.DataAccessException;
 import model.AuthData;
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Test;
 
 import java.sql.SQLException;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 import static org.junit.jupiter.api.Assertions.*;
 
 public class AuthSQLTests {
-    private final SQLAuthDAO AuthDAO = new SQLAuthDAO();
+    private final SQLAuthDAO authDAO = new SQLAuthDAO();
 
     @BeforeEach
     public void setUp() throws DataAccessException {
-        AuthDAO.clear();
+        authDAO.clear();
     }
 
     // Create Auth
     @Test
     void createAuthSuccess() throws DataAccessException {
         AuthData data = new AuthData("newToken", "myName");
-        AuthDAO.createAuthData(data);
+        authDAO.createAuthData(data);
 
         try (var connection = DatabaseManager.getConnection();
              var statement = connection.prepareStatement(
@@ -43,9 +43,9 @@ public class AuthSQLTests {
     void createDuplicateAuthTokenDataAccessException() throws DataAccessException {
         AuthData data1 = new AuthData("token1", "name1");
         AuthData data2 = new AuthData("token1", "name2");
-        AuthDAO.createAuthData(data1);
+        authDAO.createAuthData(data1);
 
-        assertThrows(DataAccessException.class, ()-> AuthDAO.createAuthData(data2),
+        assertThrows(DataAccessException.class, ()-> authDAO.createAuthData(data2),
                 "Creating AuthData with a duplicate authToken should throw a DataAccessException");
     }
 
@@ -54,18 +54,18 @@ public class AuthSQLTests {
     void getAuthDataSuccess() throws DataAccessException {
         AuthData data1 = new AuthData("myFirstToken", "Isa");
         AuthData data2 = new AuthData("mySecondToken", "Jeff");
-        AuthDAO.createAuthData(data1);
-        AuthDAO.createAuthData(data2);
+        authDAO.createAuthData(data1);
+        authDAO.createAuthData(data2);
 
-        AuthData get = AuthDAO.getAuthData(data1.authToken());
+        AuthData get = authDAO.getAuthData(data1.authToken());
 
         assertNotNull(get, "getAuthData output should not be null");
         assertEquals(data1.authToken(), get.authToken(), "Retrieved authToken should be the same as the original");
         assertEquals(data1.username(), get.username(), "Retrieved username should be the same as the original");
     }
     @Test
-    void getAuthDataNotFoundDataAccessException() throws DataAccessException {
-        AuthData notFound = AuthDAO.getAuthData("Bad authToken");
+    void getAuthDataNotFoundNull() throws DataAccessException {
+        AuthData notFound = authDAO.getAuthData("Bad authToken");
         assertNull(notFound, "Searching for AuthData not in the database should return Null");
     }
 
@@ -74,18 +74,18 @@ public class AuthSQLTests {
     void removeAuthData() throws DataAccessException {
         AuthData data1 = new AuthData("myFirstToken", "Isa");
         AuthData data2 = new AuthData("mySecondToken", "Jeff");
-        AuthDAO.createAuthData(data1);
-        AuthDAO.createAuthData(data2);
+        authDAO.createAuthData(data1);
+        authDAO.createAuthData(data2);
 
-        AuthDAO.removeAuthData(data1.authToken());
-        assertNull(AuthDAO.getAuthData(data1.authToken()),
+        authDAO.removeAuthData(data1.authToken());
+        assertNull(authDAO.getAuthData(data1.authToken()),
                 "Searching for a removed AuthData should return Null");
-        assertNotNull(AuthDAO.getAuthData(data2.authToken()),
+        assertNotNull(authDAO.getAuthData(data2.authToken()),
                 "Searching for authentication not removed should return AuthData");
     }
     @Test
-    void removeAuthDataNotFoundDataAccessException() throws DataAccessException {
-        assertDoesNotThrow(() -> AuthDAO.removeAuthData("Bad Token"),
+    void removeAuthDataNotFoundDataAccessException() {
+        assertDoesNotThrow(() -> authDAO.removeAuthData("Bad Token"),
                 "Removing a non-existant authToken should not throw an exception");
     }
 
@@ -94,11 +94,11 @@ public class AuthSQLTests {
     void clearSuccess() throws DataAccessException {
         AuthData data1 = new AuthData("myFirstToken", "Isa");
         AuthData data2 = new AuthData("mySecondToken", "Jeff");
-        AuthDAO.createAuthData(data1);
-        AuthDAO.createAuthData(data2);
+        authDAO.createAuthData(data1);
+        authDAO.createAuthData(data2);
 
-        AuthData found1 = AuthDAO.getAuthData(data1.authToken());
-        AuthData found2 = AuthDAO.getAuthData(data2.authToken());
+        AuthData found1 = authDAO.getAuthData(data1.authToken());
+        AuthData found2 = authDAO.getAuthData(data2.authToken());
         assertEquals(found1.authToken(), data1.authToken(),
                 "Before Clear, the returned authToken should match");
         assertEquals(found1.username(), data1.username(),
@@ -108,9 +108,9 @@ public class AuthSQLTests {
         assertEquals(found2.username(), data2.username(),
                 "Before Clear, the returned username should match");
 
-        AuthDAO.clear();
-        AuthData postClear1 = AuthDAO.getAuthData(data1.authToken());
-        AuthData postClear2 = AuthDAO.getAuthData(data2.authToken());
+        authDAO.clear();
+        AuthData postClear1 = authDAO.getAuthData(data1.authToken());
+        AuthData postClear2 = authDAO.getAuthData(data2.authToken());
         assertNull(postClear1, "After Clear you should no longer find the first Auth created previously");
         assertNull(postClear2, "After Clear you should no longer find the second Auth created previously");
     }

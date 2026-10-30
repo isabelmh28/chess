@@ -4,11 +4,11 @@ import dataaccess.DatabaseManager;
 import dataaccess.doa.sql.SQLUserDAO;
 import dataaccess.exceptions.DataAccessException;
 import model.UserData;
+
+import java.sql.SQLException;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mindrot.jbcrypt.BCrypt;
-
-import java.sql.SQLException;
 import static org.junit.jupiter.api.Assertions.*;
 
 public class UserSQLTests {
@@ -68,7 +68,7 @@ public class UserSQLTests {
         assertEquals(data1.email(), get.email(), "Retrieved email should be the same as the original");
     }
     @Test
-    void getUserDataNotFoundDataAccessException() throws DataAccessException {
+    void getUserDataNotFoundNull() throws DataAccessException {
         UserData notFound = userDAO.getUserData("Bad Username");
         assertNull(notFound, "Searching for a user not in the database should return Null");
     }

@@ -1,12 +1,12 @@
 package dataaccess.doa.sql;
 
 import chess.ChessGame;
-import com.google.gson.Gson;
+import model.GameData;
 import dataaccess.DatabaseManager;
 import dataaccess.doa.interfaces.GameDAO;
 import dataaccess.exceptions.DataAccessException;
-import model.GameData;
 
+import com.google.gson.Gson;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -35,7 +35,6 @@ public class SQLGameDAO implements GameDAO {
                     String.format("Unable to update database in Game: createGame. %s", e.getMessage()));
         }
     }
-
     @Override
     public GameData getGame(int gameID) throws DataAccessException {
         try (var connection = DatabaseManager.getConnection();
@@ -61,7 +60,6 @@ public class SQLGameDAO implements GameDAO {
         }
         return null;
     }
-
     @Override
     public void updateGame(GameData game) throws DataAccessException {
         var gameJson = serializer.toJson(game.game());
@@ -80,7 +78,6 @@ public class SQLGameDAO implements GameDAO {
                     String.format("Unable to update GameData in Game: updateGame. %s", e.getMessage()));
         }
     }
-
     @Override
     public Collection<GameData> getGameList() throws DataAccessException {
         Collection<GameData> gameList = new ArrayList<>();
@@ -105,7 +102,6 @@ public class SQLGameDAO implements GameDAO {
         }
         return gameList;
     }
-
     @Override
     public void clear() throws DataAccessException {
         try (var connection = DatabaseManager.getConnection();
