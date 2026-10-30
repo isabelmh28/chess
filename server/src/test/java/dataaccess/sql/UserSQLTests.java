@@ -1,7 +1,6 @@
 package dataaccess.sql;
 
 import dataaccess.DatabaseManager;
-import dataaccess.doa.sql.SQLUserDAO;
 import dataaccess.exceptions.DataAccessException;
 import model.UserData;
 

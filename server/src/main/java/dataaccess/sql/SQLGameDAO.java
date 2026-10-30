@@ -1,4 +1,4 @@
-package dataaccess.doa.sql;
+package dataaccess.sql;
 
 import chess.ChessGame;
 import model.GameData;

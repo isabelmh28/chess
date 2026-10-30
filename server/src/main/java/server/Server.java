@@ -1,11 +1,12 @@
 package server;
 
 import com.google.gson.Gson;
+import dataaccess.sql.SQLAuthDAO;
+import dataaccess.sql.SQLGameDAO;
+import dataaccess.sql.SQLUserDAO;
 import service.*;
 import dataaccess.*;
 import dataaccess.doa.interfaces.*;
-import dataaccess.doa.memory.*;
-import dataaccess.doa.sql.*;
 import dataaccess.exceptions.*;
 import server.handlers.*;
 

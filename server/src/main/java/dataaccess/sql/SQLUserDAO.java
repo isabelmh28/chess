@@ -1,4 +1,4 @@
-package dataaccess.doa.sql;
+package dataaccess.sql;
 
 import dataaccess.DatabaseManager;
 import dataaccess.exceptions.DataAccessException;
