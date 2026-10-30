@@ -23,96 +23,53 @@ public class GameSQLTests {
         gameDAO.clear();
     }
 
+    // Helper to aid in asserts
+    private void assertGameInTable(GameData data, ChessGame game) throws DataAccessException {
+        try (var connection = DatabaseManager.getConnection();
+             var statement = connection.prepareStatement(
+                     "SELECT gameID, whiteUsername, blackUsername, gameName, gameJson " +
+                             "FROM game WHERE gameID = ?")
+        ) {
+            statement.setInt(1, data.gameID());
+            var ret = statement.executeQuery();
+            String expectedGameJson = serializer.toJson(game);
+            assertTrue(ret.next(), "game Row should exist in the database");
+            assertEquals(data.gameID(), ret.getInt("gameID"),
+                    "Created game should have input gameID");
+            assertEquals(data.whiteUsername(), ret.getString("whiteUsername"),
+                    "Created game should have input whiteUsername");
+            assertEquals(data.blackUsername(), ret.getString("blackUsername"),
+                    "Created game should have input blackUsername");
+            assertEquals(data.gameName(), ret.getString("gameName"),
+                    "Created game should have input gameName");
+            assertEquals(expectedGameJson, ret.getString("gameJson"),
+                    "Created game should have matching serialized gameJson");
+        } catch (SQLException e) {
+            throw new DataAccessException(String.format("createGame was unsuccessful: %s", e.getMessage()));
+        }
+    }
+
     // Create Game
     @Test
     void createGameAllFieldsFilledSuccess() throws DataAccessException {
         ChessGame game = new ChessGame();
         GameData data = new GameData(12345, "Isa", "Jeff", "firstGame", game);
         gameDAO.createGame(data);
-
-        try (var connection = DatabaseManager.getConnection();
-             var statement = connection.prepareStatement(
-                     "SELECT gameID, whiteUsername, blackUsername, gameName, gameJson " +
-                             "FROM game WHERE gameID = ?")
-        ) {
-            statement.setInt(1, data.gameID());
-            var ret = statement.executeQuery();
-            String expectedGameJson = serializer.toJson(game);
-
-            assertTrue(ret.next(), "game Row should exist in the database");
-            assertEquals(data.gameID(), ret.getInt("gameID"),
-                    "Created game should have input gameID");
-            assertEquals(data.whiteUsername(), ret.getString("whiteUsername"),
-                    "Created game should have input whiteUsername");
-            assertEquals(data.blackUsername(), ret.getString("blackUsername"),
-                    "Created game should have input blackUsername");
-            assertEquals(data.gameName(), ret.getString("gameName"),
-                    "Created game should have input gameName");
-            assertEquals(expectedGameJson, ret.getString("gameJson"),
-                    "Created game should have matching serialized gameJson");
-        } catch (SQLException e) {
-            throw new DataAccessException(String.format("createGame was unsuccessful: %s", e.getMessage()));
-        }
+        assertGameInTable(data, game);
     }
     @Test
     void createGameNullWhiteSuccess() throws DataAccessException {
         ChessGame game = new ChessGame();
         GameData data = new GameData(12345, null, "Jeff", "firstGame", game);
         gameDAO.createGame(data);
-
-        try (var connection = DatabaseManager.getConnection();
-             var statement = connection.prepareStatement(
-                     "SELECT gameID, whiteUsername, blackUsername, gameName, gameJson " +
-                             "FROM game WHERE gameID = ?")
-        ) {
-            statement.setInt(1, data.gameID());
-            var ret = statement.executeQuery();
-            String expectedGameJson = serializer.toJson(game);
-
-            assertTrue(ret.next(), "game Row should exist in the database");
-            assertEquals(data.gameID(), ret.getInt("gameID"),
-                    "Created game should have input gameID");
-            assertEquals(data.whiteUsername(), ret.getString("whiteUsername"),
-                    "Created game should have null whiteUsername, which is valid");
-            assertEquals(data.blackUsername(), ret.getString("blackUsername"),
-                    "Created game should have input blackUsername");
-            assertEquals(data.gameName(), ret.getString("gameName"),
-                    "Created game should have input gameName");
-            assertEquals(expectedGameJson, ret.getString("gameJson"),
-                    "Created game should have matching serialized gameJson");
-        } catch (SQLException e) {
-            throw new DataAccessException(String.format("createGame was unsuccessful: %s", e.getMessage()));
-        }
+        assertGameInTable(data, game);
     }
     @Test
     void createGameNullBlackSuccess() throws DataAccessException {
         ChessGame game = new ChessGame();
         GameData data = new GameData(12345, "Isa", null, "firstGame", game);
         gameDAO.createGame(data);
-
-        try (var connection = DatabaseManager.getConnection();
-             var statement = connection.prepareStatement(
-                     "SELECT gameID, whiteUsername, blackUsername, gameName, gameJson " +
-                             "FROM game WHERE gameID = ?")
-        ) {
-            statement.setInt(1, data.gameID());
-            var ret = statement.executeQuery();
-            String expectedGameJson = serializer.toJson(game);
-
-            assertTrue(ret.next(), "game Row should exist in the database");
-            assertEquals(data.gameID(), ret.getInt("gameID"),
-                    "Created game should have input gameID");
-            assertEquals(data.whiteUsername(), ret.getString("whiteUsername"),
-                    "Created game should have input whiteUsername");
-            assertEquals(data.blackUsername(), ret.getString("blackUsername"),
-                    "Created game should have null blackUsername, which is valid");
-            assertEquals(data.gameName(), ret.getString("gameName"),
-                    "Created game should have input gameName");
-            assertEquals(expectedGameJson, ret.getString("gameJson"),
-                    "Created game should have matching serialized gameJson");
-        } catch (SQLException e) {
-            throw new DataAccessException(String.format("createGame was unsuccessful: %s", e.getMessage()));
-        }
+        assertGameInTable(data, game);
     }
     @Test
     void createGameDuplicateDataAccessException() throws DataAccessException {
