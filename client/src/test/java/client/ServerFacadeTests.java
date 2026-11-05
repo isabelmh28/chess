@@ -50,16 +50,46 @@ public class ServerFacadeTests {
     }
     @Test
     public void registerNullUsernameException() throws Exception {
-        facade.register(new RegisterRequest("user1", "password1", "email1");
-
+        assertThrows(Exception.class, ()-> {
+            facade.register(new RegisterRequest(null, "password1", "email1"));
+        }, "Trying to register with a null username should throw an exception");
+    }
+    @Test
+    public void registerEmptyUsernameException() throws Exception {
+        assertThrows(Exception.class, ()-> {
+            facade.register(new RegisterRequest("", "password1", "email1"));
+        }, "Trying to register with an empty username should throw an exception");
+    }
+    @Test
+    public void registerNullPasswordException() throws Exception {
+        assertThrows(Exception.class, ()-> {
+            facade.register(new RegisterRequest("user1", null, "email1"));
+        }, "Trying to register with a null password should throw an exception");
+    }
+    @Test
+    public void registerEmptyPasswordException() throws Exception {
+        assertThrows(Exception.class, ()-> {
+            facade.register(new RegisterRequest("user1", "", "email1"));
+        }, "Trying to register with an empty password should throw an exception");
+    }
+    @Test
+    public void registerNullEmailException() throws Exception {
+        assertThrows(Exception.class, ()-> {
+            facade.register(new RegisterRequest("user1", "password1", null));
+        }, "Trying to register with a null email should throw an exception");
+    }
+    @Test
+    public void registerEmptyEmailException() throws Exception {
+        assertThrows(Exception.class, ()-> {
+            facade.register(new RegisterRequest("user1", "password1", ""));
+        }, "Trying to register with an empty email should throw an exception");
     }
     @Test
     public void registerUserAlreadyTakenException() throws Exception {
         facade.register(new RegisterRequest("user1", "password1", "email1"));
 
         assertThrows(Exception.class, ()-> {
-            facade.register(new RegisterRequest("user1", "password1", "email1"))
-        });
+            facade.register(new RegisterRequest("user1", "password1", "email1"));
+        }, "Trying to register with a username that already exists should throw an exception");
     }
-
 }
