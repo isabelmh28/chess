@@ -1,8 +1,8 @@
 package ui;
 
 import com.google.gson.Gson;
-import model.transactions.request.RegisterRequest;
-import model.transactions.result.RegisterResult;
+import model.transactions.request.*;
+import model.transactions.result.*;
 
 import java.net.URI;
 import java.net.http.HttpClient;
@@ -57,5 +57,22 @@ public class ServerFacade {
         }
 
         return serializer.fromJson(response.body(), RegisterResult.class);
+    }
+
+    public LoginResult login(LoginRequest login) throws Exception {
+        String postBody = serializer.toJson(login);
+        HttpRequest request = HttpRequest.newBuilder()
+                .uri(URI.create(url + "/session"))
+                .header("Content-Type", "application/json")
+                .POST(HttpRequest.BodyPublishers.ofString(postBody))
+                .build();
+
+        HttpResponse<String> response = http.send(request, HttpResponse.BodyHandlers.ofString());
+
+        if(response.statusCode() != SUCCESS) {
+            throw new Exception("Error loging in user: " + response.body());
+        }
+
+        return serializer.fromJson(response.body(), LoginResult.class);
     }
 }

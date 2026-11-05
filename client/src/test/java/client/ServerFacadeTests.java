@@ -1,6 +1,10 @@
 package client;
 
+import dataaccess.exceptions.InvalidRequestException;
+import dataaccess.exceptions.UnauthorizedUserException;
+import model.transactions.request.LoginRequest;
 import model.transactions.request.RegisterRequest;
+import model.transactions.result.LoginResult;
 import org.junit.jupiter.api.*;
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -41,13 +45,17 @@ public class ServerFacadeTests {
         assertEquals(originalResult.username(), newResult.username(),
                 "Username should be the same before and after clearing and re-registration");
     }
+
     // Register
+    // Success Case
     @Test
     public void registerSuccess() throws Exception {
         var result = facade.register(new RegisterRequest("user1", "password1", "email1"));
 
-        assertNotNull(result.authToken(), "Registration should return a result.");
+        assertNotNull(result.authToken(), "Registration should return an authToken.");
+        assertEquals("user1", result.username(), "Registration result should have the original username");
     }
+    // Failure Cases
     @Test
     public void registerNullUsernameException() throws Exception {
         assertThrows(Exception.class, ()-> {
@@ -91,5 +99,43 @@ public class ServerFacadeTests {
         assertThrows(Exception.class, ()-> {
             facade.register(new RegisterRequest("user1", "password1", "email1"));
         }, "Trying to register with a username that already exists should throw an exception");
+    }
+
+    // Login
+    // Success
+    @Test
+    void loginSuccess() throws Exception{
+        var register = facade.register(new RegisterRequest("user1", "password1", "email1"));
+        var result = facade.login(new LoginRequest("user1", "password1"));
+
+        assertNotNull(result, "Login should return a result");
+        assertEquals(register.username(), result.username(), "Login username should match the registered user");
+        assertNotNull(result.authToken(), "Login should return an authToken");
+    }
+    // Invalid Request
+    @Test
+    void loginNullUsernameException() throws Exception {
+
+    }
+    @Test
+    void loginEmptyUsernameException() throws Exception {
+
+    }
+    @Test
+    void loginNullPasswordException() throws Exception {
+
+    }
+    @Test
+    void loginEmptyPasswordException() throws Exception {
+
+    }
+    // Unauthorized User
+    @Test
+    void loginNoExistingUserException() throws Exception {
+
+    }
+    @Test
+    void loginMismatchedPasswordException() throws Exception {
+
     }
 }
