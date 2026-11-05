@@ -12,8 +12,11 @@ import dataaccess.exceptions.InvalidRequestException;
 import dataaccess.exceptions.TokenNotFoundException;
 import model.AuthData;
 import model.GameData;
-import transactions.request.*;
-import transactions.result.*;
+import model.transactions.request.CreateGameRequest;
+import model.transactions.request.JoinGameRequest;
+import model.transactions.request.ListGamesRequest;
+import model.transactions.result.CreateGameResult;
+import model.transactions.result.ListGamesResult;
 import chess.ChessGame;
 
 

@@ -1,9 +1,12 @@
 package server.handlers;
 
+import model.transactions.request.CreateGameRequest;
+import model.transactions.request.JoinGameRequest;
+import model.transactions.request.ListGamesRequest;
+import model.transactions.result.CreateGameResult;
+import model.transactions.result.ListGamesResult;
 import service.GameService;
 import dataaccess.exceptions.*;
-import transactions.request.*;
-import transactions.result.*;
 
 import com.google.gson.Gson;
 import io.javalin.http.Context;

@@ -1,6 +1,12 @@
 package service;
 
 import java.util.UUID;
+
+import model.transactions.request.LoginRequest;
+import model.transactions.request.LogoutRequest;
+import model.transactions.request.RegisterRequest;
+import model.transactions.result.LoginResult;
+import model.transactions.result.RegisterResult;
 import org.mindrot.jbcrypt.BCrypt;
 
 import dataaccess.doa.interfaces.AuthDAO;
@@ -8,8 +14,6 @@ import dataaccess.doa.interfaces.UserDAO;
 import dataaccess.exceptions.*;
 import model.UserData;
 import model.AuthData;
-import transactions.request.*;
-import transactions.result.*;
 
 /**
  * Performs Services for the User (registration, login, authentication, etc.)

@@ -1,9 +1,12 @@
 package server.handlers;
 
 import dataaccess.exceptions.*;
+import model.transactions.request.LoginRequest;
+import model.transactions.request.LogoutRequest;
+import model.transactions.request.RegisterRequest;
+import model.transactions.result.LoginResult;
+import model.transactions.result.RegisterResult;
 import service.UserService;
-import transactions.request.*;
-import transactions.result.*;
 
 import com.google.gson.Gson;
 import io.javalin.http.Context;

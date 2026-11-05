@@ -3,8 +3,11 @@ package service;
 import dataaccess.doa.interfaces.*;
 import dataaccess.doa.memory.*;
 import dataaccess.exceptions.*;
-import transactions.request.*;
-import transactions.result.*;
+import model.transactions.request.LoginRequest;
+import model.transactions.request.LogoutRequest;
+import model.transactions.request.RegisterRequest;
+import model.transactions.result.LoginResult;
+import model.transactions.result.RegisterResult;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 

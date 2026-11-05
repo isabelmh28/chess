@@ -1,4 +1,4 @@
-package transactions.result;
+package model.transactions.result;
 
 import model.GameData;
 import java.util.Collection;

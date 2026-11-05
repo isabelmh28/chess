@@ -1,4 +1,4 @@
-package transactions.request;
+package model.transactions.request;
 
 public record RegisterRequest (
         String username,

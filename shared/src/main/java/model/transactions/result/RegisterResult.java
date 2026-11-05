@@ -1,4 +1,4 @@
-package transactions.result;
+package model.transactions.result;
 
 public record RegisterResult(
         String username,
