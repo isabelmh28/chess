@@ -17,7 +17,7 @@ public class Server {
 
     private final Javalin javalin;
     private final ClearService clearService;
-    Gson serializer = new Gson();
+    private final Gson serializer = new Gson();
 
     public Server() {
         // Initialization
