@@ -115,27 +115,49 @@ public class ServerFacadeTests {
     // Invalid Request
     @Test
     void loginNullUsernameException() throws Exception {
+        var register = facade.register(new RegisterRequest("user1", "password1", "email1"));
 
+        assertThrows(Exception.class, ()-> {
+            facade.login(new LoginRequest(null, "password1"));
+        }, "Trying to login with a null username should throw an exception");
     }
     @Test
     void loginEmptyUsernameException() throws Exception {
+        var register = facade.register(new RegisterRequest("user1", "password1", "email1"));
 
+        assertThrows(Exception.class, ()-> {
+            facade.login(new LoginRequest("", "password1"));
+        }, "Trying to login with an empty username should throw an exception");
     }
     @Test
     void loginNullPasswordException() throws Exception {
+        var register = facade.register(new RegisterRequest("user1", "password1", "email1"));
 
+        assertThrows(Exception.class, ()-> {
+            facade.login(new LoginRequest("user1", null));
+        }, "Trying to login with a null password should throw an exception");
     }
     @Test
     void loginEmptyPasswordException() throws Exception {
+        var register = facade.register(new RegisterRequest("user1", "password1", "email1"));
 
+        assertThrows(Exception.class, ()-> {
+            facade.login(new LoginRequest("user1", ""));
+        }, "Trying to login with an empty password should throw an exception");
     }
     // Unauthorized User
     @Test
     void loginNoExistingUserException() throws Exception {
-
+        assertThrows(Exception.class, ()-> {
+            facade.login(new LoginRequest("user1", "password1"));
+        }, "Trying to login with unregistered credentials should throw an exception");
     }
     @Test
     void loginMismatchedPasswordException() throws Exception {
+        var register = facade.register(new RegisterRequest("user1", "password1", "email1"));
 
+        assertThrows(Exception.class, ()-> {
+            facade.login(new LoginRequest("user1", "wrongPasswword"));
+        }, "Logging in with the wrong password should throw an exception");
     }
 }
