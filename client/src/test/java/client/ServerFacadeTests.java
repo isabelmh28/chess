@@ -1,10 +1,13 @@
 package client;
 
 import dataaccess.exceptions.InvalidRequestException;
+import dataaccess.exceptions.TokenNotFoundException;
 import dataaccess.exceptions.UnauthorizedUserException;
 import model.transactions.request.LoginRequest;
+import model.transactions.request.LogoutRequest;
 import model.transactions.request.RegisterRequest;
 import model.transactions.result.LoginResult;
+import model.transactions.result.RegisterResult;
 import org.junit.jupiter.api.*;
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -35,12 +38,18 @@ public class ServerFacadeTests {
         facade.clear();
     }
 
+    // Test helper functions to reduce duplication
+    @Test
+    private RegisterResult registerTestUser() throws Exception {
+        return facade.register(new RegisterRequest("user1", "password1", "email1"));
+    }
+    
     // Clear
     @Test
-    void clearSuccess() throws Exception{
-        var originalResult = facade.register(new RegisterRequest("user1", "password1", "email1"));
+    void clearSuccess() throws Exception {
+        var originalResult = registerTestUser();
         facade.clear();
-        var newResult = facade.register(new RegisterRequest("user1", "password1", "email1"));
+        var newResult = registerTestUser();
         assertNotNull(newResult.authToken(), "Clearing the database should allow re-registration");
         assertEquals(originalResult.username(), newResult.username(),
                 "Username should be the same before and after clearing and re-registration");
@@ -50,7 +59,7 @@ public class ServerFacadeTests {
     // Success Case
     @Test
     public void registerSuccess() throws Exception {
-        var result = facade.register(new RegisterRequest("user1", "password1", "email1"));
+        var result = registerTestUser();
 
         assertNotNull(result.authToken(), "Registration should return an authToken.");
         assertEquals("user1", result.username(), "Registration result should have the original username");
@@ -94,10 +103,10 @@ public class ServerFacadeTests {
     }
     @Test
     public void registerUserAlreadyTakenException() throws Exception {
-        facade.register(new RegisterRequest("user1", "password1", "email1"));
+        registerTestUser();
 
         assertThrows(Exception.class, ()-> {
-            facade.register(new RegisterRequest("user1", "password1", "email1"));
+            registerTestUser();
         }, "Trying to register with a username that already exists should throw an exception");
     }
 
@@ -105,7 +114,7 @@ public class ServerFacadeTests {
     // Success
     @Test
     void loginSuccess() throws Exception{
-        var register = facade.register(new RegisterRequest("user1", "password1", "email1"));
+        var register = registerTestUser();
         var result = facade.login(new LoginRequest("user1", "password1"));
 
         assertNotNull(result, "Login should return a result");
@@ -115,7 +124,7 @@ public class ServerFacadeTests {
     // Invalid Request
     @Test
     void loginNullUsernameException() throws Exception {
-        var register = facade.register(new RegisterRequest("user1", "password1", "email1"));
+        var register = registerTestUser();
 
         assertThrows(Exception.class, ()-> {
             facade.login(new LoginRequest(null, "password1"));
@@ -123,7 +132,7 @@ public class ServerFacadeTests {
     }
     @Test
     void loginEmptyUsernameException() throws Exception {
-        var register = facade.register(new RegisterRequest("user1", "password1", "email1"));
+        var register = registerTestUser();
 
         assertThrows(Exception.class, ()-> {
             facade.login(new LoginRequest("", "password1"));
@@ -131,7 +140,7 @@ public class ServerFacadeTests {
     }
     @Test
     void loginNullPasswordException() throws Exception {
-        var register = facade.register(new RegisterRequest("user1", "password1", "email1"));
+        var register = registerTestUser();
 
         assertThrows(Exception.class, ()-> {
             facade.login(new LoginRequest("user1", null));
@@ -139,7 +148,7 @@ public class ServerFacadeTests {
     }
     @Test
     void loginEmptyPasswordException() throws Exception {
-        var register = facade.register(new RegisterRequest("user1", "password1", "email1"));
+        var register = registerTestUser();
 
         assertThrows(Exception.class, ()-> {
             facade.login(new LoginRequest("user1", ""));
@@ -154,10 +163,31 @@ public class ServerFacadeTests {
     }
     @Test
     void loginMismatchedPasswordException() throws Exception {
-        var register = facade.register(new RegisterRequest("user1", "password1", "email1"));
+        var register = registerTestUser();
 
         assertThrows(Exception.class, ()-> {
             facade.login(new LoginRequest("user1", "wrongPasswword"));
         }, "Logging in with the wrong password should throw an exception");
     }
+
+    //Logout
+    //Success
+    @Test
+    void logoutSuccess() throws Exception{
+        var register = registerTestUser();
+        facade.logout(new LogoutRequest(register.authToken()));
+
+        assertThrows(Exception.class, ()-> {
+            facade.logout(new LogoutRequest(register.authToken()));
+        }, "Trying to Logout twice should delete the authToken and throw an Exception");
+    }
+    // Token Not Found
+    @Test
+    void logoutTokenNotFoundException() throws Exception {
+        assertThrows(Exception.class, ()-> {
+            facade.logout(new LogoutRequest("badToken"));
+        }, "Trying to Logout with an invalid authToken should throw an Exception");
+    }
+
+    // CreateGame
 }
