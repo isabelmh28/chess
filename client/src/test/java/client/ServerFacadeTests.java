@@ -1,5 +1,8 @@
 package client;
 
+import dataaccess.exceptions.AlreadyTakenException;
+import dataaccess.exceptions.InvalidRequestException;
+import dataaccess.exceptions.TokenNotFoundException;
 import model.transactions.request.*;
 import model.transactions.result.*;
 import server.Server;
@@ -258,4 +261,98 @@ public class ServerFacadeTests {
                 "Attempting to list games with a bad authToken should throw an Exception");
     }
 
+    // Join Game
+    // Success
+    @Test
+    void joinGameWhiteSuccess() throws Exception{
+        var register = registerTestUser();
+        var game = facade.createGame(register.authToken(), new CreateGameRequest("game1"));
+
+        assertDoesNotThrow(()->
+                facade.joinGame(register.authToken(), new JoinGameRequest("WHITE", game.gameID())),
+                        "Joining a game with no White player using a valid authToken should allow you" +
+                                "to join the game as a White player");
+    }
+    @Test
+    void joinGameBlackSuccess() throws Exception{
+        var register = registerTestUser();
+        var game = facade.createGame(register.authToken(), new CreateGameRequest("game1"));
+
+        assertDoesNotThrow(()->
+                        facade.joinGame(register.authToken(), new JoinGameRequest("BLACK", game.gameID())),
+                "Joining a game with no Black player using a valid authToken should allow you" +
+                        "to join the game as a Black player");
+    }
+    // Token Not Found
+    @Test
+    void joinGameTokenNotFound() throws Exception {
+        var register = registerTestUser();
+        var game = facade.createGame(register.authToken(), new CreateGameRequest("game1"));
+
+        assertThrows(Exception.class, ()->
+                facade.joinGame("badToken", new JoinGameRequest("WHITE", game.gameID())),
+                        "Attempting to join a game with a bad authToken should throw an Exception");
+    }
+    // Bad Request
+    @Test
+    void joinGameBadGameID() throws Exception {
+        var register = registerTestUser();
+        assertThrows(Exception.class, ()->
+                facade.joinGame(register.authToken(), new JoinGameRequest("WHITE", 1234)),
+                "Attempting to join a game with a bad gameID should throw an Exception");
+    }
+    @Test
+    void joinGameBadColorInvalidRequest() throws Exception {
+        var register = registerTestUser();
+        var game = facade.createGame(register.authToken(), new CreateGameRequest("game1"));
+
+        assertThrows(Exception.class, ()->
+                        facade.joinGame(register.authToken(), new JoinGameRequest("YELLOW", game.gameID())),
+                "Attempting to join a game with a bad playerColor should throw an Exception");
+    }
+    @Test
+    void joinGameNullColorInvalidRequest() throws Exception {
+        var register = registerTestUser();
+        var game = facade.createGame(register.authToken(), new CreateGameRequest("game1"));
+
+        assertThrows(Exception.class, ()->
+                        facade.joinGame(register.authToken(), new JoinGameRequest(null, game.gameID())),
+                "Attempting to join a game with a null playerColor should throw an Exception");
+    }
+    @Test
+    void joinGameEmptyColorInvalidRequest() throws Exception {
+        var register = registerTestUser();
+        var game = facade.createGame(register.authToken(), new CreateGameRequest("game1"));
+
+        assertThrows(Exception.class, ()->
+                        facade.joinGame(register.authToken(), new JoinGameRequest("", game.gameID())),
+                "Attempting to join a game with an empty playerColor should throw an Exception");
+    }
+    // Already Taken
+    // White already taken
+    @Test
+    void joinGameWhiteAlreadyTaken() throws Exception {
+        var register = registerTestUser();
+        var game = facade.createGame(register.authToken(), new CreateGameRequest("game1"));
+
+        facade.joinGame(register.authToken(), new JoinGameRequest("WHITE", game.gameID()));
+
+        assertThrows(Exception.class, ()->
+                facade.joinGame(register.authToken(), new JoinGameRequest("WHITE", game.gameID())),
+                "Attempting to join as a White user when the game already has one should" +
+                        "throw an Exception");
+    }
+    // Black already taken
+    @Test
+    void joinGameBlackAlreadyTaken() throws Exception {
+        var register = registerTestUser();
+        var game = facade.createGame(register.authToken(), new CreateGameRequest("game1"));
+
+        facade.joinGame(register.authToken(), new JoinGameRequest("BLACK", game.gameID()));
+
+        assertThrows(Exception.class, ()->
+                        facade.joinGame(register.authToken(), new JoinGameRequest("BLACK", game.gameID())),
+                "Attempting to join as a Black user when the game already has one should" +
+                        "throw an Exception");
+    }
 }

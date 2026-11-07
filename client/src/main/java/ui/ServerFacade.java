@@ -107,4 +107,18 @@ public class ServerFacade {
         }
         return serializer.fromJson(response.body(), ListGamesResult.class);
     }
+
+    public void joinGame(String authToken, JoinGameRequest join) throws Exception {
+        String postBody = serializer.toJson(join);
+        HttpRequest request = HttpRequest.newBuilder()
+                .uri(URI.create(url + "/game"))
+                .header("Content-Type", "application/json") // for the POST operation
+                .header("authorization", authToken)               // Specs
+                .PUT(HttpRequest.BodyPublishers.ofString(postBody))
+                .build();
+        HttpResponse<String> response = http.send(request, HttpResponse.BodyHandlers.ofString());
+        if(response.statusCode() != SUCCESS) {
+            throw new Exception("Error joining game: " + response.body());
+        }
+    }
 }

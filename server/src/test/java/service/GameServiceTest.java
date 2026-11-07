@@ -111,7 +111,7 @@ class GameServiceTest {
     // JoinGame Endpoint
     // Success
     @Test
-    void joinGameWhiteSuccess() throws Exception{
+    void joinGameWhiteSuccess() throws Exception {
         RegisterRequest register = new RegisterRequest("user", "password", "email");
         RegisterResult registerResult = userService.register(register);
 
@@ -123,7 +123,7 @@ class GameServiceTest {
                 "White user should be able to join a game");
     }
     @Test
-    void joinGameBlackSuccess() throws Exception{
+    void joinGameBlackSuccess() throws Exception {
         RegisterRequest register = new RegisterRequest("user", "password", "email");
         RegisterResult registerResult = userService.register(register);
 
@@ -143,7 +143,7 @@ class GameServiceTest {
     }
     // Bad Request
     @Test
-    void joinGameInvalidRequest() throws Exception {
+    void joinGameBadGameID() throws Exception {
         RegisterRequest register = new RegisterRequest("user", "password", "email");
         RegisterResult registerResult = userService.register(register);
 
@@ -202,6 +202,4 @@ class GameServiceTest {
         assertThrows(AlreadyTakenException.class, ()->gameService.joinGame(registerResult2.authToken(), join2),
                 "Black player attempting to register in game with a Black player should cause AlreadyTakenException");
     }
-
-
 }
