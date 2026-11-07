@@ -5,11 +5,8 @@ import dataaccess.exceptions.DataAccessException;
 import model.UserData;
 
 import java.sql.SQLException;
-import java.util.Objects;
-
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.mindrot.jbcrypt.BCrypt;
 import static org.junit.jupiter.api.Assertions.*;
 
 public class UserSQLTests {

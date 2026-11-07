@@ -27,9 +27,6 @@ public class ServerFacade {
     public ServerFacade(int port) {
         this.url = "http://localhost:" + port;
     }
-    public ServerFacade(String url) {
-        this.url = url;
-    }
 
     // Endpoints
     public void clear() throws Exception {

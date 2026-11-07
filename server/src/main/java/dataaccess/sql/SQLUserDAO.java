@@ -4,7 +4,6 @@ import dataaccess.DatabaseManager;
 import dataaccess.exceptions.DataAccessException;
 import dataaccess.doa.interfaces.UserDAO;
 import model.UserData;
-import org.mindrot.jbcrypt.BCrypt;
 
 import java.sql.SQLException;
 
