@@ -83,7 +83,7 @@ public class ServerFacade {
         }
     }
 
-    public CreateGameResult createGame(CreateGameRequest createGame, String authToken) throws Exception{
+    public CreateGameResult createGame(String authToken, CreateGameRequest createGame) throws Exception{
         String postBody = serializer.toJson(createGame);
         HttpRequest request = HttpRequest.newBuilder()
                 .uri(URI.create(url + "/game"))
