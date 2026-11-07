@@ -32,7 +32,7 @@ public class ServerFacade {
     }
 
     // Endpoints
-    public void clear() throws Exception{
+    public void clear() throws Exception {
         HttpRequest request = HttpRequest.newBuilder()
                 .uri(URI.create(url + "/db"))
                 .DELETE()
@@ -83,7 +83,7 @@ public class ServerFacade {
         }
     }
 
-    public CreateGameResult createGame(String authToken, CreateGameRequest createGame) throws Exception{
+    public CreateGameResult createGame(String authToken, CreateGameRequest createGame) throws Exception {
         String postBody = serializer.toJson(createGame);
         HttpRequest request = HttpRequest.newBuilder()
                 .uri(URI.create(url + "/game"))
@@ -98,5 +98,16 @@ public class ServerFacade {
         return serializer.fromJson(response.body(), CreateGameResult.class);
     }
 
-
+    public ListGamesResult listGames(String authToken) throws Exception {
+        HttpRequest request = HttpRequest.newBuilder()
+                .uri(URI.create(url + "/game"))
+                .header("authorization", authToken) // Specs
+                .GET()
+                .build();
+        HttpResponse<String> response = http.send(request, HttpResponse.BodyHandlers.ofString());
+        if(response.statusCode() != SUCCESS) {
+            throw new Exception("Error listing games: " + response.body());
+        }
+        return serializer.fromJson(response.body(), ListGamesResult.class);
+    }
 }

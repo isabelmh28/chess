@@ -41,7 +41,8 @@ public class UserService {
             throw new AlreadyTakenException("Error: already taken");
         }
         // Create new user
-        UserData newUser = new UserData(request.username(), request.password(), request.email());
+        String hashedPassword = BCrypt.hashpw(request.password(), BCrypt.gensalt());
+        UserData newUser = new UserData(request.username(), hashedPassword, request.email());
         user.createUser(newUser);
         // Generate an authToken
         String newAuthToken = UUID.randomUUID().toString();

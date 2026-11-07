@@ -5,6 +5,8 @@ import dataaccess.exceptions.DataAccessException;
 import model.UserData;
 
 import java.sql.SQLException;
+import java.util.Objects;
+
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mindrot.jbcrypt.BCrypt;
@@ -33,7 +35,7 @@ public class UserSQLTests {
             assertTrue(ret.next(), "User Row should exist in the database");
             assertEquals(data.username(), ret.getString("username"),
                     "Created user should have input username");
-            assertTrue(BCrypt.checkpw(data.password(), ret.getString("password")),
+            assertEquals(data.password(), ret.getString("password"),
                     "Created user should have password hashed from input password");
             assertEquals(data.email(), ret.getString("email"),
                     "Created user should have input email");
@@ -63,7 +65,7 @@ public class UserSQLTests {
 
         assertNotNull(get, "getUserData output should not be null");
         assertEquals(data1.username(), get.username(), "Retrieved username should be the same as the original");
-        assertTrue(BCrypt.checkpw(data1.password(), get.password()), "Retrieved password should hash to original");
+        assertEquals(data1.password(), get.password(), "Retrieved password should hash to original");
         assertEquals(data1.email(), get.email(), "Retrieved email should be the same as the original");
     }
     @Test
@@ -84,13 +86,13 @@ public class UserSQLTests {
         UserData found2 = userDAO.getUserData(data2.username());
         assertEquals(found1.username(), data1.username(),
                 "Before Clear, the returned username should match");
-        assertTrue(BCrypt.checkpw(data1.password(), found1.password()),
+        assertEquals(data1.password(), found1.password(),
                 "Before Clear, the returned password should hash to the original");
         assertEquals(found1.email(), data1.email(),
                 "Before Clear, the returned email should match");
         assertEquals(found2.username(), data2.username(),
                 "Before Clear, the returned username should match");
-        assertTrue(BCrypt.checkpw(data2.password(), found2.password()),
+        assertEquals(data2.password(), found2.password(),
                 "Before Clear, the returned password should hash to the original");
         assertEquals(found2.email(), data2.email(),
                 "Before Clear, the returned email should match");

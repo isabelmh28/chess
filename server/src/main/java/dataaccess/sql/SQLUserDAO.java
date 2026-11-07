@@ -15,14 +15,12 @@ public class SQLUserDAO implements UserDAO {
     // Interface Functions
     @Override
     public void createUser(UserData data) throws DataAccessException {
-        // Hashed Password
-        String encryptedPassword = BCrypt.hashpw(data.password(), BCrypt.gensalt());
         try (var connection = DatabaseManager.getConnection();
              var statement = connection.prepareStatement(
                 "INSERT INTO user (username, password, email)" +
                         "VALUES (?, ?, ?)")) {
             statement.setString(1, data.username());
-            statement.setString(2, encryptedPassword);
+            statement.setString(2, data.password());
             statement.setString(3, data.email());
             statement.executeUpdate();
         } catch (SQLException e) {

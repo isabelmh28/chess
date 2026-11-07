@@ -1,16 +1,16 @@
 package client;
 
-import model.transactions.request.CreateGameRequest;
-import model.transactions.request.LoginRequest;
-import model.transactions.request.LogoutRequest;
-import model.transactions.request.RegisterRequest;
-import model.transactions.result.RegisterResult;
+import model.GameData;
+import model.transactions.request.*;
+import model.transactions.result.*;
 import server.Server;
 import ui.ServerFacade;
 
 import org.junit.jupiter.api.*;
-import static org.junit.jupiter.api.Assertions.*;
 
+import java.util.Collection;
+
+import static org.junit.jupiter.api.Assertions.*;
 
 public class ServerFacadeTests {
 
@@ -101,9 +101,8 @@ public class ServerFacadeTests {
     public void registerUserAlreadyTakenException() throws Exception {
         registerTestUser();
 
-        assertThrows(Exception.class, ()-> {
-            registerTestUser();
-        }, "Trying to register with a username that already exists should throw an exception");
+        assertThrows(Exception.class, this::registerTestUser,
+                "Trying to register with a username that already exists should throw an exception");
     }
 
     // Login
@@ -113,9 +112,12 @@ public class ServerFacadeTests {
         var register = registerTestUser();
         var result = facade.login(new LoginRequest("user1", "password1"));
 
-        assertNotNull(result, "Login should return a result");
-        assertEquals(register.username(), result.username(), "Login username should match the registered user");
-        assertNotNull(result.authToken(), "Login should return an authToken");
+        assertNotNull(result,
+                "Login should return a result");
+        assertEquals(register.username(), result.username(),
+                "Login username should match the registered user");
+        assertNotNull(result.authToken(),
+                "Login should return an authToken");
     }
     // Invalid Request
     @Test
@@ -192,14 +194,19 @@ public class ServerFacadeTests {
         var register = registerTestUser();
         var create = facade.createGame(register.authToken(), new CreateGameRequest("game1"));
 
-        assertNotNull(create, "Created game should not return null");
-        assertTrue(create.gameID() > 0, "Creating a game should return a gameID that is a positive integer");
+        assertNotNull(create,
+                "Created game should not return null");
+        assertTrue(create.gameID() > 0,
+                "Creating a game should return a gameID that is a positive integer");
 
         var newGame = facade.createGame(register.authToken(), new CreateGameRequest("newGame"));
 
-        assertNotNull(create, "Creating a second game should not return null");
-        assertTrue(newGame.gameID() > 0, "Creating a  second game should return a gameID that is a positive integer");
-        assertNotEquals(create.gameID(), newGame.gameID(), "Two created games should have unique gameIDs");
+        assertNotNull(create,
+                "Creating a second game should not return null");
+        assertTrue(newGame.gameID() > 0,
+                "Creating a  second game should return a gameID that is a positive integer");
+        assertNotEquals(create.gameID(), newGame.gameID(),
+                "Two created games should have unique gameIDs");
     }
     // Invalid Request
     @Test
@@ -230,4 +237,28 @@ public class ServerFacadeTests {
             facade.createGame("badToken", new CreateGameRequest("game"));
         }, "Attempting to create a game with a bad authToken should throw an exception");
     }
+
+    // ListGames
+    // Success
+    @Test
+    void listGamesSuccess() throws Exception {
+        var register = registerTestUser();
+        facade.createGame(register.authToken(), new CreateGameRequest("game1"));
+        facade.createGame(register.authToken(), new CreateGameRequest("game2"));
+        facade.createGame(register.authToken(), new CreateGameRequest("game3"));
+
+        ListGamesResult list = facade.listGames(register.authToken());
+
+        assertNotNull(list, "GameList should not return a null result");
+        assertFalse(list.games().isEmpty(), "GameList should not return an empty list");
+        assertEquals(3, list.games().size(), "There should be 3 games in the list");
+    }
+    // Token Not Found
+    @Test
+    void listGamesTokenNotFound() throws Exception {
+        assertThrows(Exception.class, ()-> {
+            facade.listGames("badToken");
+        }, "Attempting to list games with a bad authToken should throw an Exception");
+    }
+
 }

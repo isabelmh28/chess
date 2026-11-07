@@ -14,7 +14,6 @@ import model.AuthData;
 import model.GameData;
 import model.transactions.request.CreateGameRequest;
 import model.transactions.request.JoinGameRequest;
-import model.transactions.request.ListGamesRequest;
 import model.transactions.result.CreateGameResult;
 import model.transactions.result.ListGamesResult;
 import chess.ChessGame;
@@ -52,10 +51,10 @@ public class GameService {
         return new CreateGameResult(newGame.gameID());
     }
 
-    public ListGamesResult listGames(ListGamesRequest request)
+    public ListGamesResult listGames(String authToken)
             throws DataAccessException, TokenNotFoundException {
         // Find authData from authToken
-        if(auth.getAuthData(request.authToken()) == null) {
+        if(auth.getAuthData(authToken) == null) {
             throw new TokenNotFoundException("Error: unauthorized");
         }
 

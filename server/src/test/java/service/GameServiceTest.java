@@ -95,8 +95,7 @@ class GameServiceTest {
         gameService.createGame(auth1.authToken(), game1);
         gameService.createGame(auth1.authToken(), game2);
 
-        ListGamesRequest list = new ListGamesRequest(auth1.authToken());
-        ListGamesResult games = gameService.listGames(list);
+        ListGamesResult games = gameService.listGames(auth1.authToken());
 
         assertNotNull(games, "ListGamesResult should not be null");
         assertFalse(games.games().isEmpty(), "Games list should not be empty");
@@ -105,9 +104,7 @@ class GameServiceTest {
     // Token Not Found
     @Test
     void listGamesTokenNotFound() throws Exception {
-        ListGamesRequest request = new ListGamesRequest("bad token");
-
-        assertThrows(TokenNotFoundException.class, ()->gameService.listGames(request),
+        assertThrows(TokenNotFoundException.class, ()->gameService.listGames("bad token"),
                 "Bad token should cause a TokenNotFoundException");
     }
 

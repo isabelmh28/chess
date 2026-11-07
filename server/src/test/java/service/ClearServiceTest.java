@@ -43,8 +43,7 @@ class ClearServiceTest {
         gameService.createGame(auth1.authToken(), game1);
         gameService.createGame(auth1.authToken(), game2);
 
-        ListGamesRequest list = new ListGamesRequest(auth1.authToken());
-        ListGamesResult games = gameService.listGames(list);
+        ListGamesResult games = gameService.listGames(auth1.authToken());
         assertFalse(games.games().isEmpty(), "Games list should contain games before clear");
 
         clearService.clear();
@@ -61,8 +60,7 @@ class ClearServiceTest {
         LoginRequest newLogin = new LoginRequest("user1", "password1");
         LoginResult newToken = userService.login(newLogin);
 
-        ListGamesRequest list1 = new ListGamesRequest(newToken.authToken());
-        ListGamesResult newGames = gameService.listGames(list1);
+        ListGamesResult newGames = gameService.listGames(newToken.authToken());
         assertTrue(newGames.games().isEmpty(), "Games list should be empty");
     }
 }

@@ -2,7 +2,6 @@ package server.handlers;
 
 import model.transactions.request.CreateGameRequest;
 import model.transactions.request.JoinGameRequest;
-import model.transactions.request.ListGamesRequest;
 import model.transactions.result.CreateGameResult;
 import model.transactions.result.ListGamesResult;
 import service.GameService;
@@ -45,8 +44,7 @@ public class GameHandler {
     public void list(Context ctx) {
         try {
             String authToken = ctx.header("authorization");
-            ListGamesRequest request = new ListGamesRequest(authToken);
-            ListGamesResult result = gameService.listGames(request);
+            ListGamesResult result = gameService.listGames(authToken);
 
             // Success
             ctx.status(200);
