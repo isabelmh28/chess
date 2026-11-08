@@ -1,4 +1,4 @@
-package ui;
+package client;
 
 /**
  * Manages the Scanner input loop, tracks current user state,

@@ -1,12 +1,8 @@
 package client;
 
-import dataaccess.exceptions.AlreadyTakenException;
-import dataaccess.exceptions.InvalidRequestException;
-import dataaccess.exceptions.TokenNotFoundException;
 import model.transactions.request.*;
 import model.transactions.result.*;
 import server.Server;
-import ui.ServerFacade;
 
 import org.junit.jupiter.api.*;
 
