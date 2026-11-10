@@ -1,11 +1,9 @@
 package client;
 
-import model.transactions.request.CreateGameRequest;
-import model.transactions.request.LoginRequest;
-import model.transactions.request.LogoutRequest;
-import model.transactions.request.RegisterRequest;
-import model.transactions.result.CreateGameResult;
+import model.transactions.request.*;
+import model.transactions.result.*;
 
+import java.util.ArrayList;
 import java.util.Scanner;
 
 /**
@@ -24,6 +22,7 @@ public class REPL {
     private final ServerFacade facade;
     private final Scanner scanner;
     private String authToken;
+    private ArrayList<Integer> gameIDList;
 
 
     public REPL(int port) {
@@ -31,6 +30,7 @@ public class REPL {
         facade = new ServerFacade(port);
         scanner = new Scanner(System.in);
         authToken = null;
+        gameIDList = new ArrayList<>();
     }
 
     public void run() {
@@ -240,11 +240,7 @@ public class REPL {
 
     private void logoutPostLogin(String[] words) {
         if(words.length != 1) {
-            printError("""
-                    logout command must be in the following format:
-                    logout
-                    Please try again!
-                    """);
+            printError("The 'logout' command does not take arguments. Please try again!");
             return;
         }
 
@@ -285,5 +281,52 @@ public class REPL {
         } catch (ResponseException e) {
             printError(e.getMessage());
         }
+    }
+
+    private void listGamesPostLogin(String[] words) {
+        if(words.length != 1) {
+            printError("The 'list' command does not take arguments. Please try again!");
+            return;
+        }
+        try {
+            ListGamesResult list = facade.listGames(authToken);
+            var gamesList = list.games();
+            gameIDList.clear();
+
+            if((gamesList == null) || (gamesList.isEmpty())) {
+                printOutput("""
+                        There are no active games. Create one with the 'create' command."
+                        See 'help' for more information.
+                        """);
+                return;
+            }
+            int index = 1;
+            StringBuilder listOutput = new StringBuilder("Game List: \n");
+            for(var game : gamesList) {
+                gameIDList.add(game.gameID());
+                String whiteUsername = (game.whiteUsername() != null) ? game.whiteUsername() : "<null>";
+                String blackUsername = (game.blackUsername() != null) ? game.blackUsername() : "<null>";
+
+                listOutput.append(String.format("%d. Name: %s | White: %s | Black: %s\n",
+                        index, game.gameName(), whiteUsername, blackUsername));
+                index++;
+            }
+            printOutput(listOutput.toString());
+        } catch (ResponseException e) {
+            printError(e.getMessage());
+        }
+    }
+
+    private void joinGamePostLogin(String[] words) {
+        if(words.length != 3) {
+            printError("""
+                    join command must be in the following format:
+                    join <ID> <WHITE | BLACK>
+                    EX: join 12345 WHITE
+                    Please try again!
+                    """);
+            return;
+        }
+
     }
 }
