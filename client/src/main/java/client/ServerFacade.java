@@ -29,58 +29,78 @@ public class ServerFacade {
     }
 
     // Endpoints
-    public void clear() throws Exception {
+    public void clear() throws ResponseException {
         HttpRequest request = HttpRequest.newBuilder()
                 .uri(URI.create(url + "/db"))
                 .DELETE()
                 .build();
-        HttpResponse<String> response = http.send(request, HttpResponse.BodyHandlers.ofString());
-        if(response.statusCode() != SUCCESS) {
-            throw new Exception("Error clearing database: " + response.body());
+        try {
+            HttpResponse<String> response = http.send(request, HttpResponse.BodyHandlers.ofString());
+            int statusCode = response.statusCode();
+            if(statusCode != SUCCESS) {
+                throw new ResponseException(statusCode, "Error clearing: " + response.body());
+            }
+        } catch (java.io.IOException | InterruptedException e) {
+            throw new ResponseException(500, "Http send error: " + e.getMessage());
         }
     }
 
-    public RegisterResult register(RegisterRequest register) throws Exception {
+    public RegisterResult register(RegisterRequest register) throws ResponseException {
         String postBody = serializer.toJson(register);
         HttpRequest request = HttpRequest.newBuilder()
                 .uri(URI.create(url + "/user"))
                 .header("Content-Type", "application/json")
                 .POST(HttpRequest.BodyPublishers.ofString(postBody))
                 .build();
-        HttpResponse<String> response = http.send(request, HttpResponse.BodyHandlers.ofString());
-        if(response.statusCode() != SUCCESS) {
-            throw new Exception("Error registering user: " + response.body());
+        try {
+            HttpResponse<String> response = http.send(request, HttpResponse.BodyHandlers.ofString());
+            int statusCode = response.statusCode();
+            if(statusCode != SUCCESS) {
+                throw new ResponseException(statusCode, "Error registering: " + response.body());
+            }
+            return serializer.fromJson(response.body(), RegisterResult.class);
+        } catch (java.io.IOException | InterruptedException e) {
+            throw new ResponseException(500, "Http send error: " + e.getMessage());
         }
-        return serializer.fromJson(response.body(), RegisterResult.class);
     }
 
-    public LoginResult login(LoginRequest login) throws Exception {
+    public LoginResult login(LoginRequest login) throws ResponseException {
         String postBody = serializer.toJson(login);
         HttpRequest request = HttpRequest.newBuilder()
                 .uri(URI.create(url + "/session"))
                 .header("Content-Type", "application/json")
                 .POST(HttpRequest.BodyPublishers.ofString(postBody))
                 .build();
-        HttpResponse<String> response = http.send(request, HttpResponse.BodyHandlers.ofString());
-        if(response.statusCode() != SUCCESS) {
-            throw new Exception("Error logging in user: " + response.body());
+        try {
+            HttpResponse<String> response = http.send(request, HttpResponse.BodyHandlers.ofString());
+            int statusCode = response.statusCode();
+            if(statusCode != SUCCESS) {
+                throw new ResponseException(statusCode, "Error logging in: " + response.body());
+            }
+            return serializer.fromJson(response.body(), LoginResult.class);
+        } catch (java.io.IOException | InterruptedException e) {
+            throw new ResponseException(500, "Http send error: " + e.getMessage());
         }
-        return serializer.fromJson(response.body(), LoginResult.class);
     }
 
-    public void logout(LogoutRequest logout) throws Exception {
+    public void logout(LogoutRequest logout) throws ResponseException {
         HttpRequest request = HttpRequest.newBuilder()
                 .uri(URI.create(url + "/session"))
                 .header("authorization", logout.authToken())
                 .DELETE()
                 .build();
-        HttpResponse<String> response = http.send(request, HttpResponse.BodyHandlers.ofString());
-        if(response.statusCode() != SUCCESS) {
-            throw new Exception("Error logging out user: " + response.body());
+        try {
+            HttpResponse<String> response = http.send(request, HttpResponse.BodyHandlers.ofString());
+            int statusCode = response.statusCode();
+            if(statusCode != SUCCESS) {
+                throw new ResponseException(statusCode, "Error logging out: " + response.body());
+            }
+        } catch (java.io.IOException | InterruptedException e) {
+            throw new ResponseException(500, "Http send error: " + e.getMessage());
         }
     }
 
-    public CreateGameResult createGame(String authToken, CreateGameRequest createGame) throws Exception {
+    public CreateGameResult createGame(String authToken, CreateGameRequest createGame) throws ResponseException {
         String postBody = serializer.toJson(createGame);
         HttpRequest request = HttpRequest.newBuilder()
                 .uri(URI.create(url + "/game"))
@@ -88,27 +108,37 @@ public class ServerFacade {
                 .header("authorization", authToken)               // Specs
                 .POST(HttpRequest.BodyPublishers.ofString(postBody))
                 .build();
-        HttpResponse<String> response = http.send(request, HttpResponse.BodyHandlers.ofString());
-        if(response.statusCode() != SUCCESS) {
-            throw new Exception("Error creating game: " + response.body());
+        try {
+            HttpResponse<String> response = http.send(request, HttpResponse.BodyHandlers.ofString());
+            int statusCode = response.statusCode();
+            if(statusCode != SUCCESS) {
+                throw new ResponseException(statusCode, "Error creating game: " + response.body());
+            }
+            return serializer.fromJson(response.body(), CreateGameResult.class);
+        } catch (java.io.IOException | InterruptedException e) {
+            throw new ResponseException(500, "Http send error: " + e.getMessage());
         }
-        return serializer.fromJson(response.body(), CreateGameResult.class);
     }
 
-    public ListGamesResult listGames(String authToken) throws Exception {
+    public ListGamesResult listGames(String authToken) throws ResponseException {
         HttpRequest request = HttpRequest.newBuilder()
                 .uri(URI.create(url + "/game"))
                 .header("authorization", authToken) // Specs
                 .GET()
                 .build();
-        HttpResponse<String> response = http.send(request, HttpResponse.BodyHandlers.ofString());
-        if(response.statusCode() != SUCCESS) {
-            throw new Exception("Error listing games: " + response.body());
+        try {
+            HttpResponse<String> response = http.send(request, HttpResponse.BodyHandlers.ofString());
+            int statusCode = response.statusCode();
+            if(statusCode != SUCCESS) {
+                throw new ResponseException(statusCode, "Error listing games: " + response.body());
+            }
+            return serializer.fromJson(response.body(), ListGamesResult.class);
+        } catch (java.io.IOException | InterruptedException e) {
+            throw new ResponseException(500, "Http send error: " + e.getMessage());
         }
-        return serializer.fromJson(response.body(), ListGamesResult.class);
     }
 
-    public void joinGame(String authToken, JoinGameRequest join) throws Exception {
+    public void joinGame(String authToken, JoinGameRequest join) throws ResponseException {
         String postBody = serializer.toJson(join);
         HttpRequest request = HttpRequest.newBuilder()
                 .uri(URI.create(url + "/game"))
@@ -116,9 +146,14 @@ public class ServerFacade {
                 .header("authorization", authToken)               // Specs
                 .PUT(HttpRequest.BodyPublishers.ofString(postBody))
                 .build();
-        HttpResponse<String> response = http.send(request, HttpResponse.BodyHandlers.ofString());
-        if(response.statusCode() != SUCCESS) {
-            throw new Exception("Error joining game: " + response.body());
+        try {
+            HttpResponse<String> response = http.send(request, HttpResponse.BodyHandlers.ofString());
+            int statusCode = response.statusCode();
+            if(statusCode != SUCCESS) {
+                throw new ResponseException(statusCode, "Error joining game: " + response.body());
+            }
+        } catch (java.io.IOException | InterruptedException e) {
+            throw new ResponseException(500, "Http send error: " + e.getMessage());
         }
     }
 }
