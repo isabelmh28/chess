@@ -1,31 +1,32 @@
 package client;
 
 import chess.*;
-import com.google.gson.Gson;
 import model.transactions.request.*;
-import model.transactions.result.CreateGameResult;
-import model.transactions.result.ListGamesResult;
-import model.transactions.result.LoginResult;
-import model.transactions.result.RegisterResult;
+import model.transactions.result.*;
+import client.REPL;
 
 import java.net.URI;
+import com.google.gson.Gson;
 import java.net.http.HttpClient;
 import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
 
 public class ClientMain {
     public static void main(String[] args) {
-        var piece = new ChessPiece(ChessGame.TeamColor.WHITE, ChessPiece.PieceType.PAWN);
-        System.out.println("♕ 240 Chess Client: " + piece);
+        System.out.println("♕ 240 Chess Client: Welcome!\n");
+
+        int port = 8080;
+        if(args.length >= 1) {
+            port = Integer.parseInt(args[0]);
+        }
+        REPL repl = new REPL(port);
+        repl.run();
     }
 
     /**
      * Manages the Scanner input loop, tracks current user state,
      * processes user commands, and prints user output
      */
-
-    public static class REPL {
-    }
 
     /**
      * Handles HttpClient logic for /user, /session, /game endpoints.
