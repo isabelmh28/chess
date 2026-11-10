@@ -1,7 +1,10 @@
 package client;
 
+import model.transactions.request.CreateGameRequest;
 import model.transactions.request.LoginRequest;
+import model.transactions.request.LogoutRequest;
 import model.transactions.request.RegisterRequest;
+import model.transactions.result.CreateGameResult;
 
 import java.util.Scanner;
 
@@ -72,10 +75,10 @@ public class REPL {
 
         switch(command) {
             case "help" :
-                helpPreLogin();
+                helpPreLogin(words);
                 break;
             case "quit" :
-                state = State.QUIT;
+                quit(words);
                 break;
             case "register" :
                 registerPreLogin(words);
@@ -84,9 +87,8 @@ public class REPL {
                 loginPreLogin(words);
                 break;
             default :
-                printError("""
-                        Invalid command. Please type 'help' to see available commands. Please try again!
-                        """);
+                printError("Invalid command. Type 'help' to see valid commands. Please try again!");
+                break;
         }
     }
 
@@ -96,31 +98,36 @@ public class REPL {
 
         switch(command) {
             case "help" :
-                helpPostLogin();
+                helpPostLogin(words);
+                break;
+            case "quit" :
+                quit(words);
                 break;
             case "logout" :
-                logoutPostLogin();
+                logoutPostLogin(words);
                 break;
             case "create" :
-                createGamePostLogin();
+                createGamePostLogin(words);
                 break;
             case "list" :
-                listGamesPostLogin();
+                listGamesPostLogin(words);
                 break;
             case "join" :
-                joinGamePostLogin();
+                joinGamePostLogin(words);
                 break;
             case "observe" :
-                observeGamePostLogin();
+                observeGamePostLogin(words);
                 break;
             default :
-                printError("""
-                        Invalid command. Please type 'help' to see available commands. Please try again!
-                        """);
+                printError("Invalid command. Please type 'help' to see available commands. Please try again!");
         }
     }
 
-    private void helpPreLogin() {
+    private void helpPreLogin(String[] words) {
+        if(words.length != 1) {
+            printError("The 'help' command does not take arguments. Please try again!");
+            return;
+        }
         String output = """
                 Below are the available commands.
                 NOTE: misspelling a command or providing the incorrect input will require a new command.
@@ -138,6 +145,14 @@ public class REPL {
                       login <USERNAME> <PASSWORD>
                 """;
         printOutput(output);
+    }
+
+    private void quit(String[] words) {
+        if(words.length != 1) {
+            printError("The 'quit' command does not take arguments. Please try again!");
+            return;
+        }
+        state = State.QUIT;
     }
 
     private void registerPreLogin(String[] words) {
@@ -194,7 +209,11 @@ public class REPL {
         }
     }
 
-    private void helpPostLogin() {
+    private void helpPostLogin(String[] words) {
+        if(words.length != 1) {
+            printError("The 'help' command does not take arguments. Please try again!");
+            return;
+        }
         String output = """
                 Below are the available commands.
                 NOTE: misspelling a command or providing the incorrect input will require a new command.
@@ -202,6 +221,8 @@ public class REPL {
                       Do not include the brackets when you provide your information.
                 
                 help: list possible commands
+                
+                quit: exit the game
                 
                 logout: return to pre-login menu
                 
@@ -215,5 +236,54 @@ public class REPL {
                 observe: watch a game by providing the game's ID
                 """;
         printOutput(output);
+    }
+
+    private void logoutPostLogin(String[] words) {
+        if(words.length != 1) {
+            printError("""
+                    logout command must be in the following format:
+                    logout
+                    Please try again!
+                    """);
+            return;
+        }
+
+        LogoutRequest logout = new LogoutRequest(authToken);
+
+        try {
+            facade.logout(logout);
+            state = State.SIGNEDOUT;
+            printOutput(String.format("""
+                    Successfully Logged out!
+                    Type 'help' for pre-login options
+                    """));
+        } catch (ResponseException e) {
+            printError(e.getMessage());
+        }
+    }
+
+    private void createGamePostLogin(String[] words) {
+        if(words.length != 2) {
+            printError("""
+                    create command must be in the following format:
+                    create <GAME_NAME>
+                    EX: create myNewGame
+                    Please try again!
+                    """);
+            return;
+        }
+        String gameName = words[1];
+        CreateGameRequest create = new CreateGameRequest(gameName);
+
+        try {
+            CreateGameResult gameID = facade.createGame(authToken, create);
+            printOutput(String.format("""
+                    Successfully created game! New game:
+                    Name: %s
+                    ID:   %d
+                    """, gameName, gameID.gameID()));
+        } catch (ResponseException e) {
+            printError(e.getMessage());
+        }
     }
 }
