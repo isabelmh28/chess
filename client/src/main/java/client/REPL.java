@@ -4,6 +4,7 @@ import model.transactions.request.*;
 import model.transactions.result.*;
 
 import java.util.ArrayList;
+import java.util.Objects;
 import java.util.Scanner;
 
 /**
@@ -231,9 +232,11 @@ public class REPL {
                 
                 list: list all existing games
                 
-                join: join a game by providing the game's ID and your desired player color(White or Black).
-                      join <ID> <WHITE | BLACK>
-                observe: watch a game by providing the game's ID
+                join: join a game by providing the game's list number and your desired player color(White or Black).
+                      join <NUMBER> <WHITE | BLACK>
+                
+                observe: watch a game by providing the game's list number
+                      observe <NUMBER>
                 """;
         printOutput(output);
     }
@@ -321,12 +324,94 @@ public class REPL {
         if(words.length != 3) {
             printError("""
                     join command must be in the following format:
-                    join <ID> <WHITE | BLACK>
+                    join <NUMBER> <WHITE | BLACK>
                     EX: join 12345 WHITE
                     Please try again!
                     """);
             return;
         }
+        String player = words[2];
+        if(!Objects.equals(player.toUpperCase(), "WHITE") && !Objects.equals(player.toUpperCase(), "BLACK")) {
+            printError("""
+                    join player options are only WHITE or BLACK:
+                    join <NUMBER> <WHITE | BLACK>
+                    EX: join 12345 WHITE
+                    Any input for the player argument besides WHITE or BLACK is invalid.
+                    Please try again!
+                    """);
+            return;
+        }
+        if(!words[1].matches("\\d+")) {
+            printError("""
+                    join game number argument MUST be an INTEGER
+                    join <NUMBER> <WHITE | BLACK>
+                    EX: join 12345 WHITE
+                    Any input for the NUMBER argument that is not an integer is invalid.
+                    Please try again!
+                    """);
+            return;
+        }
+        int gameNumber = Integer.parseInt(words[1]) - 1;
+        if(gameNumber < 0 || gameNumber >= gameIDList.size()) {
+            printError("""
+                    join game number argument MUST be more than 0 and less than the list size.
+                    join <NUMBER> <WHITE | BLACK>
+                    EX: join 12345 WHITE
+                    Any input for the NUMBER argument that is not in the list is invalid.
+                    See the 'list' command for more game information.
+                    Please try again!
+                    """);
+            return;
+        }
+        int gameID = gameIDList.get(gameNumber);
+        JoinGameRequest join = new JoinGameRequest(player, gameID);
 
+        try {
+            facade.joinGame(authToken, join);
+            printOutput("""
+                    Successfully joined game!
+                    """);
+        } catch (ResponseException e) {
+            printError(e.getMessage());
+        }
     }
+
+    private void observeGamePostLogin(String[] words) {
+        if(words.length != 2) {
+            printError("""
+                    observe command must be in the following format:
+                    observe <NUMBER>
+                    EX: observe 12345
+                    Please try again!
+                    """);
+            return;
+        }
+        if(!words[1].matches("\\d+")) {
+            printError("""
+                    observe game number argument MUST be an INTEGER
+                    observe <NUMBER>
+                    EX: observe 12345
+                    Any input for the NUMBER argument that is not an integer is invalid.
+                    Please try again!
+                    """);
+            return;
+        }
+        int gameNumber = Integer.parseInt(words[1]) - 1;
+        if(gameNumber < 0 || gameNumber >= gameIDList.size()) {
+            printError("""
+                    observe game number argument MUST be more than 0 and less than the list size.
+                    observe <NUMBER>
+                    EX: observe 12345
+                    Any input for the NUMBER argument that is not in the list is invalid.
+                    See the 'list' command for more game information.
+                    Please try again!
+                    """);
+            return;
+        }
+        int gameID = gameIDList.get(gameNumber);
+        printOutput("""
+                Successfully observing the game!
+                """);
+    }
+
 }
