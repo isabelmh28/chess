@@ -42,6 +42,34 @@ public class Server {
             }
         );
 
+        javalin.exception(InvalidRequestException.class, (e, ctx)-> {
+                    ctx.status(400);
+                    String jsonErr = serializer.toJson(java.util.Map.of("message", "Error: " + e.getMessage()));
+                    ctx.result(jsonErr);
+                }
+        );
+
+        javalin.exception(UnauthorizedUserException.class, (e, ctx)-> {
+                    ctx.status(401);
+                    String jsonErr = serializer.toJson(java.util.Map.of("message", "Error: " + e.getMessage()));
+                    ctx.result(jsonErr);
+                }
+        );
+
+        javalin.exception(TokenNotFoundException.class, (e, ctx)-> {
+                    ctx.status(401);
+                    String jsonErr = serializer.toJson(java.util.Map.of("message", "Error: " + e.getMessage()));
+                    ctx.result(jsonErr);
+                }
+        );
+
+        javalin.exception(AlreadyTakenException.class, (e, ctx)-> {
+                    ctx.status(403);
+                    String jsonErr = serializer.toJson(java.util.Map.of("message", "Error: " + e.getMessage()));
+                    ctx.result(jsonErr);
+                }
+        );
+
         // Register your endpoints and exception handlers here.
         // Clear Endpoint
         javalin.delete("/db",

@@ -65,8 +65,9 @@ public class REPL {
     }
 
     private void printState() {
-        printOutput(
+        System.out.print(
                 EscapeSequences.SET_TEXT_COLOR_YELLOW + "[" + state + "] >>> " + EscapeSequences.RESET_TEXT_COLOR);
+        System.out.flush();
     }
 
     private void printOutput(String output) {
@@ -76,7 +77,7 @@ public class REPL {
 
     private void printError(String message) {
         printOutput(
-                EscapeSequences.SET_TEXT_COLOR_RED + "ERROR: " + message + EscapeSequences.RESET_TEXT_COLOR);
+                EscapeSequences.SET_TEXT_COLOR_RED + message + EscapeSequences.RESET_TEXT_COLOR);
     }
 
     private void handlePreLogin(String input) {

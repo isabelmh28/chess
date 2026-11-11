@@ -28,6 +28,12 @@ public class ServerFacade {
         this.url = "http://localhost:" + port;
     }
 
+    public void printError(HttpResponse<String> response) {
+        var errMap = serializer.fromJson(response.body(), java.util.Map.class);
+        String message = (errMap != null && errMap.containsKey("message")) ? (String) errMap.get("message") : response.body();
+        throw new ResponseException(response.statusCode(), message);
+    }
+
     // Endpoints
     public void clear() throws ResponseException {
         HttpRequest request = HttpRequest.newBuilder()
@@ -38,7 +44,7 @@ public class ServerFacade {
             HttpResponse<String> response = http.send(request, HttpResponse.BodyHandlers.ofString());
             int statusCode = response.statusCode();
             if(statusCode != SUCCESS) {
-                throw new ResponseException(statusCode, "Error clearing: " + response.body());
+                printError(response);
             }
         } catch (java.io.IOException | InterruptedException e) {
             throw new ResponseException(500, "Http send error: " + e.getMessage());
@@ -56,7 +62,7 @@ public class ServerFacade {
             HttpResponse<String> response = http.send(request, HttpResponse.BodyHandlers.ofString());
             int statusCode = response.statusCode();
             if(statusCode != SUCCESS) {
-                throw new ResponseException(statusCode, "Error registering: " + response.body());
+                printError(response);
             }
             return serializer.fromJson(response.body(), RegisterResult.class);
         } catch (java.io.IOException | InterruptedException e) {
@@ -75,7 +81,7 @@ public class ServerFacade {
             HttpResponse<String> response = http.send(request, HttpResponse.BodyHandlers.ofString());
             int statusCode = response.statusCode();
             if(statusCode != SUCCESS) {
-                throw new ResponseException(statusCode, "Error logging in: " + response.body());
+                printError(response);
             }
             return serializer.fromJson(response.body(), LoginResult.class);
         } catch (java.io.IOException | InterruptedException e) {
@@ -93,7 +99,7 @@ public class ServerFacade {
             HttpResponse<String> response = http.send(request, HttpResponse.BodyHandlers.ofString());
             int statusCode = response.statusCode();
             if(statusCode != SUCCESS) {
-                throw new ResponseException(statusCode, "Error logging out: " + response.body());
+                printError(response);
             }
         } catch (java.io.IOException | InterruptedException e) {
             throw new ResponseException(500, "Http send error: " + e.getMessage());
@@ -112,7 +118,7 @@ public class ServerFacade {
             HttpResponse<String> response = http.send(request, HttpResponse.BodyHandlers.ofString());
             int statusCode = response.statusCode();
             if(statusCode != SUCCESS) {
-                throw new ResponseException(statusCode, "Error creating game: " + response.body());
+                printError(response);
             }
             return serializer.fromJson(response.body(), CreateGameResult.class);
         } catch (java.io.IOException | InterruptedException e) {
@@ -130,7 +136,7 @@ public class ServerFacade {
             HttpResponse<String> response = http.send(request, HttpResponse.BodyHandlers.ofString());
             int statusCode = response.statusCode();
             if(statusCode != SUCCESS) {
-                throw new ResponseException(statusCode, "Error listing games: " + response.body());
+                printError(response);
             }
             return serializer.fromJson(response.body(), ListGamesResult.class);
         } catch (java.io.IOException | InterruptedException e) {
@@ -150,7 +156,7 @@ public class ServerFacade {
             HttpResponse<String> response = http.send(request, HttpResponse.BodyHandlers.ofString());
             int statusCode = response.statusCode();
             if(statusCode != SUCCESS) {
-                throw new ResponseException(statusCode, "Error joining game: " + response.body());
+                printError(response);
             }
         } catch (java.io.IOException | InterruptedException e) {
             throw new ResponseException(500, "Http send error: " + e.getMessage());
