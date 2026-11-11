@@ -7,13 +7,18 @@ import client.REPL;
 
 import java.net.URI;
 import com.google.gson.Gson;
+import ui.EscapeSequences;
+
 import java.net.http.HttpClient;
 import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
 
 public class ClientMain {
     public static void main(String[] args) {
-        System.out.println("♕ 240 Chess Client: Welcome!\n");
+        System.out.println(
+                        EscapeSequences.SET_TEXT_COLOR_YELLOW + "♕" +
+                        EscapeSequences.SET_TEXT_COLOR_MAGENTA + " 240 Chess Client: Welcome!\n" +
+                        EscapeSequences.RESET_TEXT_COLOR);
 
         int port = 8080;
         if(args.length >= 1) {

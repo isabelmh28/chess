@@ -2,6 +2,7 @@ package client;
 
 import model.transactions.request.*;
 import model.transactions.result.*;
+import ui.EscapeSequences;
 
 import java.util.ArrayList;
 import java.util.Objects;
@@ -23,7 +24,7 @@ public class REPL {
     private final ServerFacade facade;
     private final Scanner scanner;
     private String authToken;
-    private ArrayList<Integer> gameIDList;
+    private final ArrayList<Integer> gameIDList;
 
 
     public REPL(int port) {
@@ -35,7 +36,10 @@ public class REPL {
     }
 
     public void run() {
-        printOutput("Welcome to Chess! Type 'Help' to get started.");
+        printOutput(
+                "Welcome to Chess! Type " +
+                        EscapeSequences.SET_TEXT_COLOR_GREEN + "'help' " +
+                EscapeSequences.SET_TEXT_COLOR_BLUE + "to get started.");
 
         while(state != State.QUIT) {
             printState();
@@ -55,19 +59,24 @@ public class REPL {
             }
         }
 
-        System.out.println("Input stream closed. Have a good day!\n");
+        printOutput(
+                EscapeSequences.SET_TEXT_COLOR_MAGENTA + "Input stream closed. Have a good day!\n" +
+                EscapeSequences.RESET_TEXT_COLOR);
     }
 
     private void printState() {
-        printOutput("[" + state + "] >>> \n");
+        printOutput(
+                EscapeSequences.SET_TEXT_COLOR_YELLOW + "[" + state + "] >>> " + EscapeSequences.RESET_TEXT_COLOR);
     }
 
     private void printOutput(String output) {
-        System.out.print(output);
+        System.out.print(
+                EscapeSequences.SET_TEXT_COLOR_BLUE + output + EscapeSequences.RESET_TEXT_COLOR + "\n");
     }
 
     private void printError(String message) {
-        printOutput("ERROR: " + message + "\n");
+        printOutput(
+                EscapeSequences.SET_TEXT_COLOR_RED + "ERROR: " + message + EscapeSequences.RESET_TEXT_COLOR);
     }
 
     private void handlePreLogin(String input) {
@@ -88,7 +97,9 @@ public class REPL {
                 loginPreLogin(words);
                 break;
             default :
-                printError("Invalid command. Type 'help' to see valid commands. Please try again!");
+                printError(
+                        "Invalid command. Type " + EscapeSequences.SET_TEXT_COLOR_GREEN + "'help' " +
+                        EscapeSequences.SET_TEXT_COLOR_RED + "to see valid commands. Please try again!");
                 break;
         }
     }
@@ -120,50 +131,66 @@ public class REPL {
                 observeGamePostLogin(words);
                 break;
             default :
-                printError("Invalid command. Please type 'help' to see available commands. Please try again!");
+                printError(
+                        "Invalid command. Type " + EscapeSequences.SET_TEXT_COLOR_GREEN + "'help' " +
+                                EscapeSequences.SET_TEXT_COLOR_RED + "to see valid commands. Please try again!");
         }
     }
 
     private void helpPreLogin(String[] words) {
         if(words.length != 1) {
-            printError("The 'help' command does not take arguments. Please try again!");
+            printError("The " + EscapeSequences.SET_TEXT_COLOR_GREEN +
+                    "'help' " + EscapeSequences.SET_TEXT_COLOR_RED + " command does not take arguments. Please try again!");
             return;
         }
-        String output = """
+        String output = String.format("""
                 Below are the available commands.
-                NOTE: misspelling a command or providing the incorrect input will require a new command.
+                %s: misspelling a command or providing the incorrect input will require a new command.
                       The angle brackets <> contain arguments that you will need to provide for that command.
                       Do not include the brackets when you provide your information.
                 
-                help: list possible commands
+                %s: list possible commands
                 
-                quit: exit the game
+                %s: exit the game
                 
-                register: to create an account
-                      register <USERNAME> <PASSWORD> <EMAIL>
+                %s: to create an account
+                      %s
                 
-                login: to log into an existing account
-                      login <USERNAME> <PASSWORD>
-                """;
+                %s: to log into an existing account
+                      %s
+                """,
+                EscapeSequences.SET_TEXT_COLOR_GREEN + "NOTE" + EscapeSequences.SET_TEXT_COLOR_BLUE,
+                EscapeSequences.SET_TEXT_COLOR_GREEN + "help" + EscapeSequences.SET_TEXT_COLOR_BLUE,
+                EscapeSequences.SET_TEXT_COLOR_GREEN + "quit" + EscapeSequences.SET_TEXT_COLOR_BLUE,
+                EscapeSequences.SET_TEXT_COLOR_GREEN + "register" + EscapeSequences.SET_TEXT_COLOR_BLUE,
+                EscapeSequences.SET_TEXT_COLOR_MAGENTA + "register <USERNAME> <PASSWORD> <EMAIL>" + EscapeSequences.SET_TEXT_COLOR_BLUE,
+                EscapeSequences.SET_TEXT_COLOR_GREEN + "login" + EscapeSequences.SET_TEXT_COLOR_BLUE,
+                EscapeSequences.SET_TEXT_COLOR_MAGENTA + "login <USERNAME> <PASSWORD>" + EscapeSequences.SET_TEXT_COLOR_BLUE);
         printOutput(output);
     }
 
     private void quit(String[] words) {
         if(words.length != 1) {
-            printError("The 'quit' command does not take arguments. Please try again!");
+            printError("The " + EscapeSequences.SET_TEXT_COLOR_GREEN +
+                    "'quit' " + EscapeSequences.SET_TEXT_COLOR_RED + " command does not take arguments. Please try again!");
             return;
         }
         state = State.QUIT;
+        printOutput(
+                EscapeSequences.SET_TEXT_COLOR_MAGENTA + "Thank you for playing!\n" + EscapeSequences.RESET_TEXT_COLOR);
     }
 
     private void registerPreLogin(String[] words) {
         if(words.length !=4) {
-            printError("""
-                    register command must be in the following format:
-                    register <USERNAME> <PASSWORD> <EMAIL>
-                    EX: register myName myPassword myEmail@email.com
+            printError(String.format("""
+                    %s command must be in the following format:
+                    %s
+                    EX: %s
                     Please try again!
-                    """);
+                    """,
+                    EscapeSequences.SET_TEXT_COLOR_GREEN + "register" + EscapeSequences.SET_TEXT_COLOR_RED,
+                    EscapeSequences.SET_TEXT_COLOR_MAGENTA + "register <USERNAME> <PASSWORD> <EMAIL>" + EscapeSequences.SET_TEXT_COLOR_RED,
+                    EscapeSequences.SET_TEXT_COLOR_MAGENTA + "register myName new_password myEmail@company.com" + EscapeSequences.SET_TEXT_COLOR_RED));
             return;
         }
         String username = words[1];
@@ -185,12 +212,15 @@ public class REPL {
 
     private void loginPreLogin(String[] words) {
         if(words.length != 3) {
-            printError("""
-                    login command must be in the following format:
-                    login <USERNAME> <PASSWORD>
-                    EX: login myName myPassword
+            printError(String.format("""
+                    %s command must be in the following format:
+                    %s
+                    EX: %s
                     Please try again!
-                    """);
+                    """,
+                    EscapeSequences.SET_TEXT_COLOR_GREEN + "login" + EscapeSequences.SET_TEXT_COLOR_RED,
+                    EscapeSequences.SET_TEXT_COLOR_MAGENTA + "login <USERNAME> <PASSWORD>" + EscapeSequences.SET_TEXT_COLOR_RED,
+                    EscapeSequences.SET_TEXT_COLOR_MAGENTA + "login myName new_password" + EscapeSequences.SET_TEXT_COLOR_RED));
             return;
         }
 
@@ -212,38 +242,51 @@ public class REPL {
 
     private void helpPostLogin(String[] words) {
         if(words.length != 1) {
-            printError("The 'help' command does not take arguments. Please try again!");
+            printError("The " + EscapeSequences.SET_TEXT_COLOR_GREEN +
+                    "'help' " + EscapeSequences.SET_TEXT_COLOR_RED + " command does not take arguments. Please try again!");
             return;
         }
-        String output = """
+        String output = String.format("""
                 Below are the available commands.
-                NOTE: misspelling a command or providing the incorrect input will require a new command.
+                %s: misspelling a command or providing the incorrect input will require a new command.
                       The angle brackets <> contain arguments that you will need to provide for that command.
                       Do not include the brackets when you provide your information.
                 
-                help: list possible commands
+                %s: list possible commands
                 
-                quit: exit the game
+                %s: exit the game
                 
-                logout: return to pre-login menu
+                %s: return to pre-login menu
                 
-                create: create a new game.
-                      create <GAME_NAME>
+                %s: create a new game.
+                      %s
                 
-                list: list all existing games
+                %s: list all existing games
                 
-                join: join a game by providing the game's list number and your desired player color(White or Black).
-                      join <NUMBER> <WHITE | BLACK>
+                %s: join a game by providing the game's list number and your desired player color(White or Black).
+                      %s
                 
-                observe: watch a game by providing the game's list number
-                      observe <NUMBER>
-                """;
+                %s: watch a game by providing the game's list number
+                      %s
+                """,
+                EscapeSequences.SET_TEXT_COLOR_GREEN + "NOTE" + EscapeSequences.SET_TEXT_COLOR_BLUE,
+                EscapeSequences.SET_TEXT_COLOR_GREEN + "help" + EscapeSequences.SET_TEXT_COLOR_BLUE,
+                EscapeSequences.SET_TEXT_COLOR_GREEN + "quit" + EscapeSequences.SET_TEXT_COLOR_BLUE,
+                EscapeSequences.SET_TEXT_COLOR_GREEN + "logout" + EscapeSequences.SET_TEXT_COLOR_BLUE,
+                EscapeSequences.SET_TEXT_COLOR_GREEN + "create" + EscapeSequences.SET_TEXT_COLOR_BLUE,
+                EscapeSequences.SET_TEXT_COLOR_MAGENTA + "create <GAME_NAME>" + EscapeSequences.SET_TEXT_COLOR_BLUE,
+                EscapeSequences.SET_TEXT_COLOR_GREEN + "list" + EscapeSequences.SET_TEXT_COLOR_BLUE,
+                EscapeSequences.SET_TEXT_COLOR_GREEN + "join" + EscapeSequences.SET_TEXT_COLOR_BLUE,
+                EscapeSequences.SET_TEXT_COLOR_MAGENTA + "join <GAME_NUMBER> <WHITE | BLACK>" + EscapeSequences.SET_TEXT_COLOR_BLUE,
+                EscapeSequences.SET_TEXT_COLOR_GREEN + "observe" + EscapeSequences.SET_TEXT_COLOR_BLUE,
+                EscapeSequences.SET_TEXT_COLOR_MAGENTA + "observe <GAME_NUMBER>" + EscapeSequences.SET_TEXT_COLOR_BLUE);
         printOutput(output);
     }
 
     private void logoutPostLogin(String[] words) {
         if(words.length != 1) {
-            printError("The 'logout' command does not take arguments. Please try again!");
+            printError("The " + EscapeSequences.SET_TEXT_COLOR_GREEN +
+                    "'logout' " + EscapeSequences.SET_TEXT_COLOR_RED + " command does not take arguments. Please try again!");
             return;
         }
 
@@ -254,8 +297,9 @@ public class REPL {
             state = State.SIGNEDOUT;
             printOutput(String.format("""
                     Successfully Logged out!
-                    Type 'help' for pre-login options
-                    """));
+                    Type %s for pre-login options
+                    """,
+                    EscapeSequences.SET_TEXT_COLOR_GREEN + "'help'" + EscapeSequences.SET_TEXT_COLOR_BLUE));
         } catch (ResponseException e) {
             printError(e.getMessage());
         }
@@ -263,12 +307,14 @@ public class REPL {
 
     private void createGamePostLogin(String[] words) {
         if(words.length != 2) {
-            printError("""
-                    create command must be in the following format:
-                    create <GAME_NAME>
+            printError(String.format("""
+                    %s command must be in the following format:
+                    %s
                     EX: create myNewGame
                     Please try again!
-                    """);
+                    """,
+                    EscapeSequences.SET_TEXT_COLOR_GREEN + "create" + EscapeSequences.SET_TEXT_COLOR_RED,
+                    EscapeSequences.SET_TEXT_COLOR_MAGENTA + "create <GAME_NAME>" + EscapeSequences.SET_TEXT_COLOR_RED));
             return;
         }
         String gameName = words[1];
@@ -288,7 +334,8 @@ public class REPL {
 
     private void listGamesPostLogin(String[] words) {
         if(words.length != 1) {
-            printError("The 'list' command does not take arguments. Please try again!");
+            printError("The " + EscapeSequences.SET_TEXT_COLOR_GREEN +
+                    "'list' " + EscapeSequences.SET_TEXT_COLOR_RED + " command does not take arguments. Please try again!");
             return;
         }
         try {
@@ -297,10 +344,12 @@ public class REPL {
             gameIDList.clear();
 
             if((gamesList == null) || (gamesList.isEmpty())) {
-                printOutput("""
-                        There are no active games. Create one with the 'create' command."
-                        See 'help' for more information.
-                        """);
+                printOutput(String.format("""
+                        There are no active games. Create one with the %s command.
+                        Try %s for more information.
+                        """,
+                        EscapeSequences.SET_TEXT_COLOR_GREEN + "'create'" + EscapeSequences.SET_TEXT_COLOR_BLUE,
+                        EscapeSequences.SET_TEXT_COLOR_GREEN + "'help'" + EscapeSequences.SET_TEXT_COLOR_BLUE));
                 return;
             }
             int index = 1;
@@ -322,45 +371,58 @@ public class REPL {
 
     private void joinGamePostLogin(String[] words) {
         if(words.length != 3) {
-            printError("""
-                    join command must be in the following format:
-                    join <NUMBER> <WHITE | BLACK>
-                    EX: join 12345 WHITE
+            printError(String.format("""
+                    %s command must be in the following format:
+                    %s
+                    EX: %s
                     Please try again!
-                    """);
+                    """,
+                    EscapeSequences.SET_TEXT_COLOR_GREEN + "'join'" + EscapeSequences.SET_TEXT_COLOR_RED,
+                    EscapeSequences.SET_TEXT_COLOR_MAGENTA + "join <NUMBER> <WHITE | BLACK>" + EscapeSequences.SET_TEXT_COLOR_RED,
+                    EscapeSequences.SET_TEXT_COLOR_MAGENTA + "join 12345 WHITE" + EscapeSequences.SET_TEXT_COLOR_RED));
             return;
         }
         String player = words[2];
         if(!Objects.equals(player.toUpperCase(), "WHITE") && !Objects.equals(player.toUpperCase(), "BLACK")) {
-            printError("""
-                    join player options are only WHITE or BLACK:
-                    join <NUMBER> <WHITE | BLACK>
-                    EX: join 12345 WHITE
+            printError(String.format("""
+                    %s player options are only WHITE or BLACK:
+                    %s
+                    EX: %s
                     Any input for the player argument besides WHITE or BLACK is invalid.
                     Please try again!
-                    """);
+                    """,
+                    EscapeSequences.SET_TEXT_COLOR_GREEN + "join" + EscapeSequences.SET_TEXT_COLOR_RED,
+                    EscapeSequences.SET_TEXT_COLOR_MAGENTA + "join <NUMBER> <WHITE | BLACK>" + EscapeSequences.SET_TEXT_COLOR_RED,
+                    EscapeSequences.SET_TEXT_COLOR_MAGENTA + "join 12345 WHITE" + EscapeSequences.SET_TEXT_COLOR_RED));
             return;
         }
         if(!words[1].matches("\\d+")) {
-            printError("""
-                    join game number argument MUST be an INTEGER
-                    join <NUMBER> <WHITE | BLACK>
-                    EX: join 12345 WHITE
+            printError(String.format("""
+                    %s game number argument MUST be an INTEGER
+                    %s
+                    EX: %s
                     Any input for the NUMBER argument that is not an integer is invalid.
                     Please try again!
-                    """);
+                    """,
+                    EscapeSequences.SET_TEXT_COLOR_GREEN + "join" + EscapeSequences.SET_TEXT_COLOR_RED,
+                    EscapeSequences.SET_TEXT_COLOR_MAGENTA + "join <NUMBER> <WHITE | BLACK>" + EscapeSequences.SET_TEXT_COLOR_RED,
+                    EscapeSequences.SET_TEXT_COLOR_MAGENTA + "join 12345 WHITE" + EscapeSequences.SET_TEXT_COLOR_RED));
             return;
         }
         int gameNumber = Integer.parseInt(words[1]) - 1;
         if(gameNumber < 0 || gameNumber >= gameIDList.size()) {
-            printError("""
-                    join game number argument MUST be more than 0 and less than the list size.
-                    join <NUMBER> <WHITE | BLACK>
-                    EX: join 12345 WHITE
+            printError(String.format("""
+                    %s game number argument MUST be more than 0 and less than the list size.
+                    %s
+                    EX: %s
                     Any input for the NUMBER argument that is not in the list is invalid.
-                    See the 'list' command for more game information.
+                    See the %s command for more game information.
                     Please try again!
-                    """);
+                    """,
+                    EscapeSequences.SET_TEXT_COLOR_GREEN + "join" + EscapeSequences.SET_TEXT_COLOR_RED,
+                    EscapeSequences.SET_TEXT_COLOR_MAGENTA + "join <NUMBER> <WHITE | BLACK>" + EscapeSequences.SET_TEXT_COLOR_RED,
+                    EscapeSequences.SET_TEXT_COLOR_MAGENTA + "join 12345 WHITE" + EscapeSequences.SET_TEXT_COLOR_RED,
+                    EscapeSequences.SET_TEXT_COLOR_GREEN + "'list'" + EscapeSequences.SET_TEXT_COLOR_RED));
             return;
         }
         int gameID = gameIDList.get(gameNumber);
@@ -378,34 +440,44 @@ public class REPL {
 
     private void observeGamePostLogin(String[] words) {
         if(words.length != 2) {
-            printError("""
-                    observe command must be in the following format:
-                    observe <NUMBER>
-                    EX: observe 12345
+            printError(String.format("""
+                    %s command must be in the following format:
+                    %s
+                    EX: %s
                     Please try again!
-                    """);
+                    """,
+                    EscapeSequences.SET_TEXT_COLOR_GREEN + "observe" + EscapeSequences.SET_TEXT_COLOR_RED,
+                    EscapeSequences.SET_TEXT_COLOR_MAGENTA + "observe <NUMBER>" + EscapeSequences.SET_TEXT_COLOR_RED,
+                    EscapeSequences.SET_TEXT_COLOR_MAGENTA + "observe 12345" + EscapeSequences.SET_TEXT_COLOR_RED));
             return;
         }
         if(!words[1].matches("\\d+")) {
-            printError("""
-                    observe game number argument MUST be an INTEGER
-                    observe <NUMBER>
-                    EX: observe 12345
+            printError(String.format("""
+                    %s game number argument MUST be an INTEGER
+                    %s
+                    EX: %s
                     Any input for the NUMBER argument that is not an integer is invalid.
                     Please try again!
-                    """);
+                    """,
+                    EscapeSequences.SET_TEXT_COLOR_GREEN + "observe" + EscapeSequences.SET_TEXT_COLOR_RED,
+                    EscapeSequences.SET_TEXT_COLOR_MAGENTA + "observe <NUMBER>" + EscapeSequences.SET_TEXT_COLOR_RED,
+                    EscapeSequences.SET_TEXT_COLOR_MAGENTA + "observe 12345" + EscapeSequences.SET_TEXT_COLOR_RED));
             return;
         }
         int gameNumber = Integer.parseInt(words[1]) - 1;
         if(gameNumber < 0 || gameNumber >= gameIDList.size()) {
-            printError("""
-                    observe game number argument MUST be more than 0 and less than the list size.
-                    observe <NUMBER>
-                    EX: observe 12345
+            printError(String.format("""
+                    %s game number argument MUST be more than 0 and less than the list size.
+                    %s
+                    EX: %s
                     Any input for the NUMBER argument that is not in the list is invalid.
-                    See the 'list' command for more game information.
+                    See the %s command for more game information.
                     Please try again!
-                    """);
+                    """,
+                    EscapeSequences.SET_TEXT_COLOR_GREEN + "observe" + EscapeSequences.SET_TEXT_COLOR_RED,
+                    EscapeSequences.SET_TEXT_COLOR_MAGENTA + "observe <NUMBER>" + EscapeSequences.SET_TEXT_COLOR_RED,
+                    EscapeSequences.SET_TEXT_COLOR_MAGENTA + "observe 12345" + EscapeSequences.SET_TEXT_COLOR_RED,
+                    EscapeSequences.SET_TEXT_COLOR_GREEN + "'list'" + EscapeSequences.SET_TEXT_COLOR_RED));
             return;
         }
         int gameID = gameIDList.get(gameNumber);
@@ -413,5 +485,4 @@ public class REPL {
                 Successfully observing the game!
                 """);
     }
-
 }
