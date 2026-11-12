@@ -60,10 +60,8 @@ public class PostLogin {
     }
 
     private void helpPostLogin(String[] words) {
-        if(words.length != 1) {
-            repl.printError("The " + EscapeSequences.SET_TEXT_COLOR_GREEN +
-                    "'help' " + EscapeSequences.SET_TEXT_COLOR_RED +
-                    " command does not take arguments. Please try again!");
+        if(words.length != 1){
+            repl.printArgErrorNoArgs(words);
             return;
         }
         String output = String.format("""
@@ -101,10 +99,8 @@ public class PostLogin {
 
     private void quit(String[] words) {
         if(words.length != 1) {
-            repl.printError("The " + EscapeSequences.SET_TEXT_COLOR_GREEN +
-                    "'quit' " + EscapeSequences.SET_TEXT_COLOR_RED +
-                    " command does not take arguments. Please try again!");
-            return;
+            repl.printArgErrorNoArgs(words);
+        return;
         }
         repl.setState(REPL.State.QUIT);
         repl.printOutput(
@@ -114,10 +110,8 @@ public class PostLogin {
 
     private void logoutPostLogin(String[] words) {
         if(words.length != 1) {
-            repl.printError("The " + EscapeSequences.SET_TEXT_COLOR_GREEN +
-                    "'logout' " + EscapeSequences.SET_TEXT_COLOR_RED +
-                    " command does not take arguments. Please try again!");
-            return;
+            repl.printArgErrorNoArgs(words);
+        return;
         }
         LogoutRequest logout = new LogoutRequest(repl.getAuthToken());
         try {
@@ -136,16 +130,8 @@ public class PostLogin {
 
     private void createGamePostLogin(String[] words) {
         if(words.length != 2) {
-            repl.printError(String.format("""
-                    %s command must be in the following format:
-                    %s
-                    EX: create myNewGame
-                    Please try again!
-                    """,
-                    EscapeSequences.SET_TEXT_COLOR_GREEN + "create" +
-                            EscapeSequences.SET_TEXT_COLOR_RED,
-                    EscapeSequences.SET_TEXT_COLOR_MAGENTA + "create <GAME_NAME>" +
-                            EscapeSequences.SET_TEXT_COLOR_RED));
+            repl.printArgErrorSpecific(words, "create <GAME_NAME>",
+                    "create myNewGame", "");
             return;
         }
         String gameName = words[1];
@@ -164,9 +150,7 @@ public class PostLogin {
 
     private void listGamesPostLogin(String[] words) {
         if(words.length != 1) {
-            repl.printError("The " + EscapeSequences.SET_TEXT_COLOR_GREEN +
-                    "'list' " + EscapeSequences.SET_TEXT_COLOR_RED +
-                    " command does not take arguments. Please try again!");
+            repl.printArgErrorNoArgs(words);
             return;
         }
         try {
@@ -204,72 +188,30 @@ public class PostLogin {
 
     private void joinGamePostLogin(String[] words) {
         if(words.length != 3) {
-            repl.printError(String.format("""
-                    %s command must be in the following format:
-                    %s
-                    EX: %s
-                    Please try again!
-                    """,
-                    EscapeSequences.SET_TEXT_COLOR_GREEN + "'join'" +
-                            EscapeSequences.SET_TEXT_COLOR_RED,
-                    EscapeSequences.SET_TEXT_COLOR_MAGENTA + "join <NUMBER> <WHITE | BLACK>" +
-                            EscapeSequences.SET_TEXT_COLOR_RED,
-                    EscapeSequences.SET_TEXT_COLOR_MAGENTA + "join 12345 WHITE" +
-                            EscapeSequences.SET_TEXT_COLOR_RED));
+            repl.printArgErrorSpecific(words, "join <NUMBER> <WHITE | BLACK>",
+                    "join 12345 WHITE", "");
             return;
         }
         String player = words[2];
         if(        !Objects.equals(player.toUpperCase(), ChessGame.TeamColor.WHITE.name())
                 && !Objects.equals(player.toUpperCase(), ChessGame.TeamColor.BLACK.name())) {
-            repl.printError(String.format("""
-                    %s player options are only WHITE or BLACK:
-                    %s
-                    EX: %s
-                    Any input for the player argument besides WHITE or BLACK is invalid.
-                    Please try again!
-                    """,
-                    EscapeSequences.SET_TEXT_COLOR_GREEN + "join" +
-                            EscapeSequences.SET_TEXT_COLOR_RED,
-                    EscapeSequences.SET_TEXT_COLOR_MAGENTA + "join <NUMBER> <WHITE | BLACK>" +
-                            EscapeSequences.SET_TEXT_COLOR_RED,
-                    EscapeSequences.SET_TEXT_COLOR_MAGENTA + "join 12345 WHITE" +
-                            EscapeSequences.SET_TEXT_COLOR_RED));
+            repl.printArgErrorSpecific(words, "join <NUMBER> <WHITE | BLACK>",
+                    "join 12345 WHITE", "player options are only WHITE or BLACK:");
             return;
         }
         if(!words[1].matches("\\d+")) {
-            repl.printError(String.format("""
-                    %s game number argument MUST be an INTEGER
-                    %s
-                    EX: %s
-                    Any input for the NUMBER argument that is not an integer is invalid.
-                    Please try again!
-                    """,
-                    EscapeSequences.SET_TEXT_COLOR_GREEN + "join" +
-                            EscapeSequences.SET_TEXT_COLOR_RED,
-                    EscapeSequences.SET_TEXT_COLOR_MAGENTA + "join <NUMBER> <WHITE | BLACK>" +
-                            EscapeSequences.SET_TEXT_COLOR_RED,
-                    EscapeSequences.SET_TEXT_COLOR_MAGENTA + "join 12345 WHITE" +
-                            EscapeSequences.SET_TEXT_COLOR_RED));
+            repl.printArgErrorSpecific(words, "join <NUMBER> <WHITE | BLACK>",
+                    "join 12345 WHITE", "game number argument MUST be an INTEGER");
             return;
         }
         int gameNumber = Integer.parseInt(words[1]) - 1;
         if(gameNumber < 0 || gameNumber >= repl.getGameList().size()) {
-            repl.printError(String.format("""
-                    %s game number argument MUST be more than 0 and less than the list size.
-                    %s
-                    EX: %s
-                    Any input for the NUMBER argument that is not in the list is invalid.
-                    See the %s command for more game information.
-                    Please try again!
-                    """,
-                    EscapeSequences.SET_TEXT_COLOR_GREEN + "join" +
-                            EscapeSequences.SET_TEXT_COLOR_RED,
-                    EscapeSequences.SET_TEXT_COLOR_MAGENTA + "join <NUMBER> <WHITE | BLACK>" +
-                            EscapeSequences.SET_TEXT_COLOR_RED,
-                    EscapeSequences.SET_TEXT_COLOR_MAGENTA + "join 12345 WHITE" +
-                            EscapeSequences.SET_TEXT_COLOR_RED,
-                    EscapeSequences.SET_TEXT_COLOR_GREEN + "'list'" +
-                            EscapeSequences.SET_TEXT_COLOR_RED));
+            repl.printArgErrorSpecific(words, "join <NUMBER> <WHITE | BLACK>",
+                    "join 12345 WHITE",
+                    "Any input for the NUMBER argument that is not in the list is invalid.\n" +
+                            "See the " + EscapeSequences.SET_TEXT_COLOR_GREEN +
+                            "'list'" + EscapeSequences.SET_TEXT_COLOR_RED +
+                    " command for more game information.");
             return;
         }
         GameData game = repl.getGameList().get(gameNumber);
@@ -290,54 +232,21 @@ public class PostLogin {
 
     private void observeGamePostLogin(String[] words) {
         if(words.length != 2) {
-            repl.printError(String.format("""
-                    %s command must be in the following format:
-                    %s
-                    EX: %s
-                    Please try again!
-                    """,
-                    EscapeSequences.SET_TEXT_COLOR_GREEN + "observe" +
-                            EscapeSequences.SET_TEXT_COLOR_RED,
-                    EscapeSequences.SET_TEXT_COLOR_MAGENTA + "observe <NUMBER>" +
-                            EscapeSequences.SET_TEXT_COLOR_RED,
-                    EscapeSequences.SET_TEXT_COLOR_MAGENTA + "observe 12345" +
-                            EscapeSequences.SET_TEXT_COLOR_RED));
+            repl.printArgErrorSpecific(words, "observe <NUMBER>",
+                    "observe 12345", "");
             return;
         }
         if(!words[1].matches("\\d+")) {
-            repl.printError(String.format("""
-                    %s game number argument MUST be an INTEGER
-                    %s
-                    EX: %s
-                    Any input for the NUMBER argument that is not an integer is invalid.
-                    Please try again!
-                    """,
-                    EscapeSequences.SET_TEXT_COLOR_GREEN + "observe" +
-                            EscapeSequences.SET_TEXT_COLOR_RED,
-                    EscapeSequences.SET_TEXT_COLOR_MAGENTA + "observe <NUMBER>" +
-                            EscapeSequences.SET_TEXT_COLOR_RED,
-                    EscapeSequences.SET_TEXT_COLOR_MAGENTA + "observe 12345" +
-                            EscapeSequences.SET_TEXT_COLOR_RED));
+            repl.printArgErrorSpecific(words, "observe <NUMBER>", "observe 12345", "");
             return;
         }
         int gameNumber = Integer.parseInt(words[1]) - 1;
         if(gameNumber < 0 || gameNumber >= repl.getGameList().size()) {
-            repl.printError(String.format("""
-                    %s game number argument MUST be more than 0 and less than the list size.
-                    %s
-                    EX: %s
-                    Any input for the NUMBER argument that is not in the list is invalid.
-                    See the %s command for more game information.
-                    Please try again!
-                    """,
-                    EscapeSequences.SET_TEXT_COLOR_GREEN + "observe" +
-                            EscapeSequences.SET_TEXT_COLOR_RED,
-                    EscapeSequences.SET_TEXT_COLOR_MAGENTA + "observe <NUMBER>" +
-                            EscapeSequences.SET_TEXT_COLOR_RED,
-                    EscapeSequences.SET_TEXT_COLOR_MAGENTA + "observe 12345" +
-                            EscapeSequences.SET_TEXT_COLOR_RED,
-                    EscapeSequences.SET_TEXT_COLOR_GREEN + "'list'" +
-                            EscapeSequences.SET_TEXT_COLOR_RED));
+            repl.printArgErrorSpecific(words, "observe <NUMBER>", "observe 12345",
+                    "Any input for the NUMBER argument that is not in the list is invalid.\n" +
+                            "See the " + EscapeSequences.SET_TEXT_COLOR_GREEN +
+                            "'list'" + EscapeSequences.SET_TEXT_COLOR_RED +
+                            " command for more game information.");
             return;
         }
         GameData game = repl.getGameList().get(gameNumber);

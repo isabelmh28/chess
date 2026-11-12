@@ -107,4 +107,27 @@ public class REPL {
                 body);
         printOutput(message);
     }
+
+    public void printArgErrorNoArgs(String[] words) {
+        printError(String.format("The " + EscapeSequences.SET_TEXT_COLOR_GREEN +
+                "'" + words[0] + "'" + EscapeSequences.SET_TEXT_COLOR_RED +
+                " command does not take arguments. Please try again!"));
+    }
+
+    public void printArgErrorSpecific(String[] words, String format, String example, String message) {
+        printError(String.format("""
+                %s command must be in the following format:
+                %s
+                EX: %s
+                %s
+                Please try again!
+                """,
+                EscapeSequences.SET_TEXT_COLOR_GREEN + words[0] +
+                        EscapeSequences.SET_TEXT_COLOR_RED,
+                EscapeSequences.SET_TEXT_COLOR_MAGENTA + format +
+                        EscapeSequences.SET_TEXT_COLOR_RED,
+                EscapeSequences.SET_TEXT_COLOR_MAGENTA + example +
+                        EscapeSequences.SET_TEXT_COLOR_RED,
+                message));
+    }
 }

@@ -46,9 +46,7 @@ public class PreLogin {
 
     private void helpPreLogin(String[] words) {
         if(words.length != 1) {
-            repl.printError("The " + EscapeSequences.SET_TEXT_COLOR_GREEN +
-                    "'help' " + EscapeSequences.SET_TEXT_COLOR_RED +
-                    " command does not take arguments. Please try again!");
+            repl.printArgErrorNoArgs(words);
             return;
         }
         String output = String.format("""
@@ -71,9 +69,7 @@ public class PreLogin {
 
     private void quit(String[] words) {
         if(words.length != 1) {
-            repl.printError("The " + EscapeSequences.SET_TEXT_COLOR_GREEN +
-                    "'quit' " + EscapeSequences.SET_TEXT_COLOR_RED +
-                    " command does not take arguments. Please try again!");
+            repl.printArgErrorNoArgs(words);
             return;
         }
         repl.setState(REPL.State.QUIT);
@@ -83,20 +79,9 @@ public class PreLogin {
     }
 
     private void registerPreLogin(String[] words) {
-        if(words.length !=4) {
-            repl.printError(String.format("""
-                    %s command must be in the following format:
-                    %s
-                    EX: %s
-                    Please try again!
-                    """,
-                    EscapeSequences.SET_TEXT_COLOR_GREEN + "register" +
-                            EscapeSequences.SET_TEXT_COLOR_RED,
-                    EscapeSequences.SET_TEXT_COLOR_MAGENTA + "register <USERNAME> <PASSWORD> <EMAIL>" +
-                            EscapeSequences.SET_TEXT_COLOR_RED,
-                    EscapeSequences.SET_TEXT_COLOR_MAGENTA +
-                            "register myName new_password myEmail@company.com" +
-                            EscapeSequences.SET_TEXT_COLOR_RED));
+        if(words.length != 4) {
+            repl.printArgErrorSpecific(words, "register <USERNAME> <PASSWORD> <EMAIL>",
+                    "register myName new_password myEmail@company.com", "");
             return;
         }
         String username = words[1];
@@ -114,19 +99,9 @@ public class PreLogin {
     }
 
     private void loginPreLogin(String[] words) {
-        if(words.length != 3) {
-            repl.printError(String.format("""
-                    %s command must be in the following format:
-                    %s
-                    EX: %s
-                    Please try again!
-                    """,
-                    EscapeSequences.SET_TEXT_COLOR_GREEN + "login" +
-                            EscapeSequences.SET_TEXT_COLOR_RED,
-                    EscapeSequences.SET_TEXT_COLOR_MAGENTA + "login <USERNAME> <PASSWORD>" +
-                            EscapeSequences.SET_TEXT_COLOR_RED,
-                    EscapeSequences.SET_TEXT_COLOR_MAGENTA + "login myName new_password" +
-                            EscapeSequences.SET_TEXT_COLOR_RED));
+        if(words.length != 3){
+            repl.printArgErrorSpecific(words, "login <USERNAME> <PASSWORD>",
+                "login myName new_password", "");
             return;
         }
         String username = words[1];
