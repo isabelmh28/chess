@@ -112,7 +112,10 @@ public class PreLogin {
             repl.setState(REPL.State.SIGNEDIN);
             repl.printOutput(String.format("""
                     Successfully Logged in with your credentials! Welcome %s!
-                    """, username));
+                    Type %s to see available Logged-In commands.
+                    """, username,
+                    EscapeSequences.SET_TEXT_COLOR_GREEN + "'help" +
+                    EscapeSequences.SET_TEXT_COLOR_BLUE));
             ListGamesResult list = facade.listGames(repl.getAuthToken());
             ArrayList<GameData> gameList = repl.getGameList();
             gameList.clear();
