@@ -23,15 +23,33 @@ public class ServerFacade {
 
     public static final int SUCCESS = 200;
 
-    // Constructors
+    // Constructor
     public ServerFacade(int port) {
         this.url = "http://localhost:" + port;
     }
 
-    public void printError(HttpResponse<String> response) {
+    // Helper Functions
+    public void printError(HttpResponse<String> response) throws ResponseException {
         var errMap = serializer.fromJson(response.body(), java.util.Map.class);
         String message = (errMap != null && errMap.containsKey("message")) ? (String) errMap.get("message") : response.body();
         throw new ResponseException(response.statusCode(), message);
+    }
+
+    private <T> T sendRequest(HttpRequest request, Class<T> responseClass) throws ResponseException {
+        try {
+            HttpResponse<String> response = http.send(request, HttpResponse.BodyHandlers.ofString());
+            int statusCode = response.statusCode();
+            if(statusCode != SUCCESS) {
+                printError(response);
+            }
+
+            if((responseClass == null) || (response.body() == null) || (response.body().isEmpty())) {
+                return null;
+            }
+            return serializer.fromJson(response.body(), responseClass);
+        } catch (java.io.IOException | InterruptedException e) {
+            throw new ResponseException(500, "Http send error: " + e.getMessage());
+        }
     }
 
     // Endpoints
@@ -40,15 +58,7 @@ public class ServerFacade {
                 .uri(URI.create(url + "/db"))
                 .DELETE()
                 .build();
-        try {
-            HttpResponse<String> response = http.send(request, HttpResponse.BodyHandlers.ofString());
-            int statusCode = response.statusCode();
-            if(statusCode != SUCCESS) {
-                printError(response);
-            }
-        } catch (java.io.IOException | InterruptedException e) {
-            throw new ResponseException(500, "Http send error: " + e.getMessage());
-        }
+        sendRequest(request, null);
     }
 
     public RegisterResult register(RegisterRequest register) throws ResponseException {
@@ -58,16 +68,7 @@ public class ServerFacade {
                 .header("Content-Type", "application/json")
                 .POST(HttpRequest.BodyPublishers.ofString(postBody))
                 .build();
-        try {
-            HttpResponse<String> response = http.send(request, HttpResponse.BodyHandlers.ofString());
-            int statusCode = response.statusCode();
-            if(statusCode != SUCCESS) {
-                printError(response);
-            }
-            return serializer.fromJson(response.body(), RegisterResult.class);
-        } catch (java.io.IOException | InterruptedException e) {
-            throw new ResponseException(500, "Http send error: " + e.getMessage());
-        }
+        return sendRequest(request, RegisterResult.class);
     }
 
     public LoginResult login(LoginRequest login) throws ResponseException {
@@ -77,16 +78,7 @@ public class ServerFacade {
                 .header("Content-Type", "application/json")
                 .POST(HttpRequest.BodyPublishers.ofString(postBody))
                 .build();
-        try {
-            HttpResponse<String> response = http.send(request, HttpResponse.BodyHandlers.ofString());
-            int statusCode = response.statusCode();
-            if(statusCode != SUCCESS) {
-                printError(response);
-            }
-            return serializer.fromJson(response.body(), LoginResult.class);
-        } catch (java.io.IOException | InterruptedException e) {
-            throw new ResponseException(500, "Http send error: " + e.getMessage());
-        }
+        return sendRequest(request, LoginResult.class);
     }
 
     public void logout(LogoutRequest logout) throws ResponseException {
@@ -95,15 +87,7 @@ public class ServerFacade {
                 .header("authorization", logout.authToken())
                 .DELETE()
                 .build();
-        try {
-            HttpResponse<String> response = http.send(request, HttpResponse.BodyHandlers.ofString());
-            int statusCode = response.statusCode();
-            if(statusCode != SUCCESS) {
-                printError(response);
-            }
-        } catch (java.io.IOException | InterruptedException e) {
-            throw new ResponseException(500, "Http send error: " + e.getMessage());
-        }
+        sendRequest(request, null);
     }
 
     public CreateGameResult createGame(String authToken, CreateGameRequest createGame) throws ResponseException {
@@ -114,16 +98,7 @@ public class ServerFacade {
                 .header("authorization", authToken)               // Specs
                 .POST(HttpRequest.BodyPublishers.ofString(postBody))
                 .build();
-        try {
-            HttpResponse<String> response = http.send(request, HttpResponse.BodyHandlers.ofString());
-            int statusCode = response.statusCode();
-            if(statusCode != SUCCESS) {
-                printError(response);
-            }
-            return serializer.fromJson(response.body(), CreateGameResult.class);
-        } catch (java.io.IOException | InterruptedException e) {
-            throw new ResponseException(500, "Http send error: " + e.getMessage());
-        }
+        return sendRequest(request, CreateGameResult.class);
     }
 
     public ListGamesResult listGames(String authToken) throws ResponseException {
@@ -132,16 +107,7 @@ public class ServerFacade {
                 .header("authorization", authToken) // Specs
                 .GET()
                 .build();
-        try {
-            HttpResponse<String> response = http.send(request, HttpResponse.BodyHandlers.ofString());
-            int statusCode = response.statusCode();
-            if(statusCode != SUCCESS) {
-                printError(response);
-            }
-            return serializer.fromJson(response.body(), ListGamesResult.class);
-        } catch (java.io.IOException | InterruptedException e) {
-            throw new ResponseException(500, "Http send error: " + e.getMessage());
-        }
+        return sendRequest(request, ListGamesResult.class);
     }
 
     public void joinGame(String authToken, JoinGameRequest join) throws ResponseException {
@@ -152,14 +118,6 @@ public class ServerFacade {
                 .header("authorization", authToken)               // Specs
                 .PUT(HttpRequest.BodyPublishers.ofString(postBody))
                 .build();
-        try {
-            HttpResponse<String> response = http.send(request, HttpResponse.BodyHandlers.ofString());
-            int statusCode = response.statusCode();
-            if(statusCode != SUCCESS) {
-                printError(response);
-            }
-        } catch (java.io.IOException | InterruptedException e) {
-            throw new ResponseException(500, "Http send error: " + e.getMessage());
-        }
+        sendRequest(request, null);
     }
 }
