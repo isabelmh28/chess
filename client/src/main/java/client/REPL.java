@@ -70,18 +70,21 @@ public class REPL {
 
     private void printState() {
         System.out.print(
-                EscapeSequences.SET_TEXT_COLOR_YELLOW + "[" + state + "] >>> " + EscapeSequences.RESET_TEXT_COLOR);
+                EscapeSequences.SET_TEXT_COLOR_YELLOW + "[" + state + "] >>> " +
+                        EscapeSequences.RESET_TEXT_COLOR);
         System.out.flush();
     }
 
     private void printOutput(String output) {
         System.out.print(
-                EscapeSequences.SET_TEXT_COLOR_BLUE + output + EscapeSequences.RESET_TEXT_COLOR + "\n");
+                EscapeSequences.SET_TEXT_COLOR_BLUE + output +
+                        EscapeSequences.RESET_TEXT_COLOR + "\n");
     }
 
     private void printError(String message) {
         printOutput(
-                EscapeSequences.SET_TEXT_COLOR_RED + message + EscapeSequences.RESET_TEXT_COLOR);
+                EscapeSequences.SET_TEXT_COLOR_RED + message +
+                        EscapeSequences.RESET_TEXT_COLOR);
     }
 
     private void handlePreLogin(String input) {
@@ -138,14 +141,16 @@ public class REPL {
             default :
                 printError(
                         "Invalid command. Type " + EscapeSequences.SET_TEXT_COLOR_GREEN + "'help' " +
-                                EscapeSequences.SET_TEXT_COLOR_RED + "to see valid commands. Please try again!");
+                                EscapeSequences.SET_TEXT_COLOR_RED +
+                                "to see valid commands. Please try again!");
         }
     }
 
     private void helpPreLogin(String[] words) {
         if(words.length != 1) {
             printError("The " + EscapeSequences.SET_TEXT_COLOR_GREEN +
-                    "'help' " + EscapeSequences.SET_TEXT_COLOR_RED + " command does not take arguments. Please try again!");
+                    "'help' " + EscapeSequences.SET_TEXT_COLOR_RED +
+                    " command does not take arguments. Please try again!");
             return;
         }
         String output = String.format("""
@@ -164,25 +169,34 @@ public class REPL {
                 %s: to log into an existing account
                       %s
                 """,
-                EscapeSequences.SET_TEXT_COLOR_GREEN + "NOTE" + EscapeSequences.SET_TEXT_COLOR_BLUE,
-                EscapeSequences.SET_TEXT_COLOR_GREEN + "help" + EscapeSequences.SET_TEXT_COLOR_BLUE,
-                EscapeSequences.SET_TEXT_COLOR_GREEN + "quit" + EscapeSequences.SET_TEXT_COLOR_BLUE,
-                EscapeSequences.SET_TEXT_COLOR_GREEN + "register" + EscapeSequences.SET_TEXT_COLOR_BLUE,
-                EscapeSequences.SET_TEXT_COLOR_MAGENTA + "register <USERNAME> <PASSWORD> <EMAIL>" + EscapeSequences.SET_TEXT_COLOR_BLUE,
-                EscapeSequences.SET_TEXT_COLOR_GREEN + "login" + EscapeSequences.SET_TEXT_COLOR_BLUE,
-                EscapeSequences.SET_TEXT_COLOR_MAGENTA + "login <USERNAME> <PASSWORD>" + EscapeSequences.SET_TEXT_COLOR_BLUE);
+                EscapeSequences.SET_TEXT_COLOR_GREEN + "NOTE" +
+                        EscapeSequences.SET_TEXT_COLOR_BLUE,
+                EscapeSequences.SET_TEXT_COLOR_GREEN + "help" +
+                        EscapeSequences.SET_TEXT_COLOR_BLUE,
+                EscapeSequences.SET_TEXT_COLOR_GREEN + "quit" +
+                        EscapeSequences.SET_TEXT_COLOR_BLUE,
+                EscapeSequences.SET_TEXT_COLOR_GREEN + "register" +
+                        EscapeSequences.SET_TEXT_COLOR_BLUE,
+                EscapeSequences.SET_TEXT_COLOR_MAGENTA + "register <USERNAME> <PASSWORD> <EMAIL>" +
+                        EscapeSequences.SET_TEXT_COLOR_BLUE,
+                EscapeSequences.SET_TEXT_COLOR_GREEN + "login" +
+                        EscapeSequences.SET_TEXT_COLOR_BLUE,
+                EscapeSequences.SET_TEXT_COLOR_MAGENTA + "login <USERNAME> <PASSWORD>" +
+                        EscapeSequences.SET_TEXT_COLOR_BLUE);
         printOutput(output);
     }
 
     private void quit(String[] words) {
         if(words.length != 1) {
             printError("The " + EscapeSequences.SET_TEXT_COLOR_GREEN +
-                    "'quit' " + EscapeSequences.SET_TEXT_COLOR_RED + " command does not take arguments. Please try again!");
+                    "'quit' " + EscapeSequences.SET_TEXT_COLOR_RED +
+                    " command does not take arguments. Please try again!");
             return;
         }
         state = State.QUIT;
         printOutput(
-                EscapeSequences.SET_TEXT_COLOR_MAGENTA + "Thank you for playing!\n" + EscapeSequences.RESET_TEXT_COLOR);
+                EscapeSequences.SET_TEXT_COLOR_MAGENTA + "Thank you for playing!\n" +
+                        EscapeSequences.RESET_TEXT_COLOR);
     }
 
     private void registerPreLogin(String[] words) {
@@ -193,9 +207,13 @@ public class REPL {
                     EX: %s
                     Please try again!
                     """,
-                    EscapeSequences.SET_TEXT_COLOR_GREEN + "register" + EscapeSequences.SET_TEXT_COLOR_RED,
-                    EscapeSequences.SET_TEXT_COLOR_MAGENTA + "register <USERNAME> <PASSWORD> <EMAIL>" + EscapeSequences.SET_TEXT_COLOR_RED,
-                    EscapeSequences.SET_TEXT_COLOR_MAGENTA + "register myName new_password myEmail@company.com" + EscapeSequences.SET_TEXT_COLOR_RED));
+                    EscapeSequences.SET_TEXT_COLOR_GREEN + "register" +
+                            EscapeSequences.SET_TEXT_COLOR_RED,
+                    EscapeSequences.SET_TEXT_COLOR_MAGENTA + "register <USERNAME> <PASSWORD> <EMAIL>" +
+                            EscapeSequences.SET_TEXT_COLOR_RED,
+                    EscapeSequences.SET_TEXT_COLOR_MAGENTA +
+                            "register myName new_password myEmail@company.com" +
+                            EscapeSequences.SET_TEXT_COLOR_RED));
             return;
         }
         String username = words[1];
@@ -223,9 +241,12 @@ public class REPL {
                     EX: %s
                     Please try again!
                     """,
-                    EscapeSequences.SET_TEXT_COLOR_GREEN + "login" + EscapeSequences.SET_TEXT_COLOR_RED,
-                    EscapeSequences.SET_TEXT_COLOR_MAGENTA + "login <USERNAME> <PASSWORD>" + EscapeSequences.SET_TEXT_COLOR_RED,
-                    EscapeSequences.SET_TEXT_COLOR_MAGENTA + "login myName new_password" + EscapeSequences.SET_TEXT_COLOR_RED));
+                    EscapeSequences.SET_TEXT_COLOR_GREEN + "login" +
+                            EscapeSequences.SET_TEXT_COLOR_RED,
+                    EscapeSequences.SET_TEXT_COLOR_MAGENTA + "login <USERNAME> <PASSWORD>" +
+                            EscapeSequences.SET_TEXT_COLOR_RED,
+                    EscapeSequences.SET_TEXT_COLOR_MAGENTA + "login myName new_password" +
+                            EscapeSequences.SET_TEXT_COLOR_RED));
             return;
         }
 
@@ -250,13 +271,14 @@ public class REPL {
     private void helpPostLogin(String[] words) {
         if(words.length != 1) {
             printError("The " + EscapeSequences.SET_TEXT_COLOR_GREEN +
-                    "'help' " + EscapeSequences.SET_TEXT_COLOR_RED + " command does not take arguments. Please try again!");
+                    "'help' " + EscapeSequences.SET_TEXT_COLOR_RED +
+                    " command does not take arguments. Please try again!");
             return;
         }
         String output = String.format("""
                 Below are the available commands.
                 %s: misspelling a command or providing the incorrect input will require a new command.
-                      The angle brackets <> contain arguments that you will need to provide for that command.
+                      The angle brackets <> contain arguments that you need to provide for that command.
                       Do not include the brackets when you provide your information.
                 
                 %s: list possible commands
@@ -270,30 +292,42 @@ public class REPL {
                 
                 %s: list all existing games
                 
-                %s: join a game by providing the game's list number and your desired player color(White or Black).
+                %s: join a game by providing the game's list number and your player color(White or Black).
                       %s
                 
                 %s: watch a game by providing the game's list number
                       %s
                 """,
-                EscapeSequences.SET_TEXT_COLOR_GREEN + "NOTE" + EscapeSequences.SET_TEXT_COLOR_BLUE,
-                EscapeSequences.SET_TEXT_COLOR_GREEN + "help" + EscapeSequences.SET_TEXT_COLOR_BLUE,
-                EscapeSequences.SET_TEXT_COLOR_GREEN + "quit" + EscapeSequences.SET_TEXT_COLOR_BLUE,
-                EscapeSequences.SET_TEXT_COLOR_GREEN + "logout" + EscapeSequences.SET_TEXT_COLOR_BLUE,
-                EscapeSequences.SET_TEXT_COLOR_GREEN + "create" + EscapeSequences.SET_TEXT_COLOR_BLUE,
-                EscapeSequences.SET_TEXT_COLOR_MAGENTA + "create <GAME_NAME>" + EscapeSequences.SET_TEXT_COLOR_BLUE,
-                EscapeSequences.SET_TEXT_COLOR_GREEN + "list" + EscapeSequences.SET_TEXT_COLOR_BLUE,
-                EscapeSequences.SET_TEXT_COLOR_GREEN + "join" + EscapeSequences.SET_TEXT_COLOR_BLUE,
-                EscapeSequences.SET_TEXT_COLOR_MAGENTA + "join <GAME_NUMBER> <WHITE | BLACK>" + EscapeSequences.SET_TEXT_COLOR_BLUE,
-                EscapeSequences.SET_TEXT_COLOR_GREEN + "observe" + EscapeSequences.SET_TEXT_COLOR_BLUE,
-                EscapeSequences.SET_TEXT_COLOR_MAGENTA + "observe <GAME_NUMBER>" + EscapeSequences.SET_TEXT_COLOR_BLUE);
+                EscapeSequences.SET_TEXT_COLOR_GREEN + "NOTE" +
+                        EscapeSequences.SET_TEXT_COLOR_BLUE,
+                EscapeSequences.SET_TEXT_COLOR_GREEN + "help" +
+                        EscapeSequences.SET_TEXT_COLOR_BLUE,
+                EscapeSequences.SET_TEXT_COLOR_GREEN + "quit" +
+                        EscapeSequences.SET_TEXT_COLOR_BLUE,
+                EscapeSequences.SET_TEXT_COLOR_GREEN + "logout" +
+                        EscapeSequences.SET_TEXT_COLOR_BLUE,
+                EscapeSequences.SET_TEXT_COLOR_GREEN + "create" +
+                        EscapeSequences.SET_TEXT_COLOR_BLUE,
+                EscapeSequences.SET_TEXT_COLOR_MAGENTA + "create <GAME_NAME>" +
+                        EscapeSequences.SET_TEXT_COLOR_BLUE,
+                EscapeSequences.SET_TEXT_COLOR_GREEN + "list" +
+                        EscapeSequences.SET_TEXT_COLOR_BLUE,
+                EscapeSequences.SET_TEXT_COLOR_GREEN + "join" +
+                        EscapeSequences.SET_TEXT_COLOR_BLUE,
+                EscapeSequences.SET_TEXT_COLOR_MAGENTA + "join <GAME_NUMBER> <WHITE | BLACK>" +
+                        EscapeSequences.SET_TEXT_COLOR_BLUE,
+                EscapeSequences.SET_TEXT_COLOR_GREEN + "observe" +
+                        EscapeSequences.SET_TEXT_COLOR_BLUE,
+                EscapeSequences.SET_TEXT_COLOR_MAGENTA + "observe <GAME_NUMBER>" +
+                        EscapeSequences.SET_TEXT_COLOR_BLUE);
         printOutput(output);
     }
 
     private void logoutPostLogin(String[] words) {
         if(words.length != 1) {
             printError("The " + EscapeSequences.SET_TEXT_COLOR_GREEN +
-                    "'logout' " + EscapeSequences.SET_TEXT_COLOR_RED + " command does not take arguments. Please try again!");
+                    "'logout' " + EscapeSequences.SET_TEXT_COLOR_RED +
+                    " command does not take arguments. Please try again!");
             return;
         }
 
@@ -306,7 +340,8 @@ public class REPL {
                     Successfully Logged out!
                     Type %s for pre-login options
                     """,
-                    EscapeSequences.SET_TEXT_COLOR_GREEN + "'help'" + EscapeSequences.SET_TEXT_COLOR_BLUE));
+                    EscapeSequences.SET_TEXT_COLOR_GREEN + "'help'" +
+                            EscapeSequences.SET_TEXT_COLOR_BLUE));
         } catch (ResponseException e) {
             printError(e.getMessage());
         }
@@ -320,8 +355,10 @@ public class REPL {
                     EX: create myNewGame
                     Please try again!
                     """,
-                    EscapeSequences.SET_TEXT_COLOR_GREEN + "create" + EscapeSequences.SET_TEXT_COLOR_RED,
-                    EscapeSequences.SET_TEXT_COLOR_MAGENTA + "create <GAME_NAME>" + EscapeSequences.SET_TEXT_COLOR_RED));
+                    EscapeSequences.SET_TEXT_COLOR_GREEN + "create" +
+                            EscapeSequences.SET_TEXT_COLOR_RED,
+                    EscapeSequences.SET_TEXT_COLOR_MAGENTA + "create <GAME_NAME>" +
+                            EscapeSequences.SET_TEXT_COLOR_RED));
             return;
         }
         String gameName = words[1];
@@ -342,7 +379,8 @@ public class REPL {
     private void listGamesPostLogin(String[] words) {
         if(words.length != 1) {
             printError("The " + EscapeSequences.SET_TEXT_COLOR_GREEN +
-                    "'list' " + EscapeSequences.SET_TEXT_COLOR_RED + " command does not take arguments. Please try again!");
+                    "'list' " + EscapeSequences.SET_TEXT_COLOR_RED +
+                    " command does not take arguments. Please try again!");
             return;
         }
         try {
@@ -355,8 +393,10 @@ public class REPL {
                         There are no active games. Create one with the %s command.
                         Try %s for more information.
                         """,
-                        EscapeSequences.SET_TEXT_COLOR_GREEN + "'create'" + EscapeSequences.SET_TEXT_COLOR_BLUE,
-                        EscapeSequences.SET_TEXT_COLOR_GREEN + "'help'" + EscapeSequences.SET_TEXT_COLOR_BLUE));
+                        EscapeSequences.SET_TEXT_COLOR_GREEN + "'create'" +
+                                EscapeSequences.SET_TEXT_COLOR_BLUE,
+                        EscapeSequences.SET_TEXT_COLOR_GREEN + "'help'" +
+                                EscapeSequences.SET_TEXT_COLOR_BLUE));
                 return;
             }
             int index = 1;
@@ -384,9 +424,12 @@ public class REPL {
                     EX: %s
                     Please try again!
                     """,
-                    EscapeSequences.SET_TEXT_COLOR_GREEN + "'join'" + EscapeSequences.SET_TEXT_COLOR_RED,
-                    EscapeSequences.SET_TEXT_COLOR_MAGENTA + "join <NUMBER> <WHITE | BLACK>" + EscapeSequences.SET_TEXT_COLOR_RED,
-                    EscapeSequences.SET_TEXT_COLOR_MAGENTA + "join 12345 WHITE" + EscapeSequences.SET_TEXT_COLOR_RED));
+                    EscapeSequences.SET_TEXT_COLOR_GREEN + "'join'" +
+                            EscapeSequences.SET_TEXT_COLOR_RED,
+                    EscapeSequences.SET_TEXT_COLOR_MAGENTA + "join <NUMBER> <WHITE | BLACK>" +
+                            EscapeSequences.SET_TEXT_COLOR_RED,
+                    EscapeSequences.SET_TEXT_COLOR_MAGENTA + "join 12345 WHITE" +
+                            EscapeSequences.SET_TEXT_COLOR_RED));
             return;
         }
         String player = words[2];
@@ -399,9 +442,12 @@ public class REPL {
                     Any input for the player argument besides WHITE or BLACK is invalid.
                     Please try again!
                     """,
-                    EscapeSequences.SET_TEXT_COLOR_GREEN + "join" + EscapeSequences.SET_TEXT_COLOR_RED,
-                    EscapeSequences.SET_TEXT_COLOR_MAGENTA + "join <NUMBER> <WHITE | BLACK>" + EscapeSequences.SET_TEXT_COLOR_RED,
-                    EscapeSequences.SET_TEXT_COLOR_MAGENTA + "join 12345 WHITE" + EscapeSequences.SET_TEXT_COLOR_RED));
+                    EscapeSequences.SET_TEXT_COLOR_GREEN + "join" +
+                            EscapeSequences.SET_TEXT_COLOR_RED,
+                    EscapeSequences.SET_TEXT_COLOR_MAGENTA + "join <NUMBER> <WHITE | BLACK>" +
+                            EscapeSequences.SET_TEXT_COLOR_RED,
+                    EscapeSequences.SET_TEXT_COLOR_MAGENTA + "join 12345 WHITE" +
+                            EscapeSequences.SET_TEXT_COLOR_RED));
             return;
         }
         if(!words[1].matches("\\d+")) {
@@ -412,9 +458,12 @@ public class REPL {
                     Any input for the NUMBER argument that is not an integer is invalid.
                     Please try again!
                     """,
-                    EscapeSequences.SET_TEXT_COLOR_GREEN + "join" + EscapeSequences.SET_TEXT_COLOR_RED,
-                    EscapeSequences.SET_TEXT_COLOR_MAGENTA + "join <NUMBER> <WHITE | BLACK>" + EscapeSequences.SET_TEXT_COLOR_RED,
-                    EscapeSequences.SET_TEXT_COLOR_MAGENTA + "join 12345 WHITE" + EscapeSequences.SET_TEXT_COLOR_RED));
+                    EscapeSequences.SET_TEXT_COLOR_GREEN + "join" +
+                            EscapeSequences.SET_TEXT_COLOR_RED,
+                    EscapeSequences.SET_TEXT_COLOR_MAGENTA + "join <NUMBER> <WHITE | BLACK>" +
+                            EscapeSequences.SET_TEXT_COLOR_RED,
+                    EscapeSequences.SET_TEXT_COLOR_MAGENTA + "join 12345 WHITE" +
+                            EscapeSequences.SET_TEXT_COLOR_RED));
             return;
         }
         int gameNumber = Integer.parseInt(words[1]) - 1;
@@ -427,10 +476,14 @@ public class REPL {
                     See the %s command for more game information.
                     Please try again!
                     """,
-                    EscapeSequences.SET_TEXT_COLOR_GREEN + "join" + EscapeSequences.SET_TEXT_COLOR_RED,
-                    EscapeSequences.SET_TEXT_COLOR_MAGENTA + "join <NUMBER> <WHITE | BLACK>" + EscapeSequences.SET_TEXT_COLOR_RED,
-                    EscapeSequences.SET_TEXT_COLOR_MAGENTA + "join 12345 WHITE" + EscapeSequences.SET_TEXT_COLOR_RED,
-                    EscapeSequences.SET_TEXT_COLOR_GREEN + "'list'" + EscapeSequences.SET_TEXT_COLOR_RED));
+                    EscapeSequences.SET_TEXT_COLOR_GREEN + "join" +
+                            EscapeSequences.SET_TEXT_COLOR_RED,
+                    EscapeSequences.SET_TEXT_COLOR_MAGENTA + "join <NUMBER> <WHITE | BLACK>" +
+                            EscapeSequences.SET_TEXT_COLOR_RED,
+                    EscapeSequences.SET_TEXT_COLOR_MAGENTA + "join 12345 WHITE" +
+                            EscapeSequences.SET_TEXT_COLOR_RED,
+                    EscapeSequences.SET_TEXT_COLOR_GREEN + "'list'" +
+                            EscapeSequences.SET_TEXT_COLOR_RED));
             return;
         }
         GameData game = gameList.get(gameNumber);
@@ -459,9 +512,12 @@ public class REPL {
                     EX: %s
                     Please try again!
                     """,
-                    EscapeSequences.SET_TEXT_COLOR_GREEN + "observe" + EscapeSequences.SET_TEXT_COLOR_RED,
-                    EscapeSequences.SET_TEXT_COLOR_MAGENTA + "observe <NUMBER>" + EscapeSequences.SET_TEXT_COLOR_RED,
-                    EscapeSequences.SET_TEXT_COLOR_MAGENTA + "observe 12345" + EscapeSequences.SET_TEXT_COLOR_RED));
+                    EscapeSequences.SET_TEXT_COLOR_GREEN + "observe" +
+                            EscapeSequences.SET_TEXT_COLOR_RED,
+                    EscapeSequences.SET_TEXT_COLOR_MAGENTA + "observe <NUMBER>" +
+                            EscapeSequences.SET_TEXT_COLOR_RED,
+                    EscapeSequences.SET_TEXT_COLOR_MAGENTA + "observe 12345" +
+                            EscapeSequences.SET_TEXT_COLOR_RED));
             return;
         }
         if(!words[1].matches("\\d+")) {
@@ -472,9 +528,12 @@ public class REPL {
                     Any input for the NUMBER argument that is not an integer is invalid.
                     Please try again!
                     """,
-                    EscapeSequences.SET_TEXT_COLOR_GREEN + "observe" + EscapeSequences.SET_TEXT_COLOR_RED,
-                    EscapeSequences.SET_TEXT_COLOR_MAGENTA + "observe <NUMBER>" + EscapeSequences.SET_TEXT_COLOR_RED,
-                    EscapeSequences.SET_TEXT_COLOR_MAGENTA + "observe 12345" + EscapeSequences.SET_TEXT_COLOR_RED));
+                    EscapeSequences.SET_TEXT_COLOR_GREEN + "observe" +
+                            EscapeSequences.SET_TEXT_COLOR_RED,
+                    EscapeSequences.SET_TEXT_COLOR_MAGENTA + "observe <NUMBER>" +
+                            EscapeSequences.SET_TEXT_COLOR_RED,
+                    EscapeSequences.SET_TEXT_COLOR_MAGENTA + "observe 12345" +
+                            EscapeSequences.SET_TEXT_COLOR_RED));
             return;
         }
         int gameNumber = Integer.parseInt(words[1]) - 1;
@@ -487,10 +546,14 @@ public class REPL {
                     See the %s command for more game information.
                     Please try again!
                     """,
-                    EscapeSequences.SET_TEXT_COLOR_GREEN + "observe" + EscapeSequences.SET_TEXT_COLOR_RED,
-                    EscapeSequences.SET_TEXT_COLOR_MAGENTA + "observe <NUMBER>" + EscapeSequences.SET_TEXT_COLOR_RED,
-                    EscapeSequences.SET_TEXT_COLOR_MAGENTA + "observe 12345" + EscapeSequences.SET_TEXT_COLOR_RED,
-                    EscapeSequences.SET_TEXT_COLOR_GREEN + "'list'" + EscapeSequences.SET_TEXT_COLOR_RED));
+                    EscapeSequences.SET_TEXT_COLOR_GREEN + "observe" +
+                            EscapeSequences.SET_TEXT_COLOR_RED,
+                    EscapeSequences.SET_TEXT_COLOR_MAGENTA + "observe <NUMBER>" +
+                            EscapeSequences.SET_TEXT_COLOR_RED,
+                    EscapeSequences.SET_TEXT_COLOR_MAGENTA + "observe 12345" +
+                            EscapeSequences.SET_TEXT_COLOR_RED,
+                    EscapeSequences.SET_TEXT_COLOR_GREEN + "'list'" +
+                            EscapeSequences.SET_TEXT_COLOR_RED));
             return;
         }
         GameData game = gameList.get(gameNumber);

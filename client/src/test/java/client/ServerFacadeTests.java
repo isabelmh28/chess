@@ -35,6 +35,14 @@ public class ServerFacadeTests {
     private RegisterResult registerTestUser() throws Exception {
         return facade.register(new RegisterRequest("user1", "password1", "email1"));
     }
+
+    // Check Networking
+    @Test
+    void networkingException() {
+        ServerFacade badFacade = new ServerFacade(1);
+        assertThrows(Exception.class, badFacade::clear,
+                "Connecting to a bad port should throw an Exception");
+    }
     
     // Clear
     @Test
@@ -100,6 +108,12 @@ public class ServerFacadeTests {
         assertThrows(Exception.class, this::registerTestUser,
                 "Trying to register with a username that already exists should throw an exception");
     }
+    @Test
+    public void registerNullRequestException() throws Exception {
+        assertThrows(Exception.class, ()->
+                        facade.register(null),
+                "Trying to register with a null Request should throw an exception");
+    }
 
     // Login
     // Success
@@ -163,6 +177,12 @@ public class ServerFacadeTests {
                 facade.login(new LoginRequest("user1", "wrongPasswword")),
                 "Logging in with the wrong password should throw an exception");
     }
+    @Test
+    void loginNullRequestException() throws Exception {
+        assertThrows(Exception.class, ()->
+                        facade.login(null),
+                "Logging in with a null Request should throw an exception");
+    }
 
     //Logout
     //Success
@@ -181,6 +201,12 @@ public class ServerFacadeTests {
         assertThrows(Exception.class, ()->
                 facade.logout(new LogoutRequest("badToken")),
                 "Trying to Logout with an invalid authToken should throw an Exception");
+    }
+    @Test
+    void logoutNullRequest() throws Exception {
+        assertThrows(Exception.class, ()->
+                        facade.logout(null),
+                "Trying to Logout with a null Request should throw an Exception");
     }
 
     // CreateGame
@@ -323,6 +349,15 @@ public class ServerFacadeTests {
         assertThrows(Exception.class, ()->
                         facade.joinGame(register.authToken(), new JoinGameRequest("", game.gameID())),
                 "Attempting to join a game with an empty playerColor should throw an Exception");
+    }
+    @Test
+    void joinGameNullRequestException() throws Exception {
+        var register = registerTestUser();
+        var game = facade.createGame(register.authToken(), new CreateGameRequest("game1"));
+
+        assertThrows(Exception.class, ()->
+                        facade.joinGame(register.authToken(), null),
+                "Attempting to join a game with a null Request should throw an Exception");
     }
     // Already Taken
     // White already taken

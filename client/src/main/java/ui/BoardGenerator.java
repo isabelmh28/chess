@@ -6,7 +6,7 @@ import chess.ChessPiece;
 import chess.ChessPosition;
 
 public class BoardGenerator {
-    private static final String[] cols =
+    private static final String[] COLS =
             {" a\u2003", " b\u2003", " c\u2003", " d\u2003", " e\u2003",
                     " f\u2003", " g\u2003", " h\u2003"};
     private final ChessGame.TeamColor color;
@@ -44,7 +44,7 @@ public class BoardGenerator {
         printBlankSquare(EscapeSequences.SET_BG_COLOR_BLUE);
         for(int i = 0; i < DIMENSION; i++) {
             int index = isWhite ? i : ((DIMENSION - 1) - i);
-            String letter = cols[index];
+            String letter = COLS[index];
             printSquare(EscapeSequences.SET_BG_COLOR_BLUE, EscapeSequences.SET_TEXT_COLOR_WHITE, String.valueOf(letter));
         }
         printBlankSquare(EscapeSequences.SET_BG_COLOR_BLUE);
