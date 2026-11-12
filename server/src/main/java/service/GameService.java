@@ -85,13 +85,13 @@ public class GameService {
         // Check if player color is already taken
         String whiteUser = checkGame.whiteUsername();
         String blackUser = checkGame.blackUsername();
-        if ("WHITE".equals(playerColor)) {
+        if (ChessGame.TeamColor.WHITE.name().equals(playerColor)) {
             if((whiteUser != null) && (!whiteUser.isBlank())) {
                 throw new AlreadyTakenException("Error: already taken");
             }
             whiteUser = username;
         }
-        else if ("BLACK".equals(playerColor)) {
+        else if (ChessGame.TeamColor.BLACK.name().equals(playerColor)) {
             if((blackUser != null) && (!blackUser.isBlank())) {
                 throw new AlreadyTakenException("Error: already taken");
             }

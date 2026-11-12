@@ -1,7 +1,11 @@
 package client;
 
+import chess.ChessBoard;
+import chess.ChessGame;
+import model.GameData;
 import model.transactions.request.*;
 import model.transactions.result.*;
+import ui.BoardGenerator;
 import ui.EscapeSequences;
 
 import java.util.ArrayList;
@@ -24,7 +28,7 @@ public class REPL {
     private final ServerFacade facade;
     private final Scanner scanner;
     private String authToken;
-    private final ArrayList<Integer> gameIDList;
+    private final ArrayList<GameData> gameList;
 
 
     public REPL(int port) {
@@ -32,7 +36,7 @@ public class REPL {
         facade = new ServerFacade(port);
         scanner = new Scanner(System.in);
         authToken = null;
-        gameIDList = new ArrayList<>();
+        gameList = new ArrayList<>();
     }
 
     public void run() {
@@ -236,6 +240,8 @@ public class REPL {
             printOutput(String.format("""
                     Successfully Logged in with your credentials! Welcome %s!
                     """, username));
+            ListGamesResult list = facade.listGames(authToken);
+            gameList.addAll(list.games());
         } catch (ResponseException e) {
             printError(e.getMessage());
         }
@@ -342,7 +348,7 @@ public class REPL {
         try {
             ListGamesResult list = facade.listGames(authToken);
             var gamesList = list.games();
-            gameIDList.clear();
+            gameList.clear();
 
             if((gamesList == null) || (gamesList.isEmpty())) {
                 printOutput(String.format("""
@@ -356,7 +362,7 @@ public class REPL {
             int index = 1;
             StringBuilder listOutput = new StringBuilder("Game List: \n");
             for(var game : gamesList) {
-                gameIDList.add(game.gameID());
+                gameList.add(game);
                 String whiteUsername = (game.whiteUsername() != null) ? game.whiteUsername() : "<null>";
                 String blackUsername = (game.blackUsername() != null) ? game.blackUsername() : "<null>";
 
@@ -384,7 +390,8 @@ public class REPL {
             return;
         }
         String player = words[2];
-        if(!Objects.equals(player.toUpperCase(), "WHITE") && !Objects.equals(player.toUpperCase(), "BLACK")) {
+        if(        !Objects.equals(player.toUpperCase(), ChessGame.TeamColor.WHITE.name())
+                && !Objects.equals(player.toUpperCase(), ChessGame.TeamColor.BLACK.name())) {
             printError(String.format("""
                     %s player options are only WHITE or BLACK:
                     %s
@@ -411,7 +418,7 @@ public class REPL {
             return;
         }
         int gameNumber = Integer.parseInt(words[1]) - 1;
-        if(gameNumber < 0 || gameNumber >= gameIDList.size()) {
+        if(gameNumber < 0 || gameNumber >= gameList.size()) {
             printError(String.format("""
                     %s game number argument MUST be more than 0 and less than the list size.
                     %s
@@ -426,14 +433,19 @@ public class REPL {
                     EscapeSequences.SET_TEXT_COLOR_GREEN + "'list'" + EscapeSequences.SET_TEXT_COLOR_RED));
             return;
         }
-        int gameID = gameIDList.get(gameNumber);
-        JoinGameRequest join = new JoinGameRequest(player, gameID);
+        GameData game = gameList.get(gameNumber);
+        JoinGameRequest join = new JoinGameRequest(player, game.gameID());
 
         try {
             facade.joinGame(authToken, join);
             printOutput("""
                     Successfully joined game!
                     """);
+
+            ChessGame.TeamColor team = ChessGame.TeamColor.valueOf(player.toUpperCase());
+            ChessBoard board = game.game().getBoard();
+            BoardGenerator gen = new BoardGenerator(team, board);
+            gen.drawBoard();
         } catch (ResponseException e) {
             printError(e.getMessage());
         }
@@ -466,7 +478,7 @@ public class REPL {
             return;
         }
         int gameNumber = Integer.parseInt(words[1]) - 1;
-        if(gameNumber < 0 || gameNumber >= gameIDList.size()) {
+        if(gameNumber < 0 || gameNumber >= gameList.size()) {
             printError(String.format("""
                     %s game number argument MUST be more than 0 and less than the list size.
                     %s
@@ -481,9 +493,11 @@ public class REPL {
                     EscapeSequences.SET_TEXT_COLOR_GREEN + "'list'" + EscapeSequences.SET_TEXT_COLOR_RED));
             return;
         }
-        int gameID = gameIDList.get(gameNumber);
+        GameData game = gameList.get(gameNumber);
         printOutput("""
                 Successfully observing the game!
                 """);
+        BoardGenerator gen = new BoardGenerator(ChessGame.TeamColor.WHITE, game.game().getBoard());
+        gen.drawBoard();
     }
 }
