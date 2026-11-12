@@ -1,15 +1,10 @@
 package client;
 
-import chess.ChessBoard;
-import chess.ChessGame;
 import model.GameData;
-import model.transactions.request.*;
-import model.transactions.result.*;
 import ui.*;
-import ui.CLIStateHandlers.*;
+import ui.statehandlers.*;
 
 import java.util.ArrayList;
-import java.util.Objects;
 import java.util.Scanner;
 
 /**
@@ -91,5 +86,25 @@ public class REPL {
     public void printError(String message) {
         printOutput(
                 EscapeSequences.SET_TEXT_COLOR_RED + message + EscapeSequences.RESET_TEXT_COLOR);
+    }
+
+    public void printHelp(String body) {
+        String message = String.format("""
+                Below are the available commands.
+                %s: misspelling a command or providing the incorrect input will require a new command.
+                      The angle brackets <> contain arguments that you will need to provide for that command.
+                      Do not include the brackets when you provide your information.
+                
+                %s: list possible commands
+                
+                %s: exit the game
+                %s""", EscapeSequences.SET_TEXT_COLOR_GREEN + "NOTE" +
+                EscapeSequences.SET_TEXT_COLOR_BLUE,
+                EscapeSequences.SET_TEXT_COLOR_GREEN + "help" +
+                        EscapeSequences.SET_TEXT_COLOR_BLUE,
+                EscapeSequences.SET_TEXT_COLOR_GREEN + "quit" +
+                        EscapeSequences.SET_TEXT_COLOR_BLUE,
+                body);
+        printOutput(message);
     }
 }
