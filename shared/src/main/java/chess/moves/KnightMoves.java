@@ -18,12 +18,17 @@ public class KnightMoves {
      * @param myPosition: the current Knight's position
      * @param piece:      the Knight you are moving, including the piece's color
      */
-    public static Collection<ChessMove> pieceMoves(ChessBoard board, ChessPosition myPosition, ChessPiece piece) {
-        Collection<ChessMove> queenMoves = new ArrayList<>();
-
+    public static Collection<ChessMove> pieceMoves(ChessBoard board, ChessPosition myPosition,
+                                                   ChessPiece piece) throws InvalidArgumentsException {
         // Check Parameters
-        if(board == null || piece == null || myPosition == null) { return queenMoves;}
-        if(!myPosition.inBounds()) { return queenMoves;}
+        if(board == null || piece == null || myPosition == null) {
+            throw new InvalidArgumentsException("pieceMoves in KnightMoves");
+        }
+        if(!myPosition.inBounds()) {
+            throw new InvalidArgumentsException("piece in KnightMoves");
+        }
+
+        Collection<ChessMove> queenMoves = new ArrayList<>();
 
         // The Knight can move in the following combinations:
         int[][] directions = {

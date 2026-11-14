@@ -57,6 +57,17 @@ public class ChessGame {
         BLACK
     }
 
+    // Overridden Methods
+    @Override
+    public int hashCode() { return 31 * board.hashCode() + 41 * Objects.hashCode(currentTeam);}
+    @Override
+    public boolean equals(Object obj) {
+        if(this == obj) {return true;}
+        else if((obj == null) || (getClass() != obj.getClass())) {return false;}
+        ChessGame that = (ChessGame) obj;
+        return Objects.equals(board, that.board) && Objects.equals(currentTeam, that.currentTeam);
+    }
+
     /**
      * Gets all valid moves for a piece at the given location
      *
@@ -66,11 +77,17 @@ public class ChessGame {
      * Move is valid if move is a "piece move" at that position AND if it doesn't let
      * the King get in check.
      */
-    public Collection<ChessMove> validMoves(ChessPosition startPosition) {
+    public Collection<ChessMove> validMoves(ChessPosition startPosition) throws InvalidArgumentsException {
         // If position doesn't have a piece on it, return null
-        if(board.getPiece(startPosition) == null) { return null;}
+        if(startPosition ==  null) {
+            throw new InvalidArgumentsException("validMoves in ChessGame");
+        }
+
         // valid moves that are returned
         Collection<ChessMove> valid = new ArrayList<>();
+
+        if(board.getPiece(startPosition) == null) { return valid;}
+
         TeamColor color = board.getPiece(startPosition).getTeamColor();
         Collection<ChessMove> possible = board.getPiece(startPosition).pieceMoves(board, startPosition);
         for(ChessMove move : possible){
@@ -104,12 +121,16 @@ public class ChessGame {
      */
     public void makeMove(ChessMove move) throws InvalidMoveException {
         // Invalids: Move cannot act on a null piece/empty position, and you can only move your team's pieces.
+        if(move == null) {
+            throw new InvalidMoveException("makeMove move invalid; passed in move is null");
+        }
         if(board.getPiece(move.getStartPosition()) == null) {
             throw new InvalidMoveException("makeMove move invalid; trying to move null piece.");
         }
         else if(board.getPiece(move.getStartPosition()).getTeamColor() != currentTeam) {
             throw new InvalidMoveException("makeMove move invalid; not the correct team's turn.");
         }
+
         // Only make a move if it is valid.
         Collection<ChessMove> valid = validMoves(move.getStartPosition());
         if(valid == null || !valid.contains(move)) {
@@ -141,7 +162,10 @@ public class ChessGame {
      *       The version that does not pass in the board uses this method,
      *       simply using this.board as the passed in board.
      */
-    public boolean isInCheck(ChessBoard board, TeamColor color) {
+    public boolean isInCheck(ChessBoard board, TeamColor color) throws InvalidArgumentsException {
+        if(board == null || color == null) {
+            throw new InvalidArgumentsException("isInCheck in ChessGame");
+        }
         ChessPosition kingPosition = board.kingPosition(color);
         for(int row = 1; row <= ROWS; row++) {
             for(int col = 1; col <= COLS; col++) {
@@ -164,7 +188,12 @@ public class ChessGame {
      * @param kingPos: the position of the enemy King
      * @return true if the enemy King is being attacked
      */
-    public boolean isAttackingKing(ChessBoard board, ChessPosition curPos, ChessPosition kingPos) {
+    public boolean isAttackingKing(ChessBoard board, ChessPosition curPos, ChessPosition kingPos)
+            throws InvalidArgumentsException{
+        if(board == null || curPos == null || kingPos == null) {
+            throw new InvalidArgumentsException("isAttackingKing in ChessGame");
+        }
+
         Collection<ChessMove> enemyMoves = board.getPiece(curPos).pieceMoves(board, curPos);
         for(ChessMove move : enemyMoves) {
             if (move.getEndPosition().equals(kingPos)) {return true;}
@@ -177,7 +206,11 @@ public class ChessGame {
      * @param teamColor: your piece's color
      * @return true if there are any valid moves for the piece
      */
-    private boolean noValidMoves(TeamColor teamColor) {
+    private boolean noValidMoves(TeamColor teamColor) throws InvalidArgumentsException {
+        if(teamColor == null) {
+            throw new InvalidArgumentsException("noValidMoves in ChessGame");
+        }
+
         for(int row = 1; row <= ROWS; row++) {
             for(int col = 1; col <= COLS; col++) {
                 ChessPosition pos = new ChessPosition(row, col);
@@ -200,7 +233,6 @@ public class ChessGame {
      * @return True if the specified team is in check
      */
     public boolean isInCheck(TeamColor teamColor) { return isInCheck(this.board, teamColor);}
-
 
     /**
      * Determines if the given team is in checkmate
@@ -236,15 +268,4 @@ public class ChessGame {
      * @return the chessboard
      */
     public ChessBoard getBoard() { return new ChessBoard(board);}
-
-    // Overridden Methods
-    @Override
-    public int hashCode() { return 31 * board.hashCode() + 41 * Objects.hashCode(currentTeam);}
-    @Override
-    public boolean equals(Object obj) {
-        if(this == obj) {return true;}
-        else if((obj == null) || (getClass() != obj.getClass())) {return false;}
-        ChessGame that = (ChessGame) obj;
-        return Objects.equals(board, that.board) && Objects.equals(currentTeam, that.currentTeam);
-    }
 }

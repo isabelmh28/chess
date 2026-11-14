@@ -13,12 +13,17 @@ public class PawnMoves {
      * @param pos:   the current Pawn's position
      * @param piece: the Pawn you are moving, including the piece's color
      */
-    public static Collection<ChessMove> pieceMoves(ChessBoard board, ChessPosition pos, ChessPiece piece) {
-        Collection<ChessMove> pawnMoves = new ArrayList<>();
-
+    public static Collection<ChessMove> pieceMoves(ChessBoard board, ChessPosition pos,
+                                                   ChessPiece piece) throws InvalidArgumentsException {
         // Check Parameters
-        if(board == null || piece == null || pos == null) { return pawnMoves;}
-        if(!pos.inBounds()) { return pawnMoves;}
+        if(board == null || piece == null || pos == null) {
+            throw new InvalidArgumentsException("pieceMoves in PawnMoves");
+        }
+        if(!pos.inBounds()) {
+            throw new InvalidArgumentsException("pieceMoves in PawnMoves");
+        }
+
+        Collection<ChessMove> pawnMoves = new ArrayList<>();
 
         // Depends on the Team Color
         int startRow = piece.getTeamColor() == ChessGame.TeamColor.WHITE ? 2 : 7;

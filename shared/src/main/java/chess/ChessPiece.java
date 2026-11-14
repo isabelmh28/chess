@@ -103,12 +103,23 @@ public class ChessPiece {
      *    a) you hit your own team's piece (you stop right next to it)
      *    b) you hit the end of the board (you stop right next to the edge)
      *    c) you hit an enemy piece (you replace the enemy piece)
-     * Parameters: hor and vert can be -1, 0, or 1. This provides the direction
-     *    ex: (1, 0) would be right, (-1, 1) would be forward left diagonal
-     * Used for Rooks, Bishops, and Queens
+     * @param board:    the chessBoard
+     * @param pos:      starting position on the board
+     * @param rowDelta: indicates the ray direction horizontally
+     * @param colDelta: indicates the ray direction vertically
+     *                  EX: rowDelta = 1, colDelta = 0 would be right
+     *                      rowDelta = -1, colDelta = 1 would be up left diagonal
+     * Used for Rooks, Bishops, Queens, Kings, and Knights
      */
-    public Collection<ChessMove> rayMoves(ChessBoard board, ChessPosition pos, int rowDelta, int colDelta, boolean cont) {
+    public Collection<ChessMove> rayMoves(ChessBoard board, ChessPosition pos, int rowDelta, int colDelta,
+                                          boolean cont) throws InvalidArgumentsException {
+        // Check Parameters
+        if((board == null) || (pos == null) || !pos.inBounds()) {
+            throw new InvalidArgumentsException("rayMoves in ChessPiece");
+        }
+        
         Collection<ChessMove> ray = new ArrayList<>();
+
         int currRow = pos.getRow();
         int currCol = pos.getColumn();
         while(true) {
@@ -116,10 +127,11 @@ public class ChessPiece {
             currCol += colDelta;
             ChessPosition newPos = new ChessPosition(currRow, currCol);
             if(newPos.inBounds()) {
+                // if new position doesn't have a piece, add a move
                 if(board.getPiece(newPos) == null) {
                     ray.add(new ChessMove(pos, newPos, null));
                 }
-                else {
+                else { // if the new position has an enemy piece, add a move and stop
                     if(board.getPiece(newPos).getTeamColor() != pieceColor) {
                         ray.add(new ChessMove(pos, newPos, null));
                     }
@@ -136,7 +148,10 @@ public class ChessPiece {
      * Calculates all the positions a chess piece can move to
      * Does not take into account moves that are illegal due to leaving the king in
      * danger
+     * NOTE: parameter checks occur within each pieceMoves class
      * See moves directory for individual pieceMoves methods
+     * @param board:      the chessBoard
+     * @param myPosition: position of the piece on the board
      * @return Collection of valid moves
      */
     public Collection<ChessMove> pieceMoves(ChessBoard board, ChessPosition myPosition) {

@@ -18,12 +18,17 @@ public class KingMoves {
      * @param myPosition: the current King's position
      * @param piece:      the King you are moving, including the piece's color
      */
-    public static Collection<ChessMove> pieceMoves(ChessBoard board, ChessPosition myPosition, ChessPiece piece) {
-        Collection<ChessMove> kingMoves = new ArrayList<>();
-
+    public static Collection<ChessMove> pieceMoves(ChessBoard board, ChessPosition myPosition,
+                                                   ChessPiece piece) throws InvalidArgumentsException {
         // Check Parameters
-        if(board == null || piece == null || myPosition == null) { return kingMoves;}
-        if(!myPosition.inBounds()) { return kingMoves;}
+        if(board == null || piece == null || myPosition == null) {
+            throw new InvalidArgumentsException("pieceMoves in KingMoves");
+        }
+        if(!myPosition.inBounds()) {
+            throw new InvalidArgumentsException("pieceMoves in KingMoves");
+        }
+
+        Collection<ChessMove> kingMoves = new ArrayList<>();
 
         // Add moves to Collection per direction
         for(int[] currDirection : ChessPiece.ALL_DIRECTIONS) {

@@ -18,12 +18,17 @@ public class BishopMoves {
      * @param myPosition: the current Bishop's position
      * @param piece:      the Bishop you are moving, including the piece's color
      */
-    public static Collection<ChessMove> pieceMoves(ChessBoard board, ChessPosition myPosition, ChessPiece piece) {
-        Collection<ChessMove> bishopMoves = new ArrayList<>();
-
+    public static Collection<ChessMove> pieceMoves(ChessBoard board, ChessPosition myPosition,
+                                                   ChessPiece piece) throws InvalidArgumentsException {
         // Check Parameters
-        if(board == null || piece == null || myPosition == null) { return bishopMoves;}
-        if(!myPosition.inBounds()) { return bishopMoves;}
+        if(board == null || piece == null || myPosition == null) {
+            throw new InvalidArgumentsException("pieceMoves in BishopMoves");
+        }
+        if(!myPosition.inBounds()) {
+            throw new InvalidArgumentsException("pieceMoves in BishopMoves");
+        }
+
+        Collection<ChessMove> bishopMoves = new ArrayList<>();
 
         // Add moves to Collection per direction
         for(int[] currDirection : ChessPiece.DIAGONALS_DIRECTIONS) {

@@ -58,13 +58,15 @@ public class ChessBoard {
      * @param position: where to add the piece to
      * @param piece:    the piece to add
      */
-    public void addPiece(ChessPosition position, ChessPiece piece) {
+    public void addPiece(ChessPosition position, ChessPiece piece) throws InvalidArgumentsException {
         /*
          * Make sure position is valid
          * No null position
          * Position must be on the board: 1 < row < 8; 1 < col < 8
          */
-        if(position == null) {throw new RuntimeException("Null position");}
+        if(position == null) {
+            throw new InvalidArgumentsException("addPiece in ChessBoard");
+        }
         if(position.inBounds()) { chessBoard[position.getRow()-1][position.getColumn()-1] = piece;}
     }
 
@@ -74,7 +76,11 @@ public class ChessBoard {
      * @param color: team's king being tested on the board
      * @return ChessPosition of the king if found
      */
-    public ChessPosition kingPosition(ChessGame.TeamColor color) {
+    public ChessPosition kingPosition(ChessGame.TeamColor color) throws InvalidArgumentsException {
+        if(color == null) {
+            throw new InvalidArgumentsException("kingPosition in ChessBoard");
+        }
+        
         for(int row = 1; row <= ROWS; row++) {
             for(int col = 1; col <= COLS; col++) {
                 ChessPiece piece = getPiece(new ChessPosition(row, col));

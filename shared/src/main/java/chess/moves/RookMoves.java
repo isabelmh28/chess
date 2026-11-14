@@ -18,12 +18,17 @@ public class RookMoves {
      * @param myPosition: the current Rook's position
      * @param piece:      the Rook you are moving, including the piece's color
      */
-    public static Collection<ChessMove> pieceMoves(ChessBoard board, ChessPosition myPosition, ChessPiece piece) {
-        Collection<ChessMove> rookMoves = new ArrayList<>();
-
+    public static Collection<ChessMove> pieceMoves(ChessBoard board, ChessPosition myPosition,
+                                                   ChessPiece piece) throws InvalidArgumentsException {
         // Check Parameters
-        if(board == null || piece == null || myPosition == null) { return rookMoves;}
-        if(!myPosition.inBounds()) { return rookMoves;}
+        if(board == null || piece == null || myPosition == null) {
+            throw new InvalidArgumentsException("pieceMoves in RookMoves");
+        }
+        if(!myPosition.inBounds()) {
+            throw new InvalidArgumentsException("pieceMoves in RookMoves");
+        }
+
+        Collection<ChessMove> rookMoves = new ArrayList<>();
 
         // Add moves to Collection per direction
         for(int[] currDirection : ChessPiece.STRAIGHTS_DIRECTIONS) {
