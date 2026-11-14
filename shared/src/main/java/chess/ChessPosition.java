@@ -50,16 +50,17 @@ public class ChessPosition {
     // Getter Functions
     /**
      * @return which row this position is in
-     * 1 codes for the bottom row, 8 is the top row
+     * 1 is the bottom row, 8 is the top row
      */
     public int getRow() { return row;}
-
     /**
      * @return which column this position is in
-     * 1 codes for the left column, 8 is the right column
+     * 1 is the left column, 8 is the right column
      */
     public int getColumn() { return col;}
-
+    /**
+     * @return if the row and column are on the board
+     */
     public boolean inBounds() {
         return (row >= 1 && row <= 8) && (col >= 1 && col <= 8);
     }

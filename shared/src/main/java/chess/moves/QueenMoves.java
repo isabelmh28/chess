@@ -12,8 +12,19 @@ import java.util.Collection;
 import java.util.ArrayList;
 
 public class QueenMoves {
+    /**
+     * A moves helper class containing the moves a Queen can make
+     * @param board:      the current chessboard
+     * @param myPosition: the current Queen's position
+     * @param piece:      the Queen you are moving, including the piece's color
+     */
     public static Collection<ChessMove> pieceMoves(ChessBoard board, ChessPosition myPosition, ChessPiece piece) {
         Collection<ChessMove> queenMoves = new ArrayList<>();
+
+        // Check Parameters
+        if(board == null || piece == null || myPosition == null) { return queenMoves;}
+        if(!myPosition.inBounds()) { return queenMoves;}
+
         // Add moves to Collection per direction
         for(int[] currDirection : ChessPiece.ALL_DIRECTIONS) {
             // See moveRay method in ChessPiece module for more information

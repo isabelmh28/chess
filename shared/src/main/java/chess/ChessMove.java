@@ -48,7 +48,9 @@ public class ChessMove {
         if((obj == null) || (getClass() != obj.getClass())) {return false;}
         // Cast and Compare data
         ChessMove that = (ChessMove) obj;
-        return Objects.equals(start, that.start) && Objects.equals(end, that.end) && Objects.equals(promoteType, that.promoteType);
+        return     Objects.equals(start, that.start)
+                && Objects.equals(end, that.end)
+                && Objects.equals(promoteType, that.promoteType);
     }
 
     // Getter Functions
@@ -56,12 +58,10 @@ public class ChessMove {
      * @return ChessPosition of starting location
      */
     public ChessPosition getStartPosition() { return start;}
-
     /**
      * @return ChessPosition of ending location
      */
     public ChessPosition getEndPosition() { return end;}
-
     /**
      * Gets the type of piece to promote a pawn to if pawn promotion is part of this
      * chess move

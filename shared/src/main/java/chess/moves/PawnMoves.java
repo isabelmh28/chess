@@ -7,8 +7,19 @@ import java.util.Collection;
 
 
 public class PawnMoves {
-
+    /**
+     * A moves helper class containing the moves a Pawn can make
+     * @param board: the current chessboard
+     * @param pos:   the current Pawn's position
+     * @param piece: the Pawn you are moving, including the piece's color
+     */
     public static Collection<ChessMove> pieceMoves(ChessBoard board, ChessPosition pos, ChessPiece piece) {
+        Collection<ChessMove> pawnMoves = new ArrayList<>();
+
+        // Check Parameters
+        if(board == null || piece == null || pos == null) { return pawnMoves;}
+        if(!pos.inBounds()) { return pawnMoves;}
+
         // Depends on the Team Color
         int startRow = piece.getTeamColor() == ChessGame.TeamColor.WHITE ? 2 : 7;
         int promRow = piece.getTeamColor() == ChessGame.TeamColor.WHITE ? 8 : 1;
@@ -18,7 +29,6 @@ public class PawnMoves {
                 {rowDelta, -1}
         };
         // Not dependent on Team Color
-        Collection<ChessMove> pawnMoves = new ArrayList<>();
         int currRow = pos.getRow();
         int currCol = pos.getColumn();
 

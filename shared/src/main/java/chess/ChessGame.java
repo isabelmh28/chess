@@ -1,3 +1,10 @@
+/**
+ * ChessGame Module
+ * Represents the chess game, storing current player information
+ * and making moves in the game.
+ * Author: Isabel Hinton off Template
+ */
+
 package chess;
 
 import java.util.ArrayList;
@@ -11,18 +18,20 @@ import java.util.Objects;
  * signature of the existing methods.
  */
 public class ChessGame {
+    // Macros
     public static final int ROWS = 8;
     public static final int COLS = 8;
-
+    // Private Members
     private TeamColor currentTeam;
     private ChessBoard board;
-
+    // Constructor
     public ChessGame() {
         currentTeam = TeamColor.WHITE;
         board = new ChessBoard();
         board.resetBoard();
     }
 
+    // Getter Functions
     /**
      * @return Which team's turn it is
      */
@@ -30,6 +39,7 @@ public class ChessGame {
         return currentTeam;
     }
 
+    // Setter Functions
     /**
      * Sets which teams turn it is
      *
@@ -62,7 +72,6 @@ public class ChessGame {
         // valid moves that are returned
         Collection<ChessMove> valid = new ArrayList<>();
         TeamColor color = board.getPiece(startPosition).getTeamColor();
-        // possible moves
         Collection<ChessMove> possible = board.getPiece(startPosition).pieceMoves(board, startPosition);
         for(ChessMove move : possible){
             // create a temporary copy
@@ -106,7 +115,7 @@ public class ChessGame {
         if(valid == null || !valid.contains(move)) {
             throw new InvalidMoveException("makeMove move invalid; not contained in valid moves.");
         }
-        else {
+        else { // If move is valid, add the moved piece to the board.
             if(move.getPromotionPiece() == null){
                 board.addPiece(move.getEndPosition(), board.getPiece(move.getStartPosition()));
             }
@@ -114,6 +123,7 @@ public class ChessGame {
                 ChessPiece promotedPawn = new ChessPiece(currentTeam, move.getPromotionPiece());
                 board.addPiece(move.getEndPosition(), promotedPawn);
             }
+            // After placing piece in new position, remove it from old position.
             board.addPiece(move.getStartPosition(), null);
         }
         // Change team after making a move.
@@ -137,13 +147,16 @@ public class ChessGame {
             for(int col = 1; col <= COLS; col++) {
                 ChessPosition curPos = new ChessPosition(row, col);
                 ChessPiece piece = board.getPiece(curPos);
+                // Check if the piece at that location is on the right team
                 if(piece != null && piece.getTeamColor() != color) {
+                    // Check if the piece is attacking the king
                     if(isAttackingKing(board, curPos, kingPosition)) {return true;}
                 }
             }
         }
         return false;
     }
+
     /**
      * Checks if a piece at a position is attacking the King
      * @param board: the board state being evaluated
@@ -158,6 +171,7 @@ public class ChessGame {
         }
         return false;
     }
+
     /**
      * Checks if a piece at a position has no valid moves from that position
      * @param teamColor: your piece's color
@@ -169,6 +183,7 @@ public class ChessGame {
                 ChessPosition pos = new ChessPosition(row, col);
                 ChessPiece piece = board.getPiece(pos);
                 if(piece != null) {
+                    // if there is your team's piece and there is a valid move, return false
                     if((piece.getTeamColor() == teamColor) && (!validMoves(pos).isEmpty())) {
                         return false;
                     }
@@ -222,9 +237,9 @@ public class ChessGame {
      */
     public ChessBoard getBoard() { return new ChessBoard(board);}
 
+    // Overridden Methods
     @Override
     public int hashCode() { return 31 * board.hashCode() + 41 * Objects.hashCode(currentTeam);}
-
     @Override
     public boolean equals(Object obj) {
         if(this == obj) {return true;}

@@ -6,16 +6,16 @@ import chess.ChessPiece;
 import chess.ChessPosition;
 
 public class BoardGenerator {
+    // Column values for top and bottom row of board
+    // Note that the letters are slightly offset due to them em-space
     private static final String[] COLS =
             {" a\u2003", " b\u2003", " c\u2003", " d\u2003", " e\u2003",
                     " f\u2003", " g\u2003", " h\u2003"};
-    private final ChessGame.TeamColor color;
     private final boolean isWhite;
     private final ChessBoard board;
     public static final int DIMENSION = 8;
 
     public BoardGenerator(ChessGame.TeamColor color, ChessBoard board) {
-        this.color = color;
         isWhite = (color == ChessGame.TeamColor.WHITE);
         this.board = board;
     }
@@ -61,14 +61,16 @@ public class BoardGenerator {
     }
 
     private void printGameRow(int row) {
+        // Row index for the side column display
         int index = isWhite ? (DIMENSION + 1 - row) : row;
-
+        // Makes sure the square colors are correct for black and white
+        int offset = isWhite ? index + 1 : index;
         String rowVal = String.format("\u2003" + index + " ");
         printSquare(EscapeSequences.SET_BG_COLOR_BLUE,
                 EscapeSequences.SET_TEXT_COLOR_BLACK,
                 rowVal);
         for(int i = 1; i <= DIMENSION; i++) {
-            String bg =   (((i + index) % 2) == 0) ? EscapeSequences.SET_BG_COLOR_LIGHT_GREY
+            String bg =   (((i + offset) % 2) == 0) ? EscapeSequences.SET_BG_COLOR_LIGHT_GREY
                         :                          EscapeSequences.SET_BG_COLOR_DARK_GREY;
             ChessPiece piece = board.getPiece(new ChessPosition(index, i));
             if(piece != null) {
@@ -79,6 +81,7 @@ public class BoardGenerator {
             }
             else { printBlankSquare(bg);}
         }
+        // rowVal is offset slightly, so the em-space is put on the other side for symmetry
         rowVal = String.format(" " + index + "\u2003");
         printSquare(EscapeSequences.SET_BG_COLOR_BLUE,
                 EscapeSequences.SET_TEXT_COLOR_BLACK,

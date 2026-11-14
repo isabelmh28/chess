@@ -12,8 +12,19 @@ import java.util.Collection;
 import java.util.ArrayList;
 
 public class KnightMoves {
+    /**
+     * A moves helper class containing the moves a Knight can make
+     * @param board:      the current chessboard
+     * @param myPosition: the current Knight's position
+     * @param piece:      the Knight you are moving, including the piece's color
+     */
     public static Collection<ChessMove> pieceMoves(ChessBoard board, ChessPosition myPosition, ChessPiece piece) {
         Collection<ChessMove> queenMoves = new ArrayList<>();
+
+        // Check Parameters
+        if(board == null || piece == null || myPosition == null) { return queenMoves;}
+        if(!myPosition.inBounds()) { return queenMoves;}
+
         // The Knight can move in the following combinations:
         int[][] directions = {
                 // Horizontal 1, Vertical 2

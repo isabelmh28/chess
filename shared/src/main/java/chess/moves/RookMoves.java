@@ -12,8 +12,19 @@ import java.util.Collection;
 import java.util.ArrayList;
 
 public class RookMoves {
+    /**
+     * A moves helper class containing the moves a Rook can make
+     * @param board:      the current chessboard
+     * @param myPosition: the current Rook's position
+     * @param piece:      the Rook you are moving, including the piece's color
+     */
     public static Collection<ChessMove> pieceMoves(ChessBoard board, ChessPosition myPosition, ChessPiece piece) {
         Collection<ChessMove> rookMoves = new ArrayList<>();
+
+        // Check Parameters
+        if(board == null || piece == null || myPosition == null) { return rookMoves;}
+        if(!myPosition.inBounds()) { return rookMoves;}
+
         // Add moves to Collection per direction
         for(int[] currDirection : ChessPiece.STRAIGHTS_DIRECTIONS) {
             // See moveRay method in ChessPiece module for more information

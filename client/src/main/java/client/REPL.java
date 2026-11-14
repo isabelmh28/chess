@@ -98,6 +98,7 @@ public class REPL {
                 %s: list possible commands
                 
                 %s: exit the game
+                
                 %s""", EscapeSequences.SET_TEXT_COLOR_GREEN + "NOTE" +
                 EscapeSequences.SET_TEXT_COLOR_BLUE,
                 EscapeSequences.SET_TEXT_COLOR_GREEN + "help" +

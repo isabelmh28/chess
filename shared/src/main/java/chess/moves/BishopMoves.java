@@ -12,8 +12,19 @@ import java.util.Collection;
 import java.util.ArrayList;
 
 public class BishopMoves {
+    /**
+     * A moves helper class containing the moves a Bishop can make
+     * @param board:      the current chessboard
+     * @param myPosition: the current Bishop's position
+     * @param piece:      the Bishop you are moving, including the piece's color
+     */
     public static Collection<ChessMove> pieceMoves(ChessBoard board, ChessPosition myPosition, ChessPiece piece) {
         Collection<ChessMove> bishopMoves = new ArrayList<>();
+
+        // Check Parameters
+        if(board == null || piece == null || myPosition == null) { return bishopMoves;}
+        if(!myPosition.inBounds()) { return bishopMoves;}
+
         // Add moves to Collection per direction
         for(int[] currDirection : ChessPiece.DIAGONALS_DIRECTIONS) {
             // See moveRay method in ChessPiece module for more information

@@ -141,8 +141,7 @@ public class PostLogin {
             repl.printOutput(String.format("""
                     Successfully created game! New game:
                     Name: %s
-                    ID:   %d
-                    """, gameName, gameID.gameID()));
+                    """, gameName));
         } catch (ResponseException e) {
             repl.printError(e.getMessage());
         }
