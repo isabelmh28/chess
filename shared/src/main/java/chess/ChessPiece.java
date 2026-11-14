@@ -117,7 +117,7 @@ public class ChessPiece {
         if((board == null) || (pos == null) || !pos.inBounds()) {
             throw new InvalidArgumentsException("rayMoves in ChessPiece");
         }
-        
+
         Collection<ChessMove> ray = new ArrayList<>();
 
         int currRow = pos.getRow();
@@ -143,7 +143,6 @@ public class ChessPiece {
         }
         return ray;
     }
-
     /**
      * Calculates all the positions a chess piece can move to
      * Does not take into account moves that are illegal due to leaving the king in

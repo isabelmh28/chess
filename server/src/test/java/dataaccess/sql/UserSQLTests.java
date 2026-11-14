@@ -1,3 +1,10 @@
+/**
+ * UserSQLTest Module
+ * Test suite for the Database level
+ * Targets User Database functions
+ * Author: Isabel Hinton
+ */
+
 package dataaccess.sql;
 
 import dataaccess.DatabaseManager;
@@ -10,6 +17,7 @@ import org.junit.jupiter.api.Test;
 import static org.junit.jupiter.api.Assertions.*;
 
 public class UserSQLTests {
+    // Private Members
     private final SQLUserDAO userDAO = new SQLUserDAO();
 
     @BeforeEach
@@ -41,6 +49,48 @@ public class UserSQLTests {
         }
     }
     @Test
+    void createUserNullUsernameDataAccessException() throws DataAccessException {
+        UserData data = new UserData(null, "myPassword12@3", "myEmail@emails.com");
+
+        assertThrows(DataAccessException.class, ()-> userDAO.createUser(data),
+                "Creating a User with a null username should throw a DataAccessException");
+    }
+    @Test
+    void createUserEmptyUsernameDataAccessException() throws DataAccessException {
+        UserData data = new UserData("", "myPassword12@3", "myEmail@emails.com");
+
+        assertThrows(DataAccessException.class, ()-> userDAO.createUser(data),
+                "Creating a User with an empty username should throw a DataAccessException");
+    }
+    @Test
+    void createUserNullPasswordDataAccessException() throws DataAccessException {
+        UserData data = new UserData("name", null, "myEmail@emails.com");
+
+        assertThrows(DataAccessException.class, ()-> userDAO.createUser(data),
+                "Creating a User with a null password should throw a DataAccessException");
+    }
+    @Test
+    void createUserEmptyPasswordDataAccessException() throws DataAccessException {
+        UserData data = new UserData("name", "", "myEmail@emails.com");
+
+        assertThrows(DataAccessException.class, ()-> userDAO.createUser(data),
+                "Creating a User with an empty password should throw a DataAccessException");
+    }
+    @Test
+    void createUserNullEmailDataAccessException() throws DataAccessException {
+        UserData data = new UserData("name", "myPassword12@3", null);
+
+        assertThrows(DataAccessException.class, ()-> userDAO.createUser(data),
+                "Creating a User with a null email should throw a DataAccessException");
+    }
+    @Test
+    void createUserEmptyEmailDataAccessException() throws DataAccessException {
+        UserData data = new UserData("name", "myPassword12@3", "");
+
+        assertThrows(DataAccessException.class, ()-> userDAO.createUser(data),
+                "Creating a User with an empty email should throw a DataAccessException");
+    }
+    @Test
     void createDuplicateUsernameDataAccessException() throws DataAccessException {
         UserData data1 = new UserData("name", "myPassword12@3", "myEmail@emails.com");
         UserData data2 = new UserData("name", "difPassword", "difEmail@dif.com");
@@ -50,7 +100,7 @@ public class UserSQLTests {
                 "Creating a User with a duplicate username should throw a DataAccessException");
     }
 
-    // Get User Datas
+    // Get User Data
     @Test
     void getUserDataSuccess() throws DataAccessException {
         UserData data1 = new UserData("Isa", "myPassword12@3", "myEmail@emails.com");
@@ -64,6 +114,16 @@ public class UserSQLTests {
         assertEquals(data1.username(), get.username(), "Retrieved username should be the same as the original");
         assertEquals(data1.password(), get.password(), "Retrieved password should hash to original");
         assertEquals(data1.email(), get.email(), "Retrieved email should be the same as the original");
+    }
+    @Test
+    void getUserDataNullUsernameDataAccessException() throws DataAccessException {
+        assertThrows(DataAccessException.class, ()-> userDAO.getUserData(null),
+                "Searching for a user with a null username should throw a DataAccessException");
+    }
+    @Test
+    void getUserDataEmptyUsernameDataAccessException() throws DataAccessException {
+        assertThrows(DataAccessException.class, ()-> userDAO.getUserData(""),
+                "Searching for a user with an empty username should throw a DataAccessException");
     }
     @Test
     void getUserDataNotFoundNull() throws DataAccessException {

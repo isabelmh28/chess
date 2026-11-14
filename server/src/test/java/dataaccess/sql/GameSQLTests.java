@@ -1,21 +1,30 @@
+/**
+ * GameSQLTest Module
+ * Test suite for the Database level
+ * Targets Game Database functions
+ * Author: Isabel Hinton
+ */
+
 package dataaccess.sql;
 
 import dataaccess.DatabaseManager;
 import dataaccess.exceptions.DataAccessException;
+
 import chess.ChessGame;
+
 import model.GameData;
 
+import static org.junit.jupiter.api.Assertions.*;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import java.util.Collection;
 import java.sql.SQLException;
 import com.google.gson.Gson;
 
-import static org.junit.jupiter.api.Assertions.*;
-
 public class GameSQLTests {
+    // Private Members
     private final SQLGameDAO gameDAO = new SQLGameDAO();
-    Gson serializer = new Gson();
+    private final Gson serializer    = new Gson();
 
     @BeforeEach
     public void setUp() throws DataAccessException {
@@ -52,30 +61,93 @@ public class GameSQLTests {
     @Test
     void createGameAllFieldsFilledSuccess() throws DataAccessException {
         ChessGame game = new ChessGame();
-        GameData data = new GameData(12345, "Isa", "Jeff", "firstGame", game);
+        GameData data = new GameData(
+                12345, "Isa", "Jeff", "firstGame", game);
         gameDAO.createGame(data);
         assertGameInTable(data, game);
     }
     @Test
     void createGameNullWhiteSuccess() throws DataAccessException {
         ChessGame game = new ChessGame();
-        GameData data = new GameData(12345, null, "Jeff", "firstGame", game);
+        GameData data = new GameData(
+                12345, null, "Jeff", "firstGame", game);
         gameDAO.createGame(data);
         assertGameInTable(data, game);
     }
     @Test
     void createGameNullBlackSuccess() throws DataAccessException {
         ChessGame game = new ChessGame();
-        GameData data = new GameData(12345, "Isa", null, "firstGame", game);
+        GameData data = new GameData(
+                12345, "Isa", null, "firstGame", game);
         gameDAO.createGame(data);
         assertGameInTable(data, game);
+    }
+    @Test
+    void createGameNullGameDataDataAccessException() throws DataAccessException {
+        assertThrows(DataAccessException.class, ()-> gameDAO.createGame(null),
+                "Null game for argument should throw a DataAccessException");
+    }
+    @Test
+    void createGameBadGameIDDataAccessException() throws DataAccessException {
+        ChessGame game = new ChessGame();
+        GameData data = new GameData(
+                -1, "Isa", "Jeff", "firstGame", game);
+
+        assertThrows(DataAccessException.class, ()-> gameDAO.createGame(data),
+                "Creating a game with a bad gameID should throw a DataAccessException");
+    }
+    @Test
+    void createGameEmptyWhiteDataAccessException() throws DataAccessException {
+        ChessGame game = new ChessGame();
+        GameData data = new GameData(
+                12345, "", "Jeff", "firstGame", game);
+
+        assertThrows(DataAccessException.class, ()-> gameDAO.createGame(data),
+                "Creating a game with an empty WHITE username should throw a DataAccessException");
+    }
+    @Test
+    void createGameEmptyBlackDataAccessException() throws DataAccessException {
+        ChessGame game = new ChessGame();
+        GameData data = new GameData(
+                12345, "Isa", "", "firstGame", game);
+
+        assertThrows(DataAccessException.class, ()-> gameDAO.createGame(data),
+                "Creating a game with an empty BLACK username should throw a DataAccessException");
+    }
+    @Test
+    void createGameNullGameNameDataAccessException() throws DataAccessException {
+        ChessGame game = new ChessGame();
+        GameData data = new GameData(
+                12345, "Isa", "Jeff", null, game);
+
+        assertThrows(DataAccessException.class, ()-> gameDAO.createGame(data),
+                "Creating a game with a null gameName should throw a DataAccessException");
+    }
+    @Test
+    void createGameEmptyGameNameDataAccessException() throws DataAccessException {
+        ChessGame game = new ChessGame();
+        GameData data = new GameData(
+                12345, "Isa", "Jeff", "", game);
+
+        assertThrows(DataAccessException.class, ()-> gameDAO.createGame(data),
+                "Creating a game with an empty gameName should throw a DataAccessException");
+    }
+    @Test
+    void createGameNullGameDataAccessException() throws DataAccessException {
+        GameData data = new GameData(
+                12345, "Isa", "Jeff", "", null);
+
+        assertThrows(DataAccessException.class, ()-> gameDAO.createGame(data),
+                "Creating a game with null game should throw a DataAccessException");
     }
     @Test
     void createGameDuplicateDataAccessException() throws DataAccessException {
         ChessGame game1 = new ChessGame();
         ChessGame game2 = new ChessGame();
-        GameData data1 = new GameData(12345, "Isa", "Jeff", "firstGame", game1);
-        GameData data2 = new GameData(12345, null, null, "SecondGame", game2);
+        GameData data1 = new GameData(
+                12345, "Isa", "Jeff", "firstGame", game1);
+        GameData data2 = new GameData(
+                12345, null, null, "SecondGame", game2);
         gameDAO.createGame(data1);
 
         assertThrows(DataAccessException.class, ()-> gameDAO.createGame(data2),
@@ -87,8 +159,10 @@ public class GameSQLTests {
     void getGameSuccess() throws DataAccessException {
         ChessGame game1 = new ChessGame();
         ChessGame game2 = new ChessGame();
-        GameData data1 = new GameData(12345, "Isa", "Jeff", "firstGame", game1);
-        GameData data2 = new GameData(54321, "Charles", "Aerin", "secondGame", game2);
+        GameData data1 = new GameData(
+                12345, "Isa", "Jeff", "firstGame", game1);
+        GameData data2 = new GameData(
+                54321, "Charles", "Aerin", "secondGame", game2);
         gameDAO.createGame(data1);
         gameDAO.createGame(data2);
 
@@ -107,6 +181,11 @@ public class GameSQLTests {
                 "Retrieved game should be the same as the original");
     }
     @Test
+    void getGameBadIDDataAccessException() {
+        assertThrows(DataAccessException.class, ()-> gameDAO.getGame(-1),
+                "Searching for GameData with an invalid ID should throw DataAccessException");
+    }
+    @Test
     void getGameNotFoundNull() throws DataAccessException {
         GameData notFound = gameDAO.getGame(9999999);
         assertNull(notFound, "Searching for GameData not in the database should return Null");
@@ -117,8 +196,10 @@ public class GameSQLTests {
     void updateGameSuccess() throws DataAccessException {
         ChessGame game1 = new ChessGame();
         ChessGame game2 = new ChessGame();
-        GameData data1 = new GameData(12345, "Isa", "Jeff", "firstGame", game1);
-        GameData data2 = new GameData(12345, "Charles", "Aerin", "secondGame", game2);
+        GameData data1 = new GameData(
+                12345, "Isa", "Jeff", "firstGame", game1);
+        GameData data2 = new GameData(
+                12345, "Charles", "Aerin", "secondGame", game2);
         gameDAO.createGame(data1);
         gameDAO.updateGame(data2);
         GameData updated = gameDAO.getGame(data2.gameID());
@@ -138,8 +219,10 @@ public class GameSQLTests {
     @Test
     void updateGamePartialUpdateSuccess() throws DataAccessException {
         ChessGame game1 = new ChessGame();
-        GameData data1 = new GameData(12345, "Isa", "Jeff", "firstGame", game1);
-        GameData data2 = new GameData(12345, "Charles", "Jeff", "firstGame", game1);
+        GameData data1 = new GameData(
+                12345, "Isa", "Jeff", "firstGame", game1);
+        GameData data2 = new GameData(
+                12345, "Charles", "Jeff", "firstGame", game1);
         gameDAO.createGame(data1);
         gameDAO.updateGame(data2);
         GameData updated = gameDAO.getGame(data2.gameID());
@@ -156,6 +239,64 @@ public class GameSQLTests {
         assertEquals(data1.game(), updated.game(),
                 "Updated game should be the same as the original since it was not updated");
     }
+    @Test
+    void updateGameNullGameDataDataAccessException() throws DataAccessException {
+        assertThrows(DataAccessException.class, ()-> gameDAO.updateGame(null),
+                "Null game for argument should throw a DataAccessException");
+    }
+    @Test
+    void updateGameBadGameIDDataAccessException() throws DataAccessException {
+        ChessGame game = new ChessGame();
+        GameData data = new GameData(
+                -1, "Isa", "Jeff", "firstGame", game);
+
+        assertThrows(DataAccessException.class, ()-> gameDAO.updateGame(data),
+                "Updating a game with a bad gameID should throw a DataAccessException");
+    }
+    @Test
+    void updateGameEmptyWhiteDataAccessException() throws DataAccessException {
+        ChessGame game = new ChessGame();
+        GameData data = new GameData(
+                12345, "", "Jeff", "firstGame", game);
+
+        assertThrows(DataAccessException.class, ()-> gameDAO.updateGame(data),
+                "Updating a game with an empty WHITE username should throw a DataAccessException");
+    }
+    @Test
+    void updateGameEmptyBlackDataAccessException() throws DataAccessException {
+        ChessGame game = new ChessGame();
+        GameData data = new GameData(
+                12345, "Isa", "", "firstGame", game);
+
+        assertThrows(DataAccessException.class, ()-> gameDAO.updateGame(data),
+                "Updating a game with an empty BLACK username should throw a DataAccessException");
+    }
+    @Test
+    void updateGameNullGameNameDataAccessException() throws DataAccessException {
+        ChessGame game = new ChessGame();
+        GameData data = new GameData(
+                12345, "Isa", "Jeff", null, game);
+
+        assertThrows(DataAccessException.class, ()-> gameDAO.updateGame(data),
+                "Updating a game with a null gameName should throw a DataAccessException");
+    }
+    @Test
+    void updateGameEmptyGameNameDataAccessException() throws DataAccessException {
+        ChessGame game = new ChessGame();
+        GameData data = new GameData(
+                12345, "Isa", "Jeff", "", game);
+
+        assertThrows(DataAccessException.class, ()-> gameDAO.updateGame(data),
+                "Updating a game with an empty gameName should throw a DataAccessException");
+    }
+    @Test
+    void updateGameNullGameDataAccessException() throws DataAccessException {
+        GameData data = new GameData(
+                12345, "Isa", "Jeff", "", null);
+
+        assertThrows(DataAccessException.class, ()-> gameDAO.updateGame(data),
+                "Updating a game with null game should throw a DataAccessException");
+    }
 
     // Get Game List
     @Test
@@ -163,9 +304,12 @@ public class GameSQLTests {
         ChessGame game1 = new ChessGame();
         ChessGame game2 = new ChessGame();
         ChessGame game3 = new ChessGame();
-        GameData data1 = new GameData(12345, "Isa", "Jeff", "firstGame", game1);
-        GameData data2 = new GameData(54321, "Charles", "Aerin", "secondGame", game2);
-        GameData data3 = new GameData(13524, null, null, "thirdGame", game3);
+        GameData data1 = new GameData(
+                12345, "Isa", "Jeff", "firstGame", game1);
+        GameData data2 = new GameData(
+                54321, "Charles", "Aerin", "secondGame", game2);
+        GameData data3 = new GameData(
+                13524, null, null, "thirdGame", game3);
         gameDAO.createGame(data1);
         gameDAO.createGame(data2);
         gameDAO.createGame(data3);
@@ -204,12 +348,15 @@ public class GameSQLTests {
             } else {allFound = false;}//listing games that weren't created
         }
         allFound &= found1 & found2 & found3;
-        assertTrue(allFound, "All games in the list should be validated and there should be no other games.");
+        assertTrue(allFound,
+                "All games in the list should be validated and there should be no other games.");
     }
     @Test
     void getGameListEmptySuccess() throws DataAccessException {
         Collection<GameData> emptyList = gameDAO.getGameList();
-        assertNotNull(emptyList, "Getting the gameList with no games in the table should not return Null");
-        assertTrue(emptyList.isEmpty(), "Getting the gameList with no games in the table should return an empty list");
+        assertNotNull(emptyList,
+                "Getting the gameList with no games in the table should not return Null");
+        assertTrue(emptyList.isEmpty(),
+                "Getting the gameList with no games in the table should return an empty list");
     }
 }

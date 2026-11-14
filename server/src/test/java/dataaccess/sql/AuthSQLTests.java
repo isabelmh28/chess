@@ -1,7 +1,15 @@
+/**
+ * AuthSQLTest Module
+ * Test suite for the Database level
+ * Targets Authentication Database functions
+ * Author: Isabel Hinton
+ */
+
 package dataaccess.sql;
 
 import dataaccess.DatabaseManager;
 import dataaccess.exceptions.DataAccessException;
+
 import model.AuthData;
 
 import java.sql.SQLException;
@@ -10,6 +18,7 @@ import org.junit.jupiter.api.Test;
 import static org.junit.jupiter.api.Assertions.*;
 
 public class AuthSQLTests {
+    // Private Members
     private final SQLAuthDAO authDAO = new SQLAuthDAO();
 
     @BeforeEach
@@ -39,6 +48,35 @@ public class AuthSQLTests {
         }
     }
     @Test
+    void createAuthDataNullAuthDataDataAccessException() throws DataAccessException {
+        assertThrows(DataAccessException.class, ()-> authDAO.createAuthData(null),
+                "Creating AuthData with null data should throw a DataAccessException");
+    }
+    @Test
+    void createAuthDataNullAuthTokenDataAccessException() throws DataAccessException {
+        AuthData data = new AuthData(null, "name");
+        assertThrows(DataAccessException.class, ()-> authDAO.createAuthData(data),
+                "Creating AuthData with a null authToken should throw a DataAccessException");
+    }
+    @Test
+    void createAuthDataEmptyAuthTokenDataAccessException() throws DataAccessException {
+        AuthData data = new AuthData("", "name");
+        assertThrows(DataAccessException.class, ()-> authDAO.createAuthData(data),
+                "Creating AuthData with an empty authToken should throw a DataAccessException");
+    }
+    @Test
+    void createAuthDataNullUsernameDataAccessException() throws DataAccessException {
+        AuthData data = new AuthData("token", null);
+        assertThrows(DataAccessException.class, ()-> authDAO.createAuthData(data),
+                "Creating AuthData with a null username should throw a DataAccessException");
+    }
+    @Test
+    void createAuthDataEmptyUsernameDataAccessException() throws DataAccessException {
+        AuthData data = new AuthData("token", "");
+        assertThrows(DataAccessException.class, ()-> authDAO.createAuthData(data),
+                "Creating AuthData with an empty username should throw a DataAccessException");
+    }
+    @Test
     void createDuplicateAuthTokenDataAccessException() throws DataAccessException {
         AuthData data1 = new AuthData("token1", "name1");
         AuthData data2 = new AuthData("token1", "name2");
@@ -63,7 +101,17 @@ public class AuthSQLTests {
         assertEquals(data1.username(), get.username(), "Retrieved username should be the same as the original");
     }
     @Test
-    void getAuthDataNotFoundNull() throws DataAccessException {
+    void getAuthDataNullAuthTokenDataAccessException() throws DataAccessException {
+        assertThrows(DataAccessException.class, ()-> authDAO.getAuthData(null),
+                "Retrieving AuthData with a null authToken should throw a DataAccessException");
+    }
+    @Test
+    void getAuthDataEmptyAuthTokenDataAccessException() throws DataAccessException {
+        assertThrows(DataAccessException.class, ()-> authDAO.getAuthData(""),
+                "Retrieving AuthData with an empty authToken should throw a DataAccessException");
+    }
+    @Test
+    void getAuthDataNotFoundNullDataAccessException() throws DataAccessException {
         AuthData notFound = authDAO.getAuthData("Bad authToken");
         assertNull(notFound, "Searching for AuthData not in the database should return Null");
     }
@@ -81,6 +129,16 @@ public class AuthSQLTests {
                 "Searching for a removed AuthData should return Null");
         assertNotNull(authDAO.getAuthData(data2.authToken()),
                 "Searching for authentication not removed should return AuthData");
+    }
+    @Test
+    void removeAuthDataNullAuthTokenDataAccessException() throws DataAccessException {
+        assertThrows(DataAccessException.class, ()-> authDAO.removeAuthData(null),
+                "Removing AuthData with a null authToken should throw a DataAccessException");
+    }
+    @Test
+    void removeAuthDataEmptyAuthTokenDataAccessException() throws DataAccessException {
+        assertThrows(DataAccessException.class, ()-> authDAO.removeAuthData(""),
+                "Removing AuthData with an empty authToken should throw a DataAccessException");
     }
     @Test
     void removeAuthDataNotFoundDataAccessException() {

@@ -91,8 +91,11 @@ public class PreLogin {
             repl.setAuthToken(authData.authToken());
             repl.setState(REPL.State.SIGNEDIN);
             repl.printOutput(String.format("""
-                    Successfully Signed in with your credentials! Welcome %s!
-                    """, username));
+                    Successfully Signed in with your credentials!
+                    See %s to see available logged in activities.
+                    Welcome %s!
+                    """, EscapeSequences.SET_TEXT_COLOR_GREEN + "'help" + EscapeSequences.SET_TEXT_COLOR_BLUE,
+                    username));
         } catch (ResponseException e) {
             repl.printError(e.getMessage());
         }

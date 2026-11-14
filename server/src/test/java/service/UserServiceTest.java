@@ -1,20 +1,31 @@
+/**
+ * UserServiceTest Module
+ * Test suite for the Service level
+ * Targets User endpoints:
+ *    Register
+ *    Login
+ *    Logout
+ * Author: Isabel Hinton
+ */
+
 package service;
 
 import dataaccess.doa.interfaces.*;
 import dataaccess.doa.memory.*;
 import dataaccess.exceptions.*;
+
 import model.transactions.request.LoginRequest;
-import model.transactions.request.LogoutRequest;
 import model.transactions.request.RegisterRequest;
 import model.transactions.result.LoginResult;
 import model.transactions.result.RegisterResult;
+
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-
-
 import static org.junit.jupiter.api.Assertions.*;
 
+
 class UserServiceTest {
+    // Private Members
     private UserService service;
 
     @BeforeEach
@@ -28,8 +39,9 @@ class UserServiceTest {
     // Register Endpoint Testing
     // Success
     @Test
-    void registerSuccess() throws Exception{
-        RegisterRequest request = new RegisterRequest("testUser", "testpw23#6^{/", "testemail@testing.com");
+    void registerSuccess() throws Exception {
+        RegisterRequest request = new RegisterRequest(
+                "testUser", "testpw23#6^{/", "testemail@testing.com");
         RegisterResult result = service.register(request);
 
         assertNotNull(result, "RegisterResult should not be null");
@@ -38,42 +50,51 @@ class UserServiceTest {
     }
     // Invalid Request
     @Test
-    void registerNullUsernameInvalidRequest() throws Exception{
-        RegisterRequest request = new RegisterRequest(null,"testpw23#6^{/", "testemail@testing.com");
+    void registerNullRequestInvalidRequestException() throws Exception {
+        assertThrows(InvalidRequestException.class, ()->service.register(null),
+                "Null RegisterRequest should cause InvalidRequestException");
+    }
+    @Test
+    void registerNullUsernameInvalidRequestException() throws Exception {
+        RegisterRequest request = new RegisterRequest(
+                null,"testpw23#6^{/", "testemail@testing.com");
 
         assertThrows(InvalidRequestException.class, ()-> service.register(request),
                 "Null username should cause InvalidRequestException");
     }
     @Test
-    void registerEmptyUsernameInvalidRequest() throws Exception{
-        RegisterRequest request = new RegisterRequest("","testpw23#6^{/", "testemail@testing.com");
+    void registerEmptyUsernameInvalidRequestException() throws Exception {
+        RegisterRequest request = new RegisterRequest(
+                "","testpw23#6^{/", "testemail@testing.com");
 
         assertThrows(InvalidRequestException.class, ()-> service.register(request),
                 "Empty/Blank username should cause InvalidRequestException");
     }
     @Test
-    void registerNullPasswordInvalidRequest() throws Exception{
-        RegisterRequest request = new RegisterRequest("testUser",null, "testemail@testing.com");
+    void registerNullPasswordInvalidRequestException() throws Exception {
+        RegisterRequest request = new RegisterRequest(
+                "testUser",null, "testemail@testing.com");
 
         assertThrows(InvalidRequestException.class, ()-> service.register(request),
                 "Null password should cause InvalidRequestException");
     }
     @Test
-    void registerEmptyPasswordInvalidRequest() throws Exception{
-        RegisterRequest request = new RegisterRequest("testUser","", "testemail@testing.com");
+    void registerEmptyPasswordInvalidRequestException() throws Exception {
+        RegisterRequest request = new RegisterRequest(
+                "testUser","", "testemail@testing.com");
 
         assertThrows(InvalidRequestException.class, ()-> service.register(request),
                 "Empty/Blank password should cause InvalidRequestException");
     }
     @Test
-    void registerNullEmailInvalidRequest() throws Exception{
+    void registerNullEmailInvalidRequestException() throws Exception {
         RegisterRequest request = new RegisterRequest("testUser","testpw23#6^{/", null);
 
         assertThrows(InvalidRequestException.class, ()-> service.register(request),
                 "Null email should cause InvalidRequestException");
     }
     @Test
-    void registerEmptyEmailInvalidRequest() throws Exception{
+    void registerEmptyEmailInvalidRequestException() throws Exception {
         RegisterRequest request = new RegisterRequest("testUser","testpw23#6^{/", "");
 
         assertThrows(InvalidRequestException.class, ()-> service.register(request),
@@ -81,8 +102,9 @@ class UserServiceTest {
     }
     // Already Taken
     @Test
-    void registerAlreadyTaken() throws Exception{
-        RegisterRequest request = new RegisterRequest("testUser","password", "testemail@testing.com");
+    void registerAlreadyTakenException() throws Exception {
+        RegisterRequest request = new RegisterRequest(
+                "testUser","password", "testemail@testing.com");
         service.register(request);
 
         assertThrows(AlreadyTakenException.class, ()-> service.register(request),
@@ -93,7 +115,8 @@ class UserServiceTest {
     // Success
     @Test
     void loginSuccess() throws Exception{
-        RegisterRequest registerRequest = new RegisterRequest("testUser", "testpw23#6^{/", "testemail@testing.com");
+        RegisterRequest registerRequest = new RegisterRequest(
+                "testUser", "testpw23#6^{/", "testemail@testing.com");
         service.register(registerRequest);
 
         LoginRequest loginRequest = new LoginRequest("testUser", "testpw23#6^{/");
@@ -105,28 +128,33 @@ class UserServiceTest {
     }
     // Invalid Request
     @Test
-    void loginNullUsernameInvalidRequest() throws Exception {
+    void loginNullRequestInvalidRequestException() throws Exception {
+        assertThrows(InvalidRequestException.class, ()-> service.login(null),
+                "Null LoginRequest should cause InvalidRequestException");
+    }
+    @Test
+    void loginNullUsernameInvalidRequestException() throws Exception {
         LoginRequest request = new LoginRequest(null,"testpw23#6^{/");
 
         assertThrows(InvalidRequestException.class, ()-> service.login(request),
                 "Null username should cause InvalidRequestException");
     }
     @Test
-    void loginEmptyUsernameInvalidRequest() throws Exception {
+    void loginEmptyUsernameInvalidRequestException() throws Exception {
         LoginRequest request = new LoginRequest("","testpw23#6^{/");
 
         assertThrows(InvalidRequestException.class, ()-> service.login(request),
                 "Empty/Blank username should cause InvalidRequestException");
     }
     @Test
-    void loginNullPasswordInvalidRequest() throws Exception {
+    void loginNullPasswordInvalidRequestException() throws Exception {
         LoginRequest request = new LoginRequest("testUser",null);
 
         assertThrows(InvalidRequestException.class, ()-> service.login(request),
                 "Null password should cause InvalidRequestException");
     }
     @Test
-    void loginEmptyPasswordInvalidRequest() throws Exception {
+    void loginEmptyPasswordInvalidRequestException() throws Exception {
         LoginRequest request = new LoginRequest("testUser","");
 
         assertThrows(InvalidRequestException.class, ()-> service.login(request),
@@ -134,8 +162,9 @@ class UserServiceTest {
     }
     // Unauthorized User
     @Test
-    void loginNoExistingUserUnauthorizedUser() throws Exception {
-        RegisterRequest registerRequest = new RegisterRequest("testUser", "testpw23#6^{/", "testemail@testing.com");
+    void loginNoExistingUserUnauthorizedUserException() throws Exception {
+        RegisterRequest registerRequest = new RegisterRequest(
+                "testUser", "testpw23#6^{/", "testemail@testing.com");
         service.register(registerRequest);
 
         LoginRequest loginRequest = new LoginRequest("newUser", "newPassword");
@@ -143,8 +172,9 @@ class UserServiceTest {
                 "Userdata from username not found should cause UnauthorizedUserException");
     }
     @Test
-    void loginMismatchedPasswordUnauthorizedUser() throws Exception {
-        RegisterRequest registerRequest = new RegisterRequest("testUser", "testpw23#6^{/", "testemail@testing.com");
+    void loginMismatchedPasswordUnauthorizedUserException() throws Exception {
+        RegisterRequest registerRequest = new RegisterRequest(
+                "testUser", "testpw23#6^{/", "testemail@testing.com");
         service.register(registerRequest);
 
         LoginRequest loginRequest = new LoginRequest("testUser", "newPassword");
@@ -156,23 +186,23 @@ class UserServiceTest {
     // Success
     @Test
     void logoutSuccess() throws Exception{
-        RegisterRequest registerRequest = new RegisterRequest("testUser", "testpw23#6^{/", "testemail@testing.com");
+        RegisterRequest registerRequest = new RegisterRequest(
+                "testUser", "testpw23#6^{/", "testemail@testing.com");
         service.register(registerRequest);
 
         LoginRequest loginRequest = new LoginRequest("testUser", "testpw23#6^{/");
         LoginResult loginResult = service.login(loginRequest);
 
-        LogoutRequest logoutRequest = new LogoutRequest(loginResult.authToken());
-        service.logout(logoutRequest);
+        String logoutHeader = loginResult.authToken();
+        service.logout(logoutHeader);
 
-        assertThrows(TokenNotFoundException.class, ()-> service.logout(logoutRequest),
+        assertThrows(TokenNotFoundException.class, ()-> service.logout(logoutHeader),
                 "Trying to logout again should cause a TokenNotFoundException");
     }
     // Token Not Found
     @Test
     void logoutTokenNotFoundException() throws Exception {
-        LogoutRequest request = new LogoutRequest("Bad AuthToken");
-        assertThrows(TokenNotFoundException.class, ()-> service.logout(request),
+        assertThrows(TokenNotFoundException.class, ()-> service.logout("Bad authToken"),
                 "Sending the wrong AuthToken should cause a TokenNotFound");
     }
 }

@@ -81,10 +81,10 @@ public class ServerFacade {
         return sendRequest(request, LoginResult.class);
     }
 
-    public void logout(LogoutRequest logout) throws ResponseException {
+    public void logout(String authToken) throws ResponseException {
         HttpRequest request = HttpRequest.newBuilder()
                 .uri(URI.create(url + "/session"))
-                .header("authorization", logout.authToken())
+                .header("authorization", authToken)
                 .DELETE()
                 .build();
         sendRequest(request, null);

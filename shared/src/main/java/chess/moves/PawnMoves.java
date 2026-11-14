@@ -1,3 +1,9 @@
+/**
+ * PawnMoves Module
+ * Helper class to identify all possible moves a Pawn can make
+ * Author: Isabel Hinton
+ */
+
 package chess.moves;
 
 import chess.*;

@@ -91,10 +91,10 @@ public class ClientMain {
             return serializer.fromJson(response.body(), LoginResult.class);
         }
 
-        public void logout(LogoutRequest logout) throws Exception {
+        public void logout(String authToken) throws Exception {
             HttpRequest request = HttpRequest.newBuilder()
                     .uri(URI.create(url + "/session"))
-                    .header("authorization", logout.authToken())
+                    .header("authorization", authToken)
                     .DELETE()
                     .build();
             HttpResponse<String> response = http.send(request, HttpResponse.BodyHandlers.ofString());

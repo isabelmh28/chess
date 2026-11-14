@@ -1,3 +1,9 @@
+/**
+ * SQLUserDAO Module
+ * Services User Database functions
+ * Author: Isabel Hinton
+ */
+
 package dataaccess.sql;
 
 import dataaccess.DatabaseManager;
@@ -14,6 +20,12 @@ public class SQLUserDAO implements UserDAO {
     // Interface Functions
     @Override
     public void createUser(UserData data) throws DataAccessException {
+        // Check Parameters
+        if(        (data.username() == null) || (data.username().isEmpty())
+                || (data.password() == null) || (data.password().isEmpty())
+                || (data.email() == null)    || (data.email().isEmpty())) {
+            throw new DataAccessException("Bad arguments, unable to update database");
+        }
         try (var connection = DatabaseManager.getConnection();
              var statement = connection.prepareStatement(
                 "INSERT INTO user (username, password, email)" +
@@ -24,11 +36,15 @@ public class SQLUserDAO implements UserDAO {
             statement.executeUpdate();
         } catch (SQLException e) {
             throw new DataAccessException(
-                    String.format("Unable to update database in User: createUser. %s", e.getMessage()));
+                    String.format("Unable to update database: %s", e.getMessage()));
         }
     }
     @Override
     public UserData getUserData(String username) throws DataAccessException {
+        // Check Parameters
+        if((username == null) || (username.isEmpty())) {
+            throw new DataAccessException("Bad arguments, unable to retrieve UserData");
+        }
         try (var connection = DatabaseManager.getConnection();
              var statement = connection.prepareStatement(
                 "SELECT username, password, email FROM user WHERE username = ?")) {
@@ -44,7 +60,7 @@ public class SQLUserDAO implements UserDAO {
             }
         } catch (SQLException e) {
             throw new DataAccessException(
-                    String.format("Unable to retrieve UserData in User: getUserData. %s", e.getMessage()));
+                    String.format("Unable to retrieve UserData: %s", e.getMessage()));
         }
         return null;
     }
@@ -56,7 +72,7 @@ public class SQLUserDAO implements UserDAO {
             statement.executeUpdate();
         } catch (SQLException e) {
             throw new DataAccessException(
-                    String.format("Unable to clear UserData in User: clear. %s", e.getMessage()));
+                    String.format("Unable to clear UserData: %s", e.getMessage()));
         }
     }
 }

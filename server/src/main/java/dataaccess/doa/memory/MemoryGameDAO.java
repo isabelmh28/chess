@@ -1,7 +1,15 @@
+/**
+ * MemoryGameDAO Module
+ * Game DataObject for non-persistent (in memory) tests
+ * NOTE: only use in testing
+ * Author: Isabel Hinton
+ */
+
 package dataaccess.doa.memory;
 
 import dataaccess.doa.interfaces.GameDAO;
 import dataaccess.exceptions.DataAccessException;
+
 import model.GameData;
 
 import java.util.ArrayList;
@@ -18,24 +26,39 @@ public class MemoryGameDAO implements GameDAO {
     // Interface Functions
     @Override
     public void createGame(GameData game) throws DataAccessException {
+        if(    (game == null)
+            || (game.gameID() < 0)
+            || ((game.whiteUsername() != null) && (game.whiteUsername().isEmpty()))
+            || ((game.blackUsername() != null) && (game.blackUsername().isEmpty()))
+            || (game.gameName() == null) || (game.gameName().isEmpty())
+            || (game.game() == null)) {
+            throw new DataAccessException("Bad GameData, unable to create game");
+        }
         games.put(game.gameID(), game);
     }
-
     @Override
     public GameData getGame(int gameID) throws DataAccessException {
+        if(gameID < 0) {
+            throw new DataAccessException("Bad gameID, unable to get game");
+        }
         return games.get(gameID);
     }
-
     @Override
     public void updateGame(GameData game) throws DataAccessException {
+        if(    (game == null)
+            || (game.gameID() < 0)
+            || ((game.whiteUsername() != null) && (game.whiteUsername().isEmpty()))
+            || ((game.blackUsername() != null) && (game.blackUsername().isEmpty()))
+            || (game.gameName() == null) || (game.gameName().isEmpty())
+            || (game.game() == null)) {
+            throw new DataAccessException("Bad GameData, unable to create game");
+        }
         games.put(game.gameID(), game);
     }
-
     @Override
     public Collection<GameData> getGameList() throws DataAccessException {
         return new ArrayList<>(games.values());
     }
-
     @Override
     public void clear() throws DataAccessException {
         games.clear();

@@ -1,32 +1,45 @@
+/**
+ * UserService Module
+ * Services User endpoints:
+ *    Register
+ *    Login
+ *    Logout
+ * Author: Isabel Hinton
+ */
+
 package service;
 
-import java.util.UUID;
-
+import model.UserData;
+import model.AuthData;
 import model.transactions.request.LoginRequest;
-import model.transactions.request.LogoutRequest;
 import model.transactions.request.RegisterRequest;
 import model.transactions.result.LoginResult;
 import model.transactions.result.RegisterResult;
-import org.mindrot.jbcrypt.BCrypt;
 
 import dataaccess.doa.interfaces.AuthDAO;
 import dataaccess.doa.interfaces.UserDAO;
 import dataaccess.exceptions.*;
-import model.UserData;
-import model.AuthData;
 
-/**
- * Performs Services for the User (registration, login, authentication, etc.)
- */
+import java.util.UUID;
+import org.mindrot.jbcrypt.BCrypt;
+
 public class UserService {
+    // Private Members
     private final UserDAO user;
     private final AuthDAO auth;
-
+    // Constructor
     public UserService(UserDAO user, AuthDAO auth) {
         this.user = user;
         this.auth = auth;
     }
 
+    // Endpoints
+    /**
+     * Registers a user given a request.
+     * @param request The service request to register a user.
+     * @return RegisterResult.
+     * See transactions package for more information on requests and results.
+     */
     public RegisterResult register(RegisterRequest request)
             throws DataAccessException, InvalidRequestException, AlreadyTakenException {
         // Check for a bad request
@@ -51,7 +64,12 @@ public class UserService {
 
         return new RegisterResult(newAuthData.username(), newAuthData.authToken());
     }
-
+    /**
+     * Logs in a user given a request.
+     * @param request The service request to log in a user.
+     * @return LoginResult.
+     * See transactions package for more information on requests and results.
+     */
     public LoginResult login(LoginRequest request)
             throws DataAccessException, InvalidRequestException, UnauthorizedUserException {
         // Check for a bad request
@@ -75,13 +93,17 @@ public class UserService {
 
         return new LoginResult(newAuthData.username(), newAuthData.authToken());
     }
-
-    public void logout(LogoutRequest request)
+    /**
+     * Logs out a user based on a request.
+     * @param authToken There is no request body, only an authToken header.
+     * See transactions package for more information on requests and results.
+     */
+    public void logout(String authToken)
             throws DataAccessException, TokenNotFoundException {
         // Find authData from authToken
-        if(auth.getAuthData(request.authToken()) == null) {
+        if(auth.getAuthData(authToken) == null) {
             throw new TokenNotFoundException("Error: unauthorized");
         }
-        auth.removeAuthData(request.authToken());
+        auth.removeAuthData(authToken);
     }
 }

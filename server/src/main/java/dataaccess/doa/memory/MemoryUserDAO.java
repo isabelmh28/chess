@@ -1,8 +1,17 @@
+/**
+ * MemoryUserDAO Module
+ * User DataObject for non-persistent (in memory) tests
+ * NOTE: only use in testing
+ * Author: Isabel Hinton
+ */
+
 package dataaccess.doa.memory;
 
 import dataaccess.exceptions.DataAccessException;
 import dataaccess.doa.interfaces.UserDAO;
+
 import model.UserData;
+
 import java.util.HashMap;
 
 /**
@@ -10,19 +19,27 @@ import java.util.HashMap;
  * NOTE: DataAccessExceptions thrown for SQL side but must still be implemented
  */
 public class MemoryUserDAO implements UserDAO {
+    // Private Members
     private final HashMap<String, UserData> users = new HashMap<>();
 
     // Interface Functions
     @Override
     public void createUser(UserData data) throws DataAccessException {
+        if(    (data == null)
+            || (data.username() == null) || (data.username().isEmpty())
+            || (data.password() == null) || (data.password().isEmpty())
+            || (data.email()    == null) || (data.email().isEmpty())) {
+            throw new DataAccessException("Bad UserData provided, unable to create UserData");
+        }
         users.put(data.username(), data);
     }
-
     @Override
     public UserData getUserData(String username) throws DataAccessException {
+        if((username == null) || (username.isEmpty())) {
+            throw new DataAccessException("Bad username provided, unable to retrieve UserData");
+        }
         return users.get(username);
     }
-
     @Override
     public void clear() throws DataAccessException {
         users.clear();
@@ -33,7 +50,6 @@ public class MemoryUserDAO implements UserDAO {
     public int hashCode() {
         return users.hashCode();
     }
-
     @Override
     public boolean equals(Object obj) {
         // Check reference equality

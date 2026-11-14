@@ -79,7 +79,7 @@ public class ChessGame {
      */
     public Collection<ChessMove> validMoves(ChessPosition startPosition) throws InvalidArgumentsException {
         // If position doesn't have a piece on it, return null
-        if(startPosition ==  null) {
+        if((startPosition ==  null) || !startPosition.inBounds()) {
             throw new InvalidArgumentsException("validMoves in ChessGame");
         }
 
@@ -226,6 +226,7 @@ public class ChessGame {
         return true;
     }
 
+    // Helper Functions
     /**
      * Determines if the given team is in check
      *
@@ -233,7 +234,6 @@ public class ChessGame {
      * @return True if the specified team is in check
      */
     public boolean isInCheck(TeamColor teamColor) { return isInCheck(this.board, teamColor);}
-
     /**
      * Determines if the given team is in checkmate
      *
@@ -243,7 +243,6 @@ public class ChessGame {
     public boolean isInCheckmate(TeamColor teamColor) {
         return (isInCheck(teamColor) && noValidMoves(teamColor));
     }
-
     /**
      * Determines if the given team is in stalemate, which here is defined as having
      * no valid moves while not in check.
@@ -254,14 +253,12 @@ public class ChessGame {
     public boolean isInStalemate(TeamColor teamColor) {
         return (!isInCheck(teamColor) && noValidMoves(teamColor));
     }
-
     /**
      * Sets this game's chessboard to a given board
      *
      * @param board the new board to use
      */
     public void setBoard(ChessBoard board) { this.board = new ChessBoard(board);}
-
     /**
      * Gets the current chessboard
      * Board returned is a copy for safety

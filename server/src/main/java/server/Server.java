@@ -1,24 +1,32 @@
+/**
+ * Server Module
+ * Server level functions
+ * Author: Isabel Hinton
+ */
+
 package server;
 
-import com.google.gson.Gson;
+import dataaccess.*;
+import dataaccess.exceptions.*;
 import dataaccess.sql.SQLAuthDAO;
 import dataaccess.sql.SQLGameDAO;
 import dataaccess.sql.SQLUserDAO;
-import service.*;
-import dataaccess.*;
 import dataaccess.doa.interfaces.*;
-import dataaccess.exceptions.*;
+
+import service.*;
+
 import server.handlers.*;
 
 import io.javalin.*;
 import java.sql.SQLException;
+import com.google.gson.Gson;
 
 public class Server {
-
+    // Private Members
     private final Javalin javalin;
     private final ClearService clearService;
     private final Gson serializer = new Gson();
-
+    // Constructor
     public Server() {
         // Initialization
         // Data Access Objects
@@ -34,6 +42,7 @@ public class Server {
         GameHandler gameHandler = new GameHandler(gameService);
         // Javalin
         javalin = Javalin.create(config -> config.staticFiles.add("web"));
+
         // Exception Handling
         javalin.exception(DataAccessException.class, (e, ctx)-> {
             ctx.status(500);
@@ -41,31 +50,31 @@ public class Server {
             ctx.result(jsonErr);
             }
         );
-
         javalin.exception(InvalidRequestException.class, (e, ctx)-> {
                     ctx.status(400);
-                    String jsonErr = serializer.toJson(java.util.Map.of("message", "Error: " + e.getMessage()));
+                    String jsonErr = serializer.toJson(
+                            java.util.Map.of("message", "Error: " + e.getMessage()));
                     ctx.result(jsonErr);
                 }
         );
-
         javalin.exception(UnauthorizedUserException.class, (e, ctx)-> {
                     ctx.status(401);
-                    String jsonErr = serializer.toJson(java.util.Map.of("message", "Error: " + e.getMessage()));
+                    String jsonErr = serializer.toJson(java.util.Map.of(
+                            "message", "Error: " + e.getMessage()));
                     ctx.result(jsonErr);
                 }
         );
-
         javalin.exception(TokenNotFoundException.class, (e, ctx)-> {
                     ctx.status(401);
-                    String jsonErr = serializer.toJson(java.util.Map.of("message", "Error: " + e.getMessage()));
+                    String jsonErr = serializer.toJson(java.util.Map.of(
+                            "message", "Error: " + e.getMessage()));
                     ctx.result(jsonErr);
                 }
         );
-
         javalin.exception(AlreadyTakenException.class, (e, ctx)-> {
                     ctx.status(403);
-                    String jsonErr = serializer.toJson(java.util.Map.of("message", "Error: " + e.getMessage()));
+                    String jsonErr = serializer.toJson(java.util.Map.of(
+                            "message", "Error: " + e.getMessage()));
                     ctx.result(jsonErr);
                 }
         );
@@ -95,6 +104,14 @@ public class Server {
         javalin.put("/game", gameHandler::join);
     }
 
+    // Server Methods
+    /**
+     * Sets up the Database with the correct structure
+     * Database has 3 tables:
+     *     user: contains UserData
+     *     auth: contains AuthData
+     *     game: contains GameData
+     */
     private void dbSetup() throws DataAccessException {
         DatabaseManager.createDatabase();
         try (var connection = DatabaseManager.getConnection()) {
@@ -134,7 +151,11 @@ public class Server {
             throw new DataAccessException("Failed to set up the database", e);
         }
     }
-
+    /**
+     * Runs Server
+     * @param desiredPort port for url
+     * @return port the server is bound to
+     */
     public int run(int desiredPort) {
         javalin.start(desiredPort);
         try {
@@ -144,7 +165,9 @@ public class Server {
         }
         return javalin.port();
     }
-
+    /**
+     * Stops Server from running
+     */
     public void stop() {
         javalin.stop();
     }

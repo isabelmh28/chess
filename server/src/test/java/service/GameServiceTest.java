@@ -1,8 +1,19 @@
+/**
+ * GameServiceTest Module
+ * Test suite for the Service level
+ * Targets Game endpoints:
+ *    CreateGame
+ *    ListGames
+ *    JoinGame
+ * Author: Isabel Hinton
+ */
+
 package service;
 
 import dataaccess.doa.interfaces.*;
 import dataaccess.doa.memory.*;
 import dataaccess.exceptions.*;
+
 import model.transactions.request.*;
 import model.transactions.result.CreateGameResult;
 import model.transactions.result.ListGamesResult;
@@ -14,6 +25,7 @@ import org.junit.jupiter.api.Test;
 import static org.junit.jupiter.api.Assertions.*;
 
 class GameServiceTest {
+    // Private Members
     private UserService userService;
     private GameService gameService;
 
@@ -43,7 +55,7 @@ class GameServiceTest {
     }
     // Invalid Request
     @Test
-    void createGameNullInvalidRequest() throws Exception {
+    void createGameNullInvalidRequestException() throws Exception {
         RegisterRequest registerRequest = new RegisterRequest("user", "password", "email");
         RegisterResult register = userService.register(registerRequest);
 
@@ -51,7 +63,7 @@ class GameServiceTest {
                 "Null request object should return InvalidRequestException");
     }
     @Test
-    void createGameNullGameNameInvalidRequest() throws Exception {
+    void createGameNullGameNameInvalidRequestException() throws Exception {
         RegisterRequest registerRequest = new RegisterRequest("user", "password", "email");
         RegisterResult register = userService.register(registerRequest);
 
@@ -61,7 +73,7 @@ class GameServiceTest {
                 "Null gameName should cause InvalidRequestException");
     }
     @Test
-    void createGameEmptyGameNameInvalidRequest() throws Exception {
+    void createGameEmptyGameNameInvalidRequestException() throws Exception {
         RegisterRequest registerRequest = new RegisterRequest("user", "password", "email");
         RegisterResult register = userService.register(registerRequest);
 
@@ -72,7 +84,7 @@ class GameServiceTest {
     }
     // Token Not Found
     @Test
-    void createGameTokenNotFound() throws Exception {
+    void createGameTokenNotFoundException() throws Exception {
         CreateGameRequest request = new CreateGameRequest("gameName");
 
         assertThrows(TokenNotFoundException.class, ()->gameService.createGame("bad token", request),
@@ -103,7 +115,12 @@ class GameServiceTest {
     }
     // Token Not Found
     @Test
-    void listGamesTokenNotFound() throws Exception {
+    void listGamesNullTokenTokenNotFoundException() {
+        assertThrows(TokenNotFoundException.class, ()->gameService.listGames(null),
+                "Null token should cause a TokenNotFoundException");
+    }
+    @Test
+    void listGamesTokenNotFoundException() throws Exception {
         assertThrows(TokenNotFoundException.class, ()->gameService.listGames("bad token"),
                 "Bad token should cause a TokenNotFoundException");
     }
@@ -136,14 +153,20 @@ class GameServiceTest {
     }
     // Token Not Found
     @Test
-    void joinGameTokenNotFound() throws Exception {
+    void joinGameNullTokenTokenNotFoundException() throws Exception {
+        JoinGameRequest request = new JoinGameRequest("WHITE", 1234);
+        assertThrows(TokenNotFoundException.class, ()->gameService.joinGame(null, request),
+                "Null Token should cause TokenNotFoundException");
+    }
+    @Test
+    void joinGameTokenNotFoundException() throws Exception {
         JoinGameRequest request = new JoinGameRequest("WHITE", 1234);
         assertThrows(TokenNotFoundException.class, ()->gameService.joinGame("bad token", request),
                 "Bad Token should cause TokenNotFoundException");
     }
     // Bad Request
     @Test
-    void joinGameBadGameID() throws Exception {
+    void joinGameBadGameIDException() throws Exception {
         RegisterRequest register = new RegisterRequest("user", "password", "email");
         RegisterResult registerResult = userService.register(register);
 
@@ -152,7 +175,7 @@ class GameServiceTest {
                 "Non-Existant GameID should cause InvalidRequestException");
     }
     @Test
-    void joinGameBadColorInvalidRequest() throws Exception{
+    void joinGameBadColorInvalidRequestException() throws Exception{
         RegisterRequest register = new RegisterRequest("user1", "password1", "email1");
         RegisterResult registerResult = userService.register(register);
 
@@ -166,7 +189,7 @@ class GameServiceTest {
     // Already Taken
     // White already taken
     @Test
-    void joinGameWhiteAlreadyTaken() throws Exception{
+    void joinGameWhiteAlreadyTakenException() throws Exception{
         RegisterRequest register1 = new RegisterRequest("user1", "password1", "email1");
         RegisterRequest register2 = new RegisterRequest("user2", "password2", "email2");
 
@@ -185,7 +208,7 @@ class GameServiceTest {
     }
     // Black already taken
     @Test
-    void joinGameBlackAlreadyTaken() throws Exception{
+    void joinGameBlackAlreadyTakenException() throws Exception{
         RegisterRequest register1 = new RegisterRequest("user1", "password1", "email1");
         RegisterRequest register2 = new RegisterRequest("user2", "password2", "email2");
 

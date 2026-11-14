@@ -1,3 +1,9 @@
+/**
+ * ServerMain Module
+ * Runs Server for Chess
+ * Author: Isabel Hinton
+ */
+
 package server;
 
 import chess.*;

@@ -1,6 +1,10 @@
-package model.transactions.result;
 /**
- * CreateGameResult. Contains the information returned by a successful
+ * CreateGameResult Module
+ * Contains the information returned by a successful
  * game creation, which is the game's generated ID.
+ * Author: Isabel Hinton
  */
+
+package model.transactions.result;
+
 public record CreateGameResult(int gameID) { }

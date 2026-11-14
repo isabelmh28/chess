@@ -1,8 +1,17 @@
+/**
+ * ClearServiceTest Module
+ * Test suite for the Service level
+ * Targets Admin Clear endpoint
+ * CLEAR SHOULD ONLY BE USED IN TESTING
+ * Author: Isabel Hinton
+ */
+
 package service;
 
 import dataaccess.doa.interfaces.*;
 import dataaccess.doa.memory.*;
 import dataaccess.exceptions.*;
+
 import model.transactions.request.*;
 import model.transactions.result.ListGamesResult;
 import model.transactions.result.LoginResult;
@@ -12,6 +21,7 @@ import org.junit.jupiter.api.Test;
 import static org.junit.jupiter.api.Assertions.*;
 
 class ClearServiceTest {
+    // Private Members
     ClearService clearService;
     UserService userService;
     GameService gameService;
@@ -53,8 +63,8 @@ class ClearServiceTest {
         assertNotNull(userService.register(register2),
                 "Clearance should allow user 2 to register again");
 
-        LogoutRequest oldLogout = new LogoutRequest(auth1.authToken());
-        assertThrows(TokenNotFoundException.class, ()->userService.logout(oldLogout),
+        String oldLogoutHeader = auth1.authToken();
+        assertThrows(TokenNotFoundException.class, ()->userService.logout(oldLogoutHeader),
                 "Old AuthToken should no longer be valid after clear");
 
         LoginRequest newLogin = new LoginRequest("user1", "password1");

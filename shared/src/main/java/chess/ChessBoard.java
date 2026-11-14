@@ -36,6 +36,23 @@ public class ChessBoard {
         }
     }
 
+    // Overridden Methods
+    //     - We are using the "deep" methods found in java.util.Arrays
+    @Override
+    public int hashCode() {
+        return Arrays.deepHashCode(chessBoard);
+    }
+    @Override
+    public boolean equals(Object obj) {
+        // Check reference equality
+        if(this == obj) {return true;}
+        // Check null and see if Classes match
+        if((obj == null) || (getClass() != obj.getClass())) {return false;}
+        // Cast and Compare data
+        ChessBoard that = (ChessBoard) obj;
+        return Arrays.deepEquals(chessBoard, that.chessBoard);
+    }
+
     // Getter Functions
     /**
      * Gets a chess piece on the chessboard
@@ -69,7 +86,6 @@ public class ChessBoard {
         }
         if(position.inBounds()) { chessBoard[position.getRow()-1][position.getColumn()-1] = piece;}
     }
-
     /**
      * Returns the position of the Team Color's King
      * Returns null if King cannot be found.
@@ -93,7 +109,6 @@ public class ChessBoard {
         }
         return null;
     }
-
     /**
      * Sets the board to the default starting board
      * (How the game of chess normally starts)
@@ -147,22 +162,5 @@ public class ChessBoard {
             addPiece(new ChessPosition(7, col),
                     new ChessPiece(ChessGame.TeamColor.BLACK, ChessPiece.PieceType.PAWN));
         }
-    }
-
-    // Overridden Methods
-    //     - We are using the "deep" methods found in java.util.Arrays
-    @Override
-    public int hashCode() {
-        return Arrays.deepHashCode(chessBoard);
-    }
-    @Override
-    public boolean equals(Object obj) {
-        // Check reference equality
-        if(this == obj) {return true;}
-        // Check null and see if Classes match
-        if((obj == null) || (getClass() != obj.getClass())) {return false;}
-        // Cast and Compare data
-        ChessBoard that = (ChessBoard) obj;
-        return Arrays.deepEquals(chessBoard, that.chessBoard);
     }
 }

@@ -1,7 +1,15 @@
+/**
+ * SQLGameDAO Module
+ * Services Game Database functions
+ * Author: Isabel Hinton
+ */
+
 package dataaccess.sql;
 
 import chess.ChessGame;
+
 import model.GameData;
+
 import dataaccess.DatabaseManager;
 import dataaccess.doa.interfaces.GameDAO;
 import dataaccess.exceptions.DataAccessException;
@@ -15,10 +23,19 @@ import java.util.Collection;
  * Stores games (Primary key is gameID)
  */
 public class SQLGameDAO implements GameDAO {
+    // Private Members
     private final Gson serializer = new Gson();
     // Interface Functions
     @Override
     public void createGame(GameData game) throws DataAccessException {
+        if(    (game == null)
+            || (game.gameID() < 0)
+            || ((game.whiteUsername() != null) && (game.whiteUsername().isEmpty()))
+            || ((game.blackUsername() != null) && (game.blackUsername().isEmpty()))
+            || (game.gameName() == null) || (game.gameName().isEmpty())
+            || (game.game() == null)) {
+            throw new DataAccessException("Bad argument, unable to update database");
+        }
         var gameJson = serializer.toJson(game.game());
         try (var connection = DatabaseManager.getConnection();
              var statement = connection.prepareStatement(
@@ -32,11 +49,14 @@ public class SQLGameDAO implements GameDAO {
             statement.executeUpdate();
         } catch (SQLException e) {
             throw new DataAccessException(
-                    String.format("Unable to update database in Game: createGame. %s", e.getMessage()));
+                    String.format("Unable to update database: %s", e.getMessage()));
         }
     }
     @Override
     public GameData getGame(int gameID) throws DataAccessException {
+        if(gameID < 0) {
+            throw new DataAccessException("Bad argument, unable to retrieve GameData");
+        }
         try (var connection = DatabaseManager.getConnection();
              var statement = connection.prepareStatement(
                      "SELECT gameID, whiteUsername, blackUsername, gameName, gameJson" +
@@ -56,12 +76,20 @@ public class SQLGameDAO implements GameDAO {
             }
         } catch (SQLException e) {
             throw new DataAccessException(
-                    String.format("Unable to retrieve GameData in Game: getGame. %s", e.getMessage()));
+                    String.format("Unable to retrieve GameData: %s", e.getMessage()));
         }
         return null;
     }
     @Override
     public void updateGame(GameData game) throws DataAccessException {
+        if(    (game == null)
+                || (game.gameID() < 0)
+                || ((game.whiteUsername() != null) && (game.whiteUsername().isEmpty()))
+                || ((game.blackUsername() != null) && (game.blackUsername().isEmpty()))
+                || (game.gameName() == null) || (game.gameName().isEmpty())
+                || (game.game() == null)) {
+            throw new DataAccessException("Bad argument, unable to update database");
+        }
         var gameJson = serializer.toJson(game.game());
         try (var connection = DatabaseManager.getConnection();
              var statement = connection.prepareStatement(
@@ -75,7 +103,7 @@ public class SQLGameDAO implements GameDAO {
             statement.executeUpdate();
         } catch (SQLException e) {
             throw new DataAccessException(
-                    String.format("Unable to update GameData in Game: updateGame. %s", e.getMessage()));
+                    String.format("Unable to update GameData: %s", e.getMessage()));
         }
     }
     @Override
@@ -98,7 +126,7 @@ public class SQLGameDAO implements GameDAO {
             }
         } catch (SQLException e) {
             throw new DataAccessException(
-                    String.format("Unable to retrieve gameList in Game: getGameList. %s", e.getMessage()));
+                    String.format("Unable to retrieve gameList: %s", e.getMessage()));
         }
         return gameList;
     }
@@ -110,7 +138,7 @@ public class SQLGameDAO implements GameDAO {
             statement.executeUpdate();
         } catch (SQLException e) {
             throw new DataAccessException(
-                    String.format("Unable to clear GameData in Game: clear. %s", e.getMessage()));
+                    String.format("Unable to clear GameData: %s", e.getMessage()));
         }
     }
 }

@@ -7,7 +7,6 @@ import client.ResponseException;
 import client.ServerFacade;
 import model.transactions.request.CreateGameRequest;
 import model.transactions.request.JoinGameRequest;
-import model.transactions.request.LogoutRequest;
 import model.transactions.result.CreateGameResult;
 import ui.BoardGenerator;
 import ui.EscapeSequences;
@@ -113,9 +112,9 @@ public class PostLogin {
             repl.printArgErrorNoArgs(words);
         return;
         }
-        LogoutRequest logout = new LogoutRequest(repl.getAuthToken());
+        String authToken = repl.getAuthToken();
         try {
-            facade.logout(logout);
+            facade.logout(authToken);
             repl.setState(REPL.State.SIGNEDOUT);
             repl.printOutput(String.format("""
                     Successfully Logged out!

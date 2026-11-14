@@ -1,8 +1,15 @@
+/**
+ * SQLAuthDAO Module
+ * Services Authentication Database functions
+ * Author: Isabel Hinton
+ */
+
 package dataaccess.sql;
 
 import dataaccess.DatabaseManager;
 import dataaccess.exceptions.DataAccessException;
 import dataaccess.doa.interfaces.AuthDAO;
+
 import model.AuthData;
 
 import java.sql.SQLException;
@@ -14,6 +21,11 @@ public class SQLAuthDAO implements AuthDAO {
     // Interface Functions
     @Override
     public void createAuthData(AuthData auth) throws DataAccessException {
+        if(    (auth == null)
+            || (auth.authToken() == null) || (auth.authToken().isEmpty())
+            || (auth.username() == null)  || (auth.username().isEmpty())) {
+            throw new DataAccessException("Bad argument, unable to update database");
+        }
         try (var connection = DatabaseManager.getConnection();
              var statement = connection.prepareStatement(
                 "INSERT INTO auth (authToken, username)" +
@@ -23,11 +35,14 @@ public class SQLAuthDAO implements AuthDAO {
             statement.executeUpdate();
         } catch (SQLException e) {
             throw new DataAccessException(
-                    String.format("Unable to update database in Auth: createAuthData. %s", e.getMessage()));
+                    String.format("Unable to update database: %s", e.getMessage()));
         }
     }
     @Override
     public AuthData getAuthData(String authToken) throws DataAccessException {
+        if((authToken == null) || (authToken.isEmpty())) {
+            throw new DataAccessException("Bad argument, unable to retrieve data");
+        }
         try (var connection = DatabaseManager.getConnection();
              var statement = connection.prepareStatement(
                 "SELECT authToken, username FROM auth WHERE authToken = ?")) {
@@ -42,12 +57,15 @@ public class SQLAuthDAO implements AuthDAO {
             }
         } catch (SQLException e) {
             throw new DataAccessException(
-                    String.format("Unable to retrieve AuthData in Auth: getAuthData. %s", e.getMessage()));
+                    String.format("Unable to retrieve AuthData: %s", e.getMessage()));
         }
         return null;
     }
     @Override
     public void removeAuthData(String authToken) throws DataAccessException {
+        if((authToken == null) || (authToken.isEmpty())) {
+            throw new DataAccessException("Bad argument, unable to update database");
+        }
         try (var connection = DatabaseManager.getConnection();
              var statement = connection.prepareStatement(
                 "DELETE FROM auth WHERE authToken = ?")) {
@@ -55,7 +73,7 @@ public class SQLAuthDAO implements AuthDAO {
             statement.executeUpdate();
         } catch (SQLException e) {
             throw new DataAccessException(
-                    String.format("Unable to delete AuthData in Auth: removeAuthData. %s", e.getMessage()));
+                    String.format("Unable to delete AuthData: %s", e.getMessage()));
         }
     }
     @Override
@@ -66,7 +84,7 @@ public class SQLAuthDAO implements AuthDAO {
             statement.executeUpdate();
         } catch (SQLException e) {
             throw new DataAccessException(
-                    String.format("Unable to clear AuthData in Auth: clear. %s", e.getMessage()));
+                    String.format("Unable to clear AuthData: %s", e.getMessage()));
         }
     }
 }
