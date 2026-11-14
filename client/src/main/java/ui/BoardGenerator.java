@@ -1,3 +1,9 @@
+/**
+ * BoardGenerator Module
+ * Prints out a chessBoard given the user's color and current board data.
+ * Author: Isabel Hinton
+ */
+
 package ui;
 
 import chess.ChessBoard;
@@ -6,29 +12,47 @@ import chess.ChessPiece;
 import chess.ChessPosition;
 
 public class BoardGenerator {
+    // Private Members
+    private final boolean isWhite;
+    private final ChessBoard board;
     // Column values for top and bottom row of board
     // Note that the letters are slightly offset due to them em-space
     private static final String[] COLS =
             {" a\u2003", " b\u2003", " c\u2003", " d\u2003", " e\u2003",
                     " f\u2003", " g\u2003", " h\u2003"};
-    private final boolean isWhite;
-    private final ChessBoard board;
     public static final int DIMENSION = 8;
-
+    // Constructor
     public BoardGenerator(ChessGame.TeamColor color, ChessBoard board) {
         isWhite = (color == ChessGame.TeamColor.WHITE);
         this.board = board;
     }
 
+    // Helper Functions
+    /**
+     * Prints a square with text. Is used for the side column/row indicators
+     * and for putting chess pieces on the board.
+     * @param bg:        background color of the square
+     * @param textColor: color of text on the square
+     * @param content:   text printed on the board
+     */
     private static void printSquare(String bg, String textColor, String content) {
         System.out.print(bg + textColor + content + EscapeSequences.RESET_BG_COLOR +
                 EscapeSequences.RESET_TEXT_COLOR);
     }
-
+    /**
+     * Prints an empty square. Is used for border corners.
+     * @param bg: background color of the square
+     */
     private static void printBlankSquare(String bg) {
         printSquare(bg, EscapeSequences.SET_TEXT_COLOR_WHITE, " \u2003 ");
     }
-
+    /**
+     * Prints a square with text. Is used for the side column/row indicators
+     * and for putting chess pieces on the board.
+     * @param piece: ChessPiece that you want converted to a String
+     *               Looks at piece Type and color
+     * @return String representation of the provided ChessPiece
+     */
     private String getPiece(ChessPiece piece) {
         ChessGame.TeamColor pieceColor = piece.getTeamColor();
         return switch (piece.getPieceType()) {
@@ -46,7 +70,13 @@ public class BoardGenerator {
                            :                                             EscapeSequences.BLACK_PAWN;
         };
     }
-
+    /**
+     * Prints a row of squares with the column indicators.
+     * Used to print the top and bottom borders of the board
+     * Depending on the user's color, the column labels will
+     * reflect their board's orientation.
+     * EX: WHITE is a - h and BLACK is h - a Left to Right
+     */
     private void printColBorder() {
         printBlankSquare(EscapeSequences.SET_BG_COLOR_BLUE);
         for(int i = 0; i < DIMENSION; i++) {
@@ -59,16 +89,28 @@ public class BoardGenerator {
         printBlankSquare(EscapeSequences.SET_BG_COLOR_BLUE);
         System.out.print("\n");
     }
-
+    /**
+     * Prints a row on the ChessBoard, including the boarder indicating the row labels.
+     * Depending on the provided row and the user's color the function will print the
+     * related row lables and will alternate the chessBoard squares to light/dark
+     * EX: WHITE is 8 - 1 and BLACK is 1 - 8 Top to Bottom. Both views should have a
+     *     light square in the Top Left corner.
+     * @param row: row label for the user's color
+     */
     private void printGameRow(int row) {
         // Row index for the side column display
         int index = isWhite ? (DIMENSION + 1 - row) : row;
         // Makes sure the square colors are correct for black and white
         int offset = isWhite ? index + 1 : index;
+        // NOTE: the rowVal is slightly off-center to work with the ChessPiece
+        //       character being wide. They are skewed towards the board.
         String rowVal = String.format("\u2003" + index + " ");
+
+        // Print Border label
         printSquare(EscapeSequences.SET_BG_COLOR_BLUE,
                 EscapeSequences.SET_TEXT_COLOR_BLACK,
                 rowVal);
+        // Print ChessBoard row
         for(int i = 1; i <= DIMENSION; i++) {
             String bg =   (((i + offset) % 2) == 0) ? EscapeSequences.SET_BG_COLOR_LIGHT_GREY
                         :                          EscapeSequences.SET_BG_COLOR_DARK_GREY;
@@ -81,6 +123,7 @@ public class BoardGenerator {
             }
             else { printBlankSquare(bg);}
         }
+        // Print other Border label (Right side)
         // rowVal is offset slightly, so the em-space is put on the other side for symmetry
         rowVal = String.format(" " + index + "\u2003");
         printSquare(EscapeSequences.SET_BG_COLOR_BLUE,
@@ -88,7 +131,12 @@ public class BoardGenerator {
                 rowVal);
         System.out.print("\n");
     }
-
+    /**
+     * Prints the chessBoard in the CLI.
+     * Depending on the user's color and current board provided in the constructor,
+     * the board will print according to the player's perspective with current chessPieces.
+     * Board indices go from 1 to 8.
+     */
     public void drawBoard() {
         printColBorder();
         for (int i = 1; i <= DIMENSION; i++) {

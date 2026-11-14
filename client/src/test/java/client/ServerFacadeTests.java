@@ -1,3 +1,10 @@
+/**
+ * ServerFacade Test Module
+ * Testing Suite for ServerFacade endpoints
+ * Contains test for all endpoints
+ * Author: Isabel Hinton
+ */
+
 package client;
 
 import model.transactions.request.*;
@@ -5,11 +12,10 @@ import model.transactions.result.*;
 import server.Server;
 
 import org.junit.jupiter.api.*;
-
 import static org.junit.jupiter.api.Assertions.*;
 
 public class ServerFacadeTests {
-
+    // Private Members
     private static Server server;
     static ServerFacade facade;
 
@@ -43,7 +49,8 @@ public class ServerFacadeTests {
         assertThrows(Exception.class, badFacade::clear,
                 "Connecting to a bad port should throw an Exception");
     }
-    
+
+    // Endpoints
     // Clear
     @Test
     void clearSuccess() throws Exception {
@@ -54,7 +61,6 @@ public class ServerFacadeTests {
         assertEquals(originalResult.username(), newResult.username(),
                 "Username should be the same before and after clearing and re-registration");
     }
-
     // Register
     // Success Case
     @Test
@@ -62,7 +68,8 @@ public class ServerFacadeTests {
         var result = registerTestUser();
 
         assertNotNull(result.authToken(), "Registration should return an authToken.");
-        assertEquals("user1", result.username(), "Registration result should have the original username");
+        assertEquals("user1", result.username(),
+                "Registration result should have the original username");
     }
     // Failure Cases
     @Test
@@ -114,7 +121,6 @@ public class ServerFacadeTests {
                         facade.register(null),
                 "Trying to register with a null Request should throw an exception");
     }
-
     // Login
     // Success
     @Test
@@ -183,23 +189,22 @@ public class ServerFacadeTests {
                         facade.login(null),
                 "Logging in with a null Request should throw an exception");
     }
-
     //Logout
     //Success
     @Test
     void logoutSuccess() throws Exception{
         var register = registerTestUser();
-        facade.logout(new LogoutRequest(register.authToken()));
+        facade.logout(register.authToken());
 
         assertThrows(Exception.class, ()->
-                facade.logout(new LogoutRequest(register.authToken())),
+                facade.logout(register.authToken()),
                 "Trying to Logout twice should delete the authToken and throw an Exception");
     }
     // Token Not Found
     @Test
     void logoutTokenNotFoundException() throws Exception {
         assertThrows(Exception.class, ()->
-                facade.logout(new LogoutRequest("badToken")),
+                facade.logout("badToken"),
                 "Trying to Logout with an invalid authToken should throw an Exception");
     }
     @Test
@@ -208,7 +213,6 @@ public class ServerFacadeTests {
                         facade.logout(null),
                 "Trying to Logout with a null Request should throw an Exception");
     }
-
     // CreateGame
     // Success
     @Test
@@ -259,7 +263,6 @@ public class ServerFacadeTests {
                 facade.createGame("badToken", new CreateGameRequest("game")),
                 "Attempting to create a game with a bad authToken should throw an exception");
     }
-
     // ListGames
     // Success
     @Test
@@ -282,7 +285,6 @@ public class ServerFacadeTests {
                 facade.listGames("badToken"),
                 "Attempting to list games with a bad authToken should throw an Exception");
     }
-
     // Join Game
     // Success
     @Test
