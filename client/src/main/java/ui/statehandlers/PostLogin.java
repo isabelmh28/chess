@@ -27,7 +27,13 @@ public class PostLogin {
 
     public void handlePostLogin(String input) {
         var words = input.split("\\s+");
-        var command = words[0].toLowerCase();
+        String command = null;
+        if(words.length == 0) {
+            command = "bad command";
+        }
+        else {
+            command = words[0].toLowerCase();
+        }
         switch(command) {
             case "help" :
                 helpPostLogin(words);
@@ -59,8 +65,8 @@ public class PostLogin {
     }
 
     private void helpPostLogin(String[] words) {
-        if(words.length != 1){
-            repl.printArgErrorNoArgs(words);
+        if(words.length > 1){
+            repl.printArgErrorNoArgs(words[0]);
             return;
         }
         String output = String.format("""
@@ -97,8 +103,8 @@ public class PostLogin {
     }
 
     private void quit(String[] words) {
-        if(words.length != 1) {
-            repl.printArgErrorNoArgs(words);
+        if(words.length > 1) {
+            repl.printArgErrorNoArgs(words[0]);
         return;
         }
         repl.setState(REPL.State.QUIT);
@@ -108,8 +114,8 @@ public class PostLogin {
     }
 
     private void logoutPostLogin(String[] words) {
-        if(words.length != 1) {
-            repl.printArgErrorNoArgs(words);
+        if(words.length > 1) {
+            repl.printArgErrorNoArgs(words[0]);
         return;
         }
         String authToken = repl.getAuthToken();
@@ -129,7 +135,7 @@ public class PostLogin {
 
     private void createGamePostLogin(String[] words) {
         if(words.length != 2) {
-            repl.printArgErrorSpecific(words, "create <GAME_NAME>",
+            repl.printArgErrorSpecific(words[0], "create <GAME_NAME>",
                     "create myNewGame", "");
             return;
         }
@@ -147,8 +153,8 @@ public class PostLogin {
     }
 
     private void listGamesPostLogin(String[] words) {
-        if(words.length != 1) {
-            repl.printArgErrorNoArgs(words);
+        if(words.length > 1) {
+            repl.printArgErrorNoArgs(words[0]);
             return;
         }
         try {
@@ -186,25 +192,25 @@ public class PostLogin {
 
     private void joinGamePostLogin(String[] words) {
         if(words.length != 3) {
-            repl.printArgErrorSpecific(words, "join <NUMBER> <WHITE | BLACK>",
+            repl.printArgErrorSpecific(words[0], "join <NUMBER> <WHITE | BLACK>",
                     "join 12345 WHITE", "");
             return;
         }
         String player = words[2];
         if(        !Objects.equals(player.toUpperCase(), ChessGame.TeamColor.WHITE.name())
                 && !Objects.equals(player.toUpperCase(), ChessGame.TeamColor.BLACK.name())) {
-            repl.printArgErrorSpecific(words, "join <NUMBER> <WHITE | BLACK>",
+            repl.printArgErrorSpecific(words[0], "join <NUMBER> <WHITE | BLACK>",
                     "join 12345 WHITE", "player options are only WHITE or BLACK:");
             return;
         }
         if(!words[1].matches("\\d+")) {
-            repl.printArgErrorSpecific(words, "join <NUMBER> <WHITE | BLACK>",
+            repl.printArgErrorSpecific(words[0], "join <NUMBER> <WHITE | BLACK>",
                     "join 12345 WHITE", "game number argument MUST be an INTEGER");
             return;
         }
         int gameNumber = Integer.parseInt(words[1]) - 1;
         if(gameNumber < 0 || gameNumber >= repl.getGameList().size()) {
-            repl.printArgErrorSpecific(words, "join <NUMBER> <WHITE | BLACK>",
+            repl.printArgErrorSpecific(words[0], "join <NUMBER> <WHITE | BLACK>",
                     "join 12345 WHITE",
                     "Any input for the NUMBER argument that is not in the list is invalid.\n" +
                             "See the " + EscapeSequences.SET_TEXT_COLOR_GREEN +
@@ -230,17 +236,17 @@ public class PostLogin {
 
     private void observeGamePostLogin(String[] words) {
         if(words.length != 2) {
-            repl.printArgErrorSpecific(words, "observe <NUMBER>",
+            repl.printArgErrorSpecific(words[0], "observe <NUMBER>",
                     "observe 12345", "");
             return;
         }
         if(!words[1].matches("\\d+")) {
-            repl.printArgErrorSpecific(words, "observe <NUMBER>", "observe 12345", "");
+            repl.printArgErrorSpecific(words[0], "observe <NUMBER>", "observe 12345", "");
             return;
         }
         int gameNumber = Integer.parseInt(words[1]) - 1;
         if(gameNumber < 0 || gameNumber >= repl.getGameList().size()) {
-            repl.printArgErrorSpecific(words, "observe <NUMBER>", "observe 12345",
+            repl.printArgErrorSpecific(words[0], "observe <NUMBER>", "observe 12345",
                     "Any input for the NUMBER argument that is not in the list is invalid.\n" +
                             "See the " + EscapeSequences.SET_TEXT_COLOR_GREEN +
                             "'list'" + EscapeSequences.SET_TEXT_COLOR_RED +

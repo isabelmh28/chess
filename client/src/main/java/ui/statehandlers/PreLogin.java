@@ -45,8 +45,8 @@ public class PreLogin {
     }
 
     private void helpPreLogin(String[] words) {
-        if(words.length != 1) {
-            repl.printArgErrorNoArgs(words);
+        if(words.length > 1) {
+            repl.printArgErrorNoArgs(words[0]);
             return;
         }
         String output = String.format("""
@@ -68,8 +68,8 @@ public class PreLogin {
     }
 
     private void quit(String[] words) {
-        if(words.length != 1) {
-            repl.printArgErrorNoArgs(words);
+        if(words.length > 1) {
+            repl.printArgErrorNoArgs(words[0]);
             return;
         }
         repl.setState(REPL.State.QUIT);
@@ -80,7 +80,7 @@ public class PreLogin {
 
     private void registerPreLogin(String[] words) {
         if(words.length != 4) {
-            repl.printArgErrorSpecific(words, "register <USERNAME> <PASSWORD> <EMAIL>",
+            repl.printArgErrorSpecific(words[0], "register <USERNAME> <PASSWORD> <EMAIL>",
                     "register myName new_password myEmail@company.com", "");
             return;
         }
@@ -103,7 +103,7 @@ public class PreLogin {
 
     private void loginPreLogin(String[] words) {
         if(words.length != 3){
-            repl.printArgErrorSpecific(words, "login <USERNAME> <PASSWORD>",
+            repl.printArgErrorSpecific(words[0], "login <USERNAME> <PASSWORD>",
                 "login myName new_password", "");
             return;
         }

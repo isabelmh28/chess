@@ -9,6 +9,7 @@ package client;
 
 import model.transactions.request.*;
 import model.transactions.result.*;
+
 import server.Server;
 
 import org.junit.jupiter.api.*;
