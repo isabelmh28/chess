@@ -6,9 +6,9 @@
 
 package dataaccess.doa.interfaces;
 
-import dataaccess.exceptions.DataAccessException;
-
 import model.GameData;
+
+import dataaccess.exceptions.DataAccessException;
 
 import java.util.Collection;
 

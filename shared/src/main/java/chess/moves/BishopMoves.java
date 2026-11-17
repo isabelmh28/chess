@@ -8,8 +8,8 @@ package chess.moves;
 
 import chess.*;
 
-import java.util.Collection;
 import java.util.ArrayList;
+import java.util.Collection;
 
 public class BishopMoves {
     /**

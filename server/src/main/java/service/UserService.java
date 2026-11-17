@@ -9,16 +9,16 @@
 
 package service;
 
-import model.UserData;
-import model.AuthData;
-import model.transactions.request.LoginRequest;
-import model.transactions.request.RegisterRequest;
-import model.transactions.result.LoginResult;
-import model.transactions.result.RegisterResult;
-
+import dataaccess.exceptions.*;
 import dataaccess.doa.interfaces.AuthDAO;
 import dataaccess.doa.interfaces.UserDAO;
-import dataaccess.exceptions.*;
+
+import model.UserData;
+import model.AuthData;
+import model.transactions.result.LoginResult;
+import model.transactions.result.RegisterResult;
+import model.transactions.request.LoginRequest;
+import model.transactions.request.RegisterRequest;
 
 import java.util.UUID;
 import org.mindrot.jbcrypt.BCrypt;

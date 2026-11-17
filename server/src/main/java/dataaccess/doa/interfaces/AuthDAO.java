@@ -6,9 +6,9 @@
 
 package dataaccess.doa.interfaces;
 
-import dataaccess.exceptions.DataAccessException;
-
 import model.AuthData;
+
+import dataaccess.exceptions.DataAccessException;
 
 public interface AuthDAO {
     // Interface Functions

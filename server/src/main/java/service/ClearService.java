@@ -12,9 +12,10 @@
 package service;
 
 import dataaccess.doa.interfaces.AuthDAO;
-import dataaccess.exceptions.DataAccessException;
 import dataaccess.doa.interfaces.GameDAO;
 import dataaccess.doa.interfaces.UserDAO;
+import dataaccess.exceptions.DataAccessException;
+
 
 public class ClearService {
     // Private Members

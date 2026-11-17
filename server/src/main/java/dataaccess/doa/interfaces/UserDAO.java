@@ -6,9 +6,10 @@
 
 package dataaccess.doa.interfaces;
 
+import model.UserData;
+
 import dataaccess.exceptions.DataAccessException;
 
-import model.UserData;
 
 public interface UserDAO {
     // Interface Functions

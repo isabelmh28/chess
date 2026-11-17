@@ -7,14 +7,14 @@
 
 package dataaccess.sql;
 
+import model.AuthData;
+
 import dataaccess.DatabaseManager;
 import dataaccess.exceptions.DataAccessException;
 
-import model.AuthData;
-
 import java.sql.SQLException;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.BeforeEach;
 import static org.junit.jupiter.api.Assertions.*;
 
 public class AuthSQLTests {

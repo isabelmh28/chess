@@ -6,18 +6,18 @@
 
 package server.handlers;
 
-import com.google.gson.JsonSyntaxException;
-import model.transactions.request.CreateGameRequest;
-import model.transactions.request.JoinGameRequest;
-import model.transactions.result.CreateGameResult;
-import model.transactions.result.ListGamesResult;
+import service.GameService;
 
 import dataaccess.exceptions.*;
 
-import service.GameService;
+import model.transactions.result.ListGamesResult;
+import model.transactions.result.CreateGameResult;
+import model.transactions.request.JoinGameRequest;
+import model.transactions.request.CreateGameRequest;
 
 import io.javalin.http.Context;
 import com.google.gson.Gson;
+import com.google.gson.JsonSyntaxException;
 
 public class GameHandler {
     // Private Members

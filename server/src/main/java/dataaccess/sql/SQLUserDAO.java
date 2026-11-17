@@ -6,10 +6,11 @@
 
 package dataaccess.sql;
 
-import dataaccess.DatabaseManager;
-import dataaccess.exceptions.DataAccessException;
-import dataaccess.doa.interfaces.UserDAO;
 import model.UserData;
+
+import dataaccess.DatabaseManager;
+import dataaccess.doa.interfaces.UserDAO;
+import dataaccess.exceptions.DataAccessException;
 
 import java.sql.SQLException;
 

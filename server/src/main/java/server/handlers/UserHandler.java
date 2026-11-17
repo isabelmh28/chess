@@ -6,18 +6,18 @@
 
 package server.handlers;
 
-import com.google.gson.JsonSyntaxException;
-import model.transactions.request.LoginRequest;
-import model.transactions.request.RegisterRequest;
-import model.transactions.result.LoginResult;
-import model.transactions.result.RegisterResult;
+import service.UserService;
 
 import dataaccess.exceptions.*;
 
-import service.UserService;
+import model.transactions.result.LoginResult;
+import model.transactions.result.RegisterResult;
+import model.transactions.request.LoginRequest;
+import model.transactions.request.RegisterRequest;
 
-import com.google.gson.Gson;
 import io.javalin.http.Context;
+import com.google.gson.Gson;
+import com.google.gson.JsonSyntaxException;
 
 public class UserHandler {
     // Private Members

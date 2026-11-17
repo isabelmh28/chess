@@ -6,16 +6,16 @@
 
 package server;
 
+import service.*;
+
+import server.handlers.*;
+
 import dataaccess.*;
 import dataaccess.exceptions.*;
 import dataaccess.sql.SQLAuthDAO;
 import dataaccess.sql.SQLGameDAO;
 import dataaccess.sql.SQLUserDAO;
 import dataaccess.doa.interfaces.*;
-
-import service.*;
-
-import server.handlers.*;
 
 import io.javalin.*;
 import java.sql.SQLException;

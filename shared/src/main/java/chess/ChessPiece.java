@@ -8,9 +8,9 @@ package chess;
 
 import chess.moves.*;
 
-import java.util.Collection;
 import java.util.Objects;
 import java.util.ArrayList;
+import java.util.Collection;
 
 /**
  * Represents a single chess piece

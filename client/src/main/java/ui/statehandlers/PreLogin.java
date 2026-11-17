@@ -11,18 +11,18 @@
 
 package ui.statehandlers;
 
-import model.transactions.result.LoginResult;
-import model.transactions.result.RegisterResult;
 import ui.EscapeSequences;
 
 import client.REPL;
-import client.ResponseException;
 import client.ServerFacade;
+import client.ResponseException;
 
 import model.GameData;
+import model.transactions.result.LoginResult;
+import model.transactions.result.RegisterResult;
+import model.transactions.result.ListGamesResult;
 import model.transactions.request.LoginRequest;
 import model.transactions.request.RegisterRequest;
-import model.transactions.result.ListGamesResult;
 
 import java.util.ArrayList;
 

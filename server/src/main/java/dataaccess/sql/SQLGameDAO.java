@@ -6,18 +6,18 @@
 
 package dataaccess.sql;
 
-import chess.ChessGame;
-
 import model.GameData;
+
+import chess.ChessGame;
 
 import dataaccess.DatabaseManager;
 import dataaccess.doa.interfaces.GameDAO;
 import dataaccess.exceptions.DataAccessException;
 
 import com.google.gson.Gson;
-import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.sql.SQLException;
 
 /**
  * Stores games (Primary key is gameID)

@@ -7,14 +7,14 @@
 
 package dataaccess.doa.memory;
 
+import model.GameData;
+
 import dataaccess.doa.interfaces.GameDAO;
 import dataaccess.exceptions.DataAccessException;
 
-import model.GameData;
-
+import java.util.HashMap;
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.HashMap;
 
 /**
  * Stores games (mapped by gameID)

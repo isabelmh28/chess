@@ -7,10 +7,10 @@
 
 package dataaccess.doa.memory;
 
+import model.AuthData;
+
 import dataaccess.doa.interfaces.AuthDAO;
 import dataaccess.exceptions.DataAccessException;
-
-import model.AuthData;
 
 import java.util.HashMap;
 

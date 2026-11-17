@@ -13,21 +13,21 @@ import chess.ChessGame;
 
 import dataaccess.doa.interfaces.AuthDAO;
 import dataaccess.doa.interfaces.GameDAO;
-import dataaccess.exceptions.AlreadyTakenException;
 import dataaccess.exceptions.DataAccessException;
-import dataaccess.exceptions.InvalidRequestException;
+import dataaccess.exceptions.AlreadyTakenException;
 import dataaccess.exceptions.TokenNotFoundException;
+import dataaccess.exceptions.InvalidRequestException;
 
 import model.AuthData;
 import model.GameData;
-import model.transactions.request.CreateGameRequest;
-import model.transactions.request.JoinGameRequest;
-import model.transactions.result.CreateGameResult;
 import model.transactions.result.ListGamesResult;
+import model.transactions.result.CreateGameResult;
+import model.transactions.request.JoinGameRequest;
+import model.transactions.request.CreateGameRequest;
 
+import java.util.UUID;
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.UUID;
 
 public class GameService {
     // Private Members

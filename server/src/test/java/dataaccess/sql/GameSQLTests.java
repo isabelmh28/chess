@@ -7,19 +7,19 @@
 
 package dataaccess.sql;
 
-import dataaccess.DatabaseManager;
-import dataaccess.exceptions.DataAccessException;
+import model.GameData;
 
 import chess.ChessGame;
 
-import model.GameData;
+import dataaccess.DatabaseManager;
+import dataaccess.exceptions.DataAccessException;
 
-import static org.junit.jupiter.api.Assertions.*;
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Test;
+import com.google.gson.Gson;
 import java.util.Collection;
 import java.sql.SQLException;
-import com.google.gson.Gson;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.BeforeEach;
+import static org.junit.jupiter.api.Assertions.*;
 
 public class GameSQLTests {
     // Private Members

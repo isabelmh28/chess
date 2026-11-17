@@ -9,13 +9,13 @@
 
 package client;
 
+import model.GameData;
+
 import ui.*;
 import ui.statehandlers.*;
 
-import model.GameData;
-
-import java.util.ArrayList;
 import java.util.Scanner;
+import java.util.ArrayList;
 
 /**
  * Manages the Scanner input loop, tracks current user state,

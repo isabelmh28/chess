@@ -7,10 +7,10 @@
 
 package client;
 
-import model.transactions.request.*;
-import model.transactions.result.*;
-
 import server.Server;
+
+import model.transactions.result.*;
+import model.transactions.request.*;
 
 import org.junit.jupiter.api.*;
 import static org.junit.jupiter.api.Assertions.*;

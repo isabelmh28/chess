@@ -14,25 +14,25 @@
 
 package ui.statehandlers;
 
-import chess.ChessBoard;
 import chess.ChessGame;
+import chess.ChessBoard;
 
 import ui.BoardGenerator;
 import ui.EscapeSequences;
 
 import client.REPL;
-import client.ResponseException;
 import client.ServerFacade;
+import client.ResponseException;
 
 import model.GameData;
 import model.transactions.result.ListGamesResult;
-import model.transactions.request.CreateGameRequest;
-import model.transactions.request.JoinGameRequest;
 import model.transactions.result.CreateGameResult;
+import model.transactions.request.JoinGameRequest;
+import model.transactions.request.CreateGameRequest;
 
+import java.util.Objects;
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.Objects;
 
 public class PostLogin {
     // Private Members

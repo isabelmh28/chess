@@ -10,18 +10,18 @@
 
 package service;
 
-import dataaccess.doa.interfaces.*;
-import dataaccess.doa.memory.*;
 import dataaccess.exceptions.*;
+import dataaccess.doa.memory.*;
+import dataaccess.doa.interfaces.*;
 
-import model.transactions.request.*;
-import model.transactions.result.CreateGameResult;
-import model.transactions.result.ListGamesResult;
 import model.transactions.result.LoginResult;
 import model.transactions.result.RegisterResult;
+import model.transactions.result.CreateGameResult;
+import model.transactions.result.ListGamesResult;
+import model.transactions.request.*;
 
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.BeforeEach;
 import static org.junit.jupiter.api.Assertions.*;
 
 class GameServiceTest {
